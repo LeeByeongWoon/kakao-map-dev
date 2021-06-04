@@ -31,7 +31,7 @@ public class ProducerKafka {
 	KafkaProducerService kafkaProducerService;
 
 
-	@Scheduled(cron = "0 45 * * * *")
+	@Scheduled(cron = "0 * * * * *")
 	public void collect() {
 		try {
 			logger.info("###########################");

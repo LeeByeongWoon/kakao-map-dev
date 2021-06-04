@@ -22,8 +22,9 @@ spring:
     show-sql: true
   api:
     weather:
-      url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst
+      url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst
       service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
+      request-interval: 6
 
 info:
   app:

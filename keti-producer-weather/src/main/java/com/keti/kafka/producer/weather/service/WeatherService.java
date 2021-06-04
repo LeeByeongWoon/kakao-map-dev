@@ -48,16 +48,19 @@ public class WeatherService {
 
         
         long enableVillageLength = enableVillageList.size();
-        String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String now = new SimpleDateFormat("yyyyMMdd HHmm").format(new Date());
+        String[] nowArr = now.split(" ");
+        String date = nowArr[0];
+        String time = nowArr[1];
 
         for(int cnt=0; cnt<enableVillageLength; cnt++) {
             VillageInfoEntity villageInfo = enableVillageList.get(cnt);
 
             String pageNo = "1";
-            String numOfRows = "255";
+            String numOfRows = "32";
             String dataType = "JSON";
-            String baseDate = today;
-            String baseTime = "0500";
+            String baseDate = date;
+            String baseTime = time;
             int nx = villageInfo.getViNx();
             int ny = villageInfo.getViNy();
 
