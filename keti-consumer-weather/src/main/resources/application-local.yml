@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile: "local"
+  kafka:
+    consumer:
+      bootstrap-servers: 192.168.190.141:9092
+      topics: dev-keti
+      group-id: keti-consumer-kafka
+      auto-offset-reset: latest
+      task: 2
+      enable-auto-commit: true
+      poll-timeout: 1000
+      auto-commit-interval-ms: 1000
+      session-timeout-ms: 30000
+      key-deserializer-class-config: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
+  influxdb:
+    url: http://192.168.190.141:8086
+    database: keti_kafka
+    username: admin
+    password: admin
+    retention-policy: autogen
+    connect-timeout: 10
+    read-timeout: 30
+    write-timeout: 10
+    gzip: true
+  pid:
+    file: ${HOME}/gorotis11/KETI/consumer-kafka/pids/consumer-kafka.pid

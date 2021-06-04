@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: "common"
+
+info:
+  app:
+    name: keti-consumer-weather
+    version: 0.0.1-SNAPSHOT
+    description: kafka consumer
+
+---
+
+spring:
+  profiles:
+    group:
+      "local": "common,local"
+      "dev": "common,dev"
+      "prod": "common,prod"
