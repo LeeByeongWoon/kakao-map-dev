@@ -1,0 +1,33 @@
+spring:
+  config:
+    activate:
+      on-profile: "local"
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.190.146:3306/keti?reconnect=true&characterEncoding=UTF-8
+    username: keti
+    password: 'qwer1234!@'
+  kafka:
+    producer:
+      bootstrap-servers: 192.168.190.146:9092
+      topic: dev-keti-weather
+      acks: -1
+      retries: 1
+      batch-size: 16384
+      linger-ms: 0
+      request-timeout-ms: 30000
+      delivery-timeout-ms: 120000
+      buffer-memory: 33554432
+      max-block-ms: 60000
+      max-request-size: 125829120
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      compresstion-type: lz4
+  pid:
+    file: /Users/gangbinpark/gorotis11/KETI/keti-producer-weather/keti-producer-weather.pid
+logging:
+  path:
+    dir: /Users/gangbinpark/gorotis11/KETI/keti-producer-weather/logs
+    file: keti-producer-weather
+  level:
+    root: info

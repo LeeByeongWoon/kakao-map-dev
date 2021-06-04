@@ -1,0 +1,41 @@
+spring:
+  config:
+    activate:
+      on-profile: "common"
+  main:
+    web-application-type: none
+  restTemplate:
+    factory:
+      readTimeout: 1000
+      connectTimeout: 3000
+    httpClient:
+      maxConnTotal: 100
+      maxConnPerRoute: 5
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+      ddl-auto: update
+    generate-ddl: false
+    show-sql: true
+  api:
+    weather:
+      url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst
+      service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
+
+info:
+  app:
+    name: keti-producer-weather
+    version: 0.0.1-SNAPSHOT
+    description: kafka producer
+
+---
+
+spring:
+  profiles:
+    group:
+      "local": "common,local"
+      "dev": "common,dev"
+      "prod": "common,prod"
