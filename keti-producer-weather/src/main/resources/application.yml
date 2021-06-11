@@ -9,8 +9,8 @@ spring:
       readTimeout: 1000
       connectTimeout: 3000
     httpClient:
-      maxConnTotal: 500
-      maxConnPerRoute: 8
+      maxConnTotal: 80
+      maxConnPerRoute: 4
   jpa:
     database-platform: org.hibernate.dialect.MariaDB103Dialect
     hibernate:
