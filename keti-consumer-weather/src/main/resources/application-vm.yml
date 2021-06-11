@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: "local"
+      on-profile: "vm"
   kafka:
     consumer:
       bootstrap-servers: 192.168.190.146:9092
@@ -17,21 +17,21 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influx2: 
     url: http://192.168.190.146:8086 # URL to connect to InfluxDB.
-    username: keti # Username to use in the basic auth.
+    username: wiz # Username to use in the basic auth.
     password: qwer1234!@ # Password to use in the basic auth.
     token: -2O-zW3Yf2fV7cztbkWBL_GzZErRTZIYdyfjgXCx8CFN0wTaJKKTy4xqkawYrqaDvCCAug8q7W12zKKEz-TLEA== # Token to use for the authorization.
-    org: keti # Default destination organization for writes and queries.
+    org: wizontech # Default destination organization for writes and queries.
     bucket: keti # Default destination bucket for writes.
     logLevel: BODY # The log level for logging the HTTP request and HTTP response. (Default: NONE)
     readTimeout: 10s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 10s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 10s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
-    file: ${HOME}/gorotis11/ketiClust/keti-consumer-weather/keti-consumer-weather.pid
-
+    file: /app/keti-consumer-weather/keti-consumer-weather.pid
+    
 logging:
   path:
-    dir: ${HOME}/gorotis11/ketiClust/keti-consumer-weather/logs
+    dir: /applog/keti-consumer-weather
     file: keti-consumer-weather
   level:
     root: info

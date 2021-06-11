@@ -9,8 +9,8 @@ spring:
       readTimeout: 1000
       connectTimeout: 3000
     httpClient:
-      maxConnTotal: 100
-      maxConnPerRoute: 5
+      maxConnTotal: 500
+      maxConnPerRoute: 8
   jpa:
     database-platform: org.hibernate.dialect.MariaDB103Dialect
     hibernate:
@@ -38,5 +38,6 @@ spring:
   profiles:
     group:
       "local": "common,local"
+      "vm": "common,vm"
       "dev": "common,dev"
       "prod": "common,prod"

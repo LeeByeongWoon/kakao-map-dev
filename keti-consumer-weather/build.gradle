@@ -35,18 +35,26 @@ repositories {
 	mavenCentral()
 }
 
+//gradle bootRun -Dspring.profiles.active=local
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 	implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.7.1'
+	implementation 'com.influxdb:influxdb-spring:2.2.0'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-test {
-	useJUnitPlatform()
+bootRun {
+    String activeProfile = System.properties['spring.profiles.active']
+    systemProperty "spring.profiles.active", activeProfile
 }
+
+// test {
+// 	useJUnitPlatform()
+// }

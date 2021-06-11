@@ -17,11 +17,28 @@ public class VillageInfoService {
     private VillageInfoRepository villageInfoRepository;
 
 
-    public List<VillageInfoEntity> getEnabledVillage() {
-        List<VillageInfoEntity> enableVillageList = new ArrayList<>();
-        enableVillageList = villageInfoRepository.findByViCollectActive(true);
+    public List<VillageInfoEntity> getViAll() {
+        List<VillageInfoEntity> viAll = villageInfoRepository.findByAll();
 
-        return enableVillageList;
+        return viAll;
+    }
+
+
+    public List<int[]> getViPointGrpCnt() {
+        List<int[]> ViPointGrpCnt = new ArrayList<>();
+        ViPointGrpCnt = villageInfoRepository.findByViPointGrpCnt();
+
+        return ViPointGrpCnt;
+        
+    }
+
+
+    public List<int[]> getEnablePoint(Boolean active) {
+        List<int[]> enablePointList = new ArrayList<>();
+        enablePointList = villageInfoRepository.findByViActivePoint(active);
+
+        return enablePointList;
+        
     }
     
 }

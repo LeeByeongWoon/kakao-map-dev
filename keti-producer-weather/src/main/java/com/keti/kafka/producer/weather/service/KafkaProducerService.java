@@ -1,7 +1,6 @@
 package com.keti.kafka.producer.weather.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +13,13 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.apache.kafka.clients.producer.ProducerRecord;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONObject;
 
 
 @Service
 public class KafkaProducerService {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -32,13 +28,13 @@ public class KafkaProducerService {
     private String topic;
 
     
-    public void sendMessage(List<Map<String, Object>> weatherDataList) throws Exception {
-		int cnt = 0;
-		int weatherDataLength = weatherDataList.size();
+    public void sendMessage(List<JSONObject> weatherDataList) throws Exception {
+		int weatherDataSize = weatherDataList.size();
 
-		while(cnt < weatherDataLength) {
-			Map<String, Object> map = weatherDataList.get(cnt);
-			String data = objectMapper.writeValueAsString(map);
+		for(int cnt=0; cnt<weatherDataSize; cnt++) {
+			JSONObject json = weatherDataList.get(cnt);
+			String data = json.toString();
+
 			ProducerRecord<String, String> message = new ProducerRecord<String, String>(topic, data);
 			ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(message);
 	
@@ -47,17 +43,15 @@ public class KafkaProducerService {
 
 				@Override
 				public void onSuccess(SendResult<String, String> result) {
-					logger.info("[onSuccess(" + i + "/" + weatherDataLength + ") | offset=" + result.getRecordMetadata().offset() + "]");
+					logger.info("[onSuccess(" + i + "/" + weatherDataSize + ") | offset=" + result.getRecordMetadata().offset() + "]");
 				}
 	
 				@Override
 				public void onFailure(Throwable ex) {
-					logger.info("[onFailure(" + i + "/" + weatherDataLength + ") | " + ex.getMessage() + "]");
+					logger.info("[onFailure(" + i + "/" + weatherDataSize + ") | " + ex.getMessage() + "]");
 				}
 
 			});
-
-			cnt++;
 		}
 		
     }
