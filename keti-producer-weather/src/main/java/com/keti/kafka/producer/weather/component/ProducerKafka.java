@@ -80,7 +80,7 @@ public class ProducerKafka {
 	}
 
 
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 45 * * * *")
 	public void collect() {
 		try {
 			logger.info("#########################################");
