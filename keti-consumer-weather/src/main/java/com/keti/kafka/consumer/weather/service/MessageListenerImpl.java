@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.kafka.listener.MessageListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +30,8 @@ public class MessageListenerImpl implements MessageListener<String, String> {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    JSONParser parser = new JSONParser();
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -38,60 +42,72 @@ public class MessageListenerImpl implements MessageListener<String, String> {
     @Override
 	public void onMessage(ConsumerRecord<String, String> consumerRecord) {
         try {
-            String message  = consumerRecord.value();
-            JsonNode rootNode = objectMapper.readTree(message);
+            List<Map<String, Object>> weatherDatas = new ArrayList<>();
 
-            String timestamp = rootNode.get("timestamp").asText();
-            String statusCode = rootNode.get("statusCode").asText();
-            Long statusCodeValue = rootNode.get("statusCodeValue").asLong();
-            Map<String, Object> requestData = 
-                    objectMapper.readValue(String.valueOf(rootNode.get("requestData")), new TypeReference<Map<String, Object>>(){});
-            JsonNode responseData = rootNode.get("responseData");
+            JSONObject recordValue = (JSONObject) parser.parse(consumerRecord.value());
+            List<JSONObject> messages = 
+                    objectMapper.convertValue(recordValue.get("messages"), new TypeReference<List<JSONObject>>(){});
+                    
+
+            int messagesSize = messages.size();
+            for(int cnt=0; cnt<messagesSize; cnt++) {
+                JSONObject message = messages.get(cnt);
+
+                Instant timestamp = Instant.parse(message.get("timestamp").toString());
+                String statusCode = message.get("statusCodeValue").toString();
+                Map<String, Object> requestData = 
+                        objectMapper.convertValue(message.get("requestData"), new TypeReference<Map<String, Object>>(){});
+                String resStringData =
+                        objectMapper.writeValueAsString(message.get("responseData"));
+
+                JsonNode rootNode = objectMapper.readTree(resStringData);
+                JsonNode header = rootNode.path("header");
+                JsonNode body = rootNode.path("body");
+
+                int resultCode = header.path("resultCode").asInt();
+                String resultMsg = header.path("resultMsg").asText();
+                
+
+                logger.info("[Consume(" + (cnt+1) + "/" + messagesSize + ") | resultCode, resultMsg=" + resultCode + ", " + resultMsg + "]");
+
+                if(resultCode == 00) {
+                    JsonNode itemsObject = body.path("items").path("item");
+                    List<Map<String, Object>> items =
+                            objectMapper.convertValue(itemsObject, new TypeReference<List<Map<String, Object>>>(){});
 
 
-            ArrayList<WeatherEntity> entities = new ArrayList<>();
-            
+                    int itemsSize = items.size();
+                    for(int itemsCnt=0; itemsCnt<itemsSize; itemsCnt++) {
+                        Map<String, Object> weatherData = new HashMap<>();
+                        JSONObject item = 
+                                objectMapper.convertValue(items.get(itemsCnt), new TypeReference<JSONObject>(){});
 
-            Long serviceCode = responseData.path("header").path("resultCode").asLong();
-            String serviceMessage = responseData.path("header").path("resultMsg").asText();
-            logger.info("[serviceCode: " + serviceCode + ", serviceMessage: " + serviceMessage + "]");
+                        Iterator<String> requestDataKeys = requestData.keySet().iterator();
+                        while(requestDataKeys.hasNext()) {
+                            String key = requestDataKeys.next();
+                            weatherData.put(key, requestData.get(key));
+                        }
+                        
+                        weatherData.put("timestamp", timestamp);
+                        weatherData.put("statusCode", statusCode);
+                        weatherData.put("resultCode", resultCode);
+                        weatherData.put("baseDate", item.get("baseDate"));
+                        weatherData.put("baseTime", item.get("baseTime"));
+                        weatherData.put("category", item.get("category"));
+                        weatherData.put("obsrValue", item.get("obsrValue"));
 
-            if(serviceCode == 0) {
-                List<Map<String, Object>> items = 
-                    objectMapper.convertValue(responseData.path("body").path("items").path("item"), new TypeReference<List<Map<String, Object>>>(){});
-
-                int cnt = 0;
-                int itemsLength = items.size();
-                while(cnt < itemsLength) {
-                    Map<String, Object> item = items.get(cnt);
-
-
-                    Map<String, Object> entity = new HashMap<>();
-
-                    entity.put("timestamp", Instant.parse(timestamp.toString()));
-                    entity.put("statusCode", statusCode);
-                    entity.put("statusCodeValue", statusCodeValue);
-
-                    Iterator requestDatakeys = requestData.keySet().iterator();
-                    while(requestDatakeys.hasNext()) {
-                        String requestDatakey = (String) requestDatakeys.next();
-                        entity.put(requestDatakey, requestData.get(requestDatakey));
+                        weatherDatas.add(weatherData);
                     }
-
-                    Iterator itemkeys = item.keySet().iterator();
-                    while(itemkeys.hasNext()) {
-                        String itemkey = (String) itemkeys.next();
-                        entity.put(itemkey, item.get(itemkey));
-                    }
-
-                    WeatherEntity weatherEntity = objectMapper.convertValue(entity, new TypeReference<WeatherEntity>(){});
-
-                    entities.add(weatherEntity);
-                    cnt++;
                 }
             }
 
-            weatherRepository.save(entities);
+            int weatherDatasSize = weatherDatas.size();
+            if(weatherDatasSize > 0) {
+                List<WeatherEntity> entities =
+                        objectMapper.convertValue(weatherDatas, new TypeReference<List<WeatherEntity>>(){});
+
+                weatherRepository.save(entities);
+            }
 
         } catch (Exception e) {
             logger.info("[Exception: " + e + " ]");

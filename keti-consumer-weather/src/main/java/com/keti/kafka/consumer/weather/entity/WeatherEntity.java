@@ -19,10 +19,10 @@ public class WeatherEntity {
     @Column(timestamp = true)
     Instant timestamp;
 
-    @Column(name = "status_code",  tag = true)
+    @Column(name = "status_code", tag = true)
     private String statusCode;
-    @Column(name = "status_code_value",  tag = true)
-    private Long statusCodeValue;
+    @Column(name = "result_code", tag = true)
+    private String resultCode;
 
 
     @Column(name = "vi_code", tag = true)
@@ -63,37 +63,14 @@ public class WeatherEntity {
     private Date viUpdateDate;
 
 
-    @Column(name = "result_code",  tag = true)
-    private Long resultCode;
-    @Column(name = "result_msg", tag = true)
-    private String resultMsg;
-
-    @Column(name = "data_type", tag = true)
-    private String dataType;
-    @Column(name = "page_no", tag = true)
-    private Long pageNo;
-    @Column(name = "num_of_rows", tag = true)
-    private Long numOfRows;
-    @Column(name = "total_count", tag = true)
-    private Long totalCount;
     @Column(name = "base_date", tag = true)
     private String baseDate;
     @Column(name = "base_time", tag = true)
     private String baseTime;
     @Column(name = "category", tag = true)
     private String category;
-    @Column(name = "nx", tag = true)
-    private Long nx;
-    @Column(name = "ny", tag = true)
-    private Long ny;
     
     @Column(name = "obsr_value")
     private Double obsrValue;
-
-    @Builder
-    public WeatherEntity(Instant timestamp, Double obsrValue) {
-        this.timestamp = timestamp;
-        this.obsrValue = obsrValue;
-    }
 
 }
