@@ -25,8 +25,10 @@ public class WeatherRepository {
 
 
     public void save(final List<WeatherEntity> entities) {
+        
         final WriteApi writeApi = influxdb.getWriteApi();
-        writeApi.writeMeasurements(bucket, org, WritePrecision.US, entities);
+        writeApi.writeMeasurements(WritePrecision.NS, entities);
+
     }
 
 }

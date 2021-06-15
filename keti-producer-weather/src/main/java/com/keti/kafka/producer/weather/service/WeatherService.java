@@ -7,6 +7,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,16 +56,15 @@ public class WeatherService {
     private String serviceKey;
 
 
-    public List<JSONObject> getRequestPointData(List<int[]> enableVillageList) throws Exception {
+    public List<JSONObject> getRequestPointData(LocalDateTime now, List<int[]> enableVillageList) throws Exception {
         List<JSONObject> weatherDataList = new ArrayList<>();
-
 
         int enableVillageSize = enableVillageList.size();
         
-        String now = new SimpleDateFormat("yyyyMMdd HHmm").format(new Date());
-        String[] nowArr = now.split(" ");
-        String date = nowArr[0];
-        String time = nowArr[1];
+        String today = now.format(DateTimeFormatter.ofPattern("yyyyMMdd HHmm"));
+        String[] todayArr = today.split(" ");
+        String date = todayArr[0];
+        String time = todayArr[1];
 
         for(int cnt=0; cnt<enableVillageSize; cnt++) {
             int[] point = enableVillageList.get(cnt);
@@ -89,10 +94,11 @@ public class WeatherService {
 
             ResponseEntity<String> response = restTemplate.exchange(uri.toUri(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
             
-            Instant timestamp = Instant.now();
-            int statusCodeValue = response.getStatusCodeValue();
+            Instant kst = now.toInstant(ZoneOffset.UTC);
+            String convertKst = kst.toString();
 
-            logger.info("[Collect(" + (cnt+1) + "/" + enableVillageSize + ") | HttpStatusCode=" + statusCodeValue + "]");
+            int statusCodeValue = response.getStatusCodeValue();
+            logger.info(convertKst + " - [Collect(" + (cnt+1) + "/" + enableVillageSize + ") | HttpStatusCode=" + statusCodeValue + "]");
 
             if(statusCodeValue >= 200 && statusCodeValue <= 300) { 
                 String key = nx + "." + ny;
@@ -109,7 +115,7 @@ public class WeatherService {
                             objectMapper.convertValue(pointDataList.get(i), new TypeReference<JSONObject>(){});
 
                     HashMap<String, Object> messageData = new HashMap<>();
-                    messageData.put("timestamp", String.valueOf(timestamp));
+                    messageData.put("timestamp", convertKst);
                     messageData.put("statusCodeValue", statusCodeValue);
                     messageData.put("requestData", requestData);
                     messageData.put("responseData", responseData.get("response"));
@@ -126,5 +132,31 @@ public class WeatherService {
 
         return weatherDataList;
     }
-    
+
+    public List<JSONObject> getRealTimeData(List<int[]> enableVillageList) throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+        List<JSONObject> weatherDataList = getRequestPointData(now, enableVillageList);
+
+        return weatherDataList;
+    }
+
+    public List<List<JSONObject>> getLeapData(List<int[]> enableVillageList) throws Exception {
+        List<List<JSONObject>> leapDataList = new ArrayList<>();
+
+        List<LocalDateTime> minusHours = new ArrayList<>();
+        int min = 0;
+        int max = 23;
+        LocalDateTime now = LocalDateTime.now();
+        for(int cnt=max; cnt>min; cnt--) {
+            minusHours.add(now.minusHours(cnt));
+        }
+
+        for(LocalDateTime minusHour : minusHours) {
+            List<JSONObject> weatherDataList = getRequestPointData(minusHour, enableVillageList);
+
+            leapDataList.add(weatherDataList);
+        }
+
+        return leapDataList;
+    }
 }

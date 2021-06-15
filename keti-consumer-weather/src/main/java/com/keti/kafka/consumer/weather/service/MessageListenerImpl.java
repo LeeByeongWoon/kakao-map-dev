@@ -8,14 +8,12 @@ import java.util.List;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.kafka.listener.MessageListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,16 +42,18 @@ public class MessageListenerImpl implements MessageListener<String, String> {
         try {
             List<Map<String, Object>> weatherDatas = new ArrayList<>();
 
-            JSONObject recordValue = (JSONObject) parser.parse(consumerRecord.value());
-            List<JSONObject> messages = 
-                    objectMapper.convertValue(recordValue.get("messages"), new TypeReference<List<JSONObject>>(){});
+            Map<String, Object> recordValue = objectMapper.readValue(consumerRecord.value(), new TypeReference<Map<String, Object>>(){});
+            List<Map<String, Object>> messages = 
+                    objectMapper.convertValue(recordValue.get("messages"), new TypeReference<List<Map<String, Object>>>(){});
                     
 
             int messagesSize = messages.size();
             for(int cnt=0; cnt<messagesSize; cnt++) {
-                JSONObject message = messages.get(cnt);
+                Map<String, Object> message = messages.get(cnt);
 
                 Instant timestamp = Instant.parse(message.get("timestamp").toString());
+                logger.info("timestamp: "+ timestamp);
+
                 String statusCode = message.get("statusCodeValue").toString();
                 Map<String, Object> requestData = 
                         objectMapper.convertValue(message.get("requestData"), new TypeReference<Map<String, Object>>(){});
@@ -75,26 +75,28 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                     List<Map<String, Object>> items =
                             objectMapper.convertValue(itemsObject, new TypeReference<List<Map<String, Object>>>(){});
 
-
+                    List<String> keys = new ArrayList<>(requestData.keySet());
+                    int keysSize = keys.size();
                     int itemsSize = items.size();
-                    for(int itemsCnt=0; itemsCnt<itemsSize; itemsCnt++) {
-                        Map<String, Object> weatherData = new HashMap<>();
-                        JSONObject item = 
-                                objectMapper.convertValue(items.get(itemsCnt), new TypeReference<JSONObject>(){});
 
-                        Iterator<String> requestDataKeys = requestData.keySet().iterator();
-                        while(requestDataKeys.hasNext()) {
-                            String key = requestDataKeys.next();
-                            weatherData.put(key, requestData.get(key));
-                        }
-                        
-                        weatherData.put("timestamp", timestamp);
-                        weatherData.put("statusCode", statusCode);
-                        weatherData.put("resultCode", resultCode);
-                        weatherData.put("baseDate", item.get("baseDate"));
-                        weatherData.put("baseTime", item.get("baseTime"));
-                        weatherData.put("category", item.get("category"));
-                        weatherData.put("obsrValue", item.get("obsrValue"));
+                    Map<String, Object> weatherData = new HashMap<>();
+                    weatherData.put("timestamp", timestamp);
+                    weatherData.put("statusCode", statusCode);
+                    weatherData.put("resultCode", resultCode);
+
+                    for(int keysCnt=0; keysCnt<keysSize; keysCnt++) {
+                        String key = keys.get(keysCnt);
+                        weatherData.put(key, requestData.get(key));
+                    }
+
+                    weatherData.put("baseDate", items.get(0).get("baseDate"));
+                    weatherData.put("baseTime", items.get(0).get("baseTime"));
+                    
+                    for(int itemsCnt=0; itemsCnt<itemsSize; itemsCnt++) {
+                        Map<String, Object> item = items.get(itemsCnt);
+                        String category = item.get("category").toString();
+
+                        weatherData.put(category.toLowerCase() + "Value", item.get("obsrValue"));
 
                         weatherDatas.add(weatherData);
                     }

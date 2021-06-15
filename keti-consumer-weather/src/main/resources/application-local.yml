@@ -6,7 +6,7 @@ spring:
     consumer:
       bootstrap-servers: 192.168.190.146:9092
       topics: dev-keti-weather
-      group-id: dev-keti-weather-consumer-group
+      group-id: dev-keti-weather-consumer
       auto-offset-reset: latest
       task: 2
       enable-auto-commit: true
@@ -17,12 +17,12 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influx2: 
     url: http://192.168.190.146:8086 # URL to connect to InfluxDB.
-    username: keti # Username to use in the basic auth.
+    username: admin # Username to use in the basic auth.
     password: qwer1234!@ # Password to use in the basic auth.
-    token: -2O-zW3Yf2fV7cztbkWBL_GzZErRTZIYdyfjgXCx8CFN0wTaJKKTy4xqkawYrqaDvCCAug8q7W12zKKEz-TLEA== # Token to use for the authorization.
-    org: keti # Default destination organization for writes and queries.
+    token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
+    org: wizontech # Default destination organization for writes and queries.
     bucket: keti # Default destination bucket for writes.
-    logLevel: BODY # The log level for logging the HTTP request and HTTP response. (Default: NONE)
+    logLevel: NONE # The log level for logging the HTTP request and HTTP response. (Default: NONE)
     readTimeout: 10s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 10s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 10s # Connection timeout for OkHttpClient. (Default: 10s)

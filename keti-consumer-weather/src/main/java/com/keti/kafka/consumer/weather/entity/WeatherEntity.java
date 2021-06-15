@@ -1,6 +1,5 @@
 package com.keti.kafka.consumer.weather.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,7 @@ import com.influxdb.annotations.Measurement;
 public class WeatherEntity {
 
     @Column(timestamp = true)
-    Instant timestamp;
+    private Instant timestamp;
 
     @Column(name = "status_code", tag = true)
     private String statusCode;
@@ -67,10 +66,22 @@ public class WeatherEntity {
     private String baseDate;
     @Column(name = "base_time", tag = true)
     private String baseTime;
-    @Column(name = "category", tag = true)
-    private String category;
     
-    @Column(name = "obsr_value")
-    private Double obsrValue;
+    @Column(name = "T1H_value")
+    private Double t1hValue;
+    @Column(name = "RN1_value")
+    private Double rn1Value;
+    @Column(name = "UUU_value")
+    private Double uuuValue;
+    @Column(name = "VVV_value")
+    private Double vvvValue;
+    @Column(name = "REH_value")
+    private Double rehValue;
+    @Column(name = "PTY_value")
+    private Double ptyValue;
+    @Column(name = "VEC_value")
+    private Double vecValue;
+    @Column(name = "WSD_value")
+    private Double wsdValue;
 
 }

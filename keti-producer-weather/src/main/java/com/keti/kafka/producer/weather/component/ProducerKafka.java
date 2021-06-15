@@ -36,6 +36,7 @@ public class ProducerKafka {
 	@Autowired
 	KafkaProducerService kafkaProducerService;
 
+	private static Boolean bool = true;
 	public static final Map<String, List<VillageInfoEntity>> _pointGroupData = new HashMap<>();
 
 
@@ -76,7 +77,24 @@ public class ProducerKafka {
 				start += viPointGrpCnt.get(i)[2];
 			}
 		}
-		
+
+		try {
+			if(bool) {
+				List<int[]> enablePointList = villageInfoService.getEnablePoint(true);
+				List<List<JSONObject>> leapDataList = weatherService.getLeapData(enablePointList);
+	
+				int leapDataSize = leapDataList.size();
+				
+				for(int cnt=0; cnt<leapDataSize; cnt++) { 
+					List<JSONObject> weatherDataList = leapDataList.get(cnt);
+					kafkaProducerService.sendMessage(weatherDataList);
+				}
+	
+				bool = false;
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 
@@ -88,10 +106,10 @@ public class ProducerKafka {
 			logger.info("#########################################");
 			
 			List<int[]> enablePointList = villageInfoService.getEnablePoint(true);
-			List<JSONObject> weatherDataList = weatherService.getRequestPointData(enablePointList);
+			List<JSONObject> weatherDataList = weatherService.getRealTimeData(enablePointList);
 
 			kafkaProducerService.sendMessage(weatherDataList);
-
+			
 		} catch (Exception e) {
 			logger.info("[Exception: " + e + " ]");
 		} finally {
