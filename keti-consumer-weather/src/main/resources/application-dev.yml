@@ -6,7 +6,7 @@ spring:
     consumer:
       bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
       topics: dev-keti-weather
-      group-id: dev-keti-weather-consumer
+      group-id: dev-keti-weather-consumer-test03
       auto-offset-reset: earliest
       task: 3
       enable-auto-commit: true
@@ -22,10 +22,10 @@ spring:
     token: Y1Mbv0p1giQ1lPiKL7Ea7JstVN3eyIJCstxV1dRneRlhnnYtc2pedaMeMDWR4p0NI_95fvmxlmKArDmghyRVpA== # Token to use for the authorization.
     org: wizontech # Default destination organization for writes and queries.
     bucket: wizontech # Default destination bucket for writes.
-    logLevel: NONE # The log level for logging the HTTP request and HTTP response. (Default: NONE) BODY
+    logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE) BODY
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 15s # Connection timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 180s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: /app/keti-consumer-weather/keti-consumer-weather.pid
     

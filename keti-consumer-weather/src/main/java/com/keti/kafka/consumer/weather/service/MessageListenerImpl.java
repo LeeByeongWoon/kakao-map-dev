@@ -52,7 +52,6 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                 Map<String, Object> message = messages.get(cnt);
 
                 Instant timestamp = Instant.parse(message.get("timestamp").toString());
-                logger.info("timestamp: "+ timestamp);
 
                 String statusCode = message.get("statusCodeValue").toString();
                 Map<String, Object> requestData = 
@@ -97,9 +96,9 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                         String category = item.get("category").toString();
 
                         weatherData.put(category.toLowerCase() + "Value", item.get("obsrValue"));
-
-                        weatherDatas.add(weatherData);
                     }
+
+                    weatherDatas.add(weatherData);
                 }
             }
 
@@ -107,10 +106,9 @@ public class MessageListenerImpl implements MessageListener<String, String> {
             if(weatherDatasSize > 0) {
                 List<WeatherEntity> entities =
                         objectMapper.convertValue(weatherDatas, new TypeReference<List<WeatherEntity>>(){});
-
+                        
                 weatherRepository.save(entities);
             }
-
         } catch (Exception e) {
             logger.info("[Exception: " + e + " ]");
         }   

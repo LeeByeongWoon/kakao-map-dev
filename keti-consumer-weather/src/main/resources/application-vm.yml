@@ -8,7 +8,7 @@ spring:
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer
       auto-offset-reset: latest
-      task: 2
+      task: 1
       enable-auto-commit: true
       poll-timeout: 1000
       auto-commit-interval-ms: 1000
@@ -22,10 +22,10 @@ spring:
     token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
     org: wizontech # Default destination organization for writes and queries.
     bucket: keti # Default destination bucket for writes.
-    logLevel: BODY # The log level for logging the HTTP request and HTTP response. (Default: NONE)
-    readTimeout: 10s # Read timeout for OkHttpClient. (Default: 10s)
-    writeTimeout: 10s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 10s # Connection timeout for OkHttpClient. (Default: 10s)
+    logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE)
+    readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
+    writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 15s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: /app/keti-consumer-weather/keti-consumer-weather.pid
     

@@ -62,6 +62,9 @@ public class WeatherService {
         int enableVillageSize = enableVillageList.size();
         
         String today = now.format(DateTimeFormatter.ofPattern("yyyyMMdd HHmm"));
+
+        logger.info("today: " + today);
+
         String[] todayArr = today.split(" ");
         String date = todayArr[0];
         String time = todayArr[1];
@@ -95,7 +98,9 @@ public class WeatherService {
             ResponseEntity<String> response = restTemplate.exchange(uri.toUri(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
             
             Instant kst = now.toInstant(ZoneOffset.UTC);
+            Instant utc = now.minusHours(9).toInstant(ZoneOffset.UTC);
             String convertKst = kst.toString();
+            String convertUtc = utc.toString();
 
             int statusCodeValue = response.getStatusCodeValue();
             logger.info(convertKst + " - [Collect(" + (cnt+1) + "/" + enableVillageSize + ") | HttpStatusCode=" + statusCodeValue + "]");
@@ -115,7 +120,7 @@ public class WeatherService {
                             objectMapper.convertValue(pointDataList.get(i), new TypeReference<JSONObject>(){});
 
                     HashMap<String, Object> messageData = new HashMap<>();
-                    messageData.put("timestamp", convertKst);
+                    messageData.put("timestamp", convertUtc);
                     messageData.put("statusCodeValue", statusCodeValue);
                     messageData.put("requestData", requestData);
                     messageData.put("responseData", responseData.get("response"));
