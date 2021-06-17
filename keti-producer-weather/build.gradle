@@ -60,10 +60,14 @@ dependencies {
 
 
 //gradle build
-//gradle bootRun -Dspring.profiles.active=local
+//gradle bootRun -Dspring.profiles.active=local -Pargs=--LeapTimeCollector=false
 bootRun {
     String activeProfile = System.properties['spring.profiles.active']
     systemProperty "spring.profiles.active", activeProfile
+
+	if (project.hasProperty('args')) {
+        args project.args.split(',')
+    }
 }
 
 // test {

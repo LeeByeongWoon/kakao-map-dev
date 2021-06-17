@@ -12,7 +12,7 @@ public class KafkaConsumerProperties {
 	private String[] topics;
 	private String groupId;
 	private String autoOffsetReset;
-	private int task;
+	private int listener;
 	private boolean enableAutoCommit;
 	private int pollTimeout;
 	private int autoCommitIntervalMs;

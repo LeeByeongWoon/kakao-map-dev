@@ -6,9 +6,10 @@ spring:
     consumer:
       bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
       topics: dev-keti-weather
-      group-id: dev-keti-weather-consumer-test03
-      auto-offset-reset: earliest
-      task: 3
+      group-id: dev-keti-weather-consumer-01
+      auto-offset-reset: latest
+      # auto-offset-reset: earliest
+      listener: 3
       enable-auto-commit: true
       poll-timeout: 1000
       auto-commit-interval-ms: 1000
@@ -25,7 +26,7 @@ spring:
     logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE) BODY
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 180s # Connection timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: /app/keti-consumer-weather/keti-consumer-weather.pid
     

@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.List;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -52,6 +54,7 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                 Map<String, Object> message = messages.get(cnt);
 
                 Instant timestamp = Instant.parse(message.get("timestamp").toString());
+                
 
                 String statusCode = message.get("statusCodeValue").toString();
                 Map<String, Object> requestData = 
@@ -65,9 +68,6 @@ public class MessageListenerImpl implements MessageListener<String, String> {
 
                 int resultCode = header.path("resultCode").asInt();
                 String resultMsg = header.path("resultMsg").asText();
-                
-
-                logger.info("[Consume(" + (cnt+1) + "/" + messagesSize + ") | resultCode, resultMsg=" + resultCode + ", " + resultMsg + "]");
 
                 if(resultCode == 00) {
                     JsonNode itemsObject = body.path("items").path("item");
@@ -85,7 +85,26 @@ public class MessageListenerImpl implements MessageListener<String, String> {
 
                     for(int keysCnt=0; keysCnt<keysSize; keysCnt++) {
                         String key = keys.get(keysCnt);
-                        weatherData.put(key, requestData.get(key));
+
+                        switch (key) {
+                            case "vi02Phase":
+                                String vi02Phase = requestData.get("vi02Phase").toString();
+                                String chk_vi02Phase = vi02Phase != "" ? vi02Phase : "전체";
+
+                                weatherData.put(key, chk_vi02Phase);
+                                break;
+                            
+                            case "vi03Phase":
+                                String vi03Phase = requestData.get("vi03Phase").toString();
+                                String chk_vi03Phase = vi03Phase != "" ? vi03Phase : "전체";
+
+                                weatherData.put(key, chk_vi03Phase);
+                                break;
+                        
+                            default:
+                                weatherData.put(key, requestData.get(key));
+                                break;
+                        }
                     }
 
                     weatherData.put("baseDate", items.get(0).get("baseDate"));
@@ -94,21 +113,25 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                     for(int itemsCnt=0; itemsCnt<itemsSize; itemsCnt++) {
                         Map<String, Object> item = items.get(itemsCnt);
                         String category = item.get("category").toString();
-
+                        
                         weatherData.put(category.toLowerCase() + "Value", item.get("obsrValue"));
                     }
 
                     weatherDatas.add(weatherData);
                 }
+
+                logger.info("[Consume(" + (cnt+1) + "/" + messagesSize + ") | resultCode=" + resultCode + ", resultMsg=" + resultMsg + "]");
             }
 
             int weatherDatasSize = weatherDatas.size();
+            
             if(weatherDatasSize > 0) {
                 List<WeatherEntity> entities =
                         objectMapper.convertValue(weatherDatas, new TypeReference<List<WeatherEntity>>(){});
                         
                 weatherRepository.save(entities);
             }
+
         } catch (Exception e) {
             logger.info("[Exception: " + e + " ]");
         }   

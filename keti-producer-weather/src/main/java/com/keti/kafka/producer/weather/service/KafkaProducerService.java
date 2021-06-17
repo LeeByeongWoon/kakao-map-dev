@@ -56,4 +56,19 @@ public class KafkaProducerService {
 		
     }
 
+
+	public void sendRealTimeData(List<JSONObject> weatherDataList) throws Exception {
+        sendMessage(weatherDataList);
+    }
+
+
+	public void sendLeapTimeData(List<List<JSONObject>> leapDataList) throws Exception {
+		int leapDataSize = leapDataList.size();
+		for(int cnt=0; cnt<leapDataSize; cnt++) {
+			List<JSONObject> weatherDataList = leapDataList.get(cnt);
+			
+			sendMessage(weatherDataList);
+		}
+    }
+
 }

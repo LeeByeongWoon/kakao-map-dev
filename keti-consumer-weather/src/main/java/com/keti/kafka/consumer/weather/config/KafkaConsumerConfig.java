@@ -36,7 +36,7 @@ public class KafkaConsumerConfig {
 
         ConcurrentMessageListenerContainer<String, String> container = new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
         container.setupMessageListener(messageListener);
-        container.setConcurrency(properties.getTask());
+        container.setConcurrency(properties.getListener());
 		container.setAutoStartup(false);
 
         return container;

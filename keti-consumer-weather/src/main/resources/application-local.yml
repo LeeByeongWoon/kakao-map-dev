@@ -8,7 +8,7 @@ spring:
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer
       auto-offset-reset: latest
-      task: 1
+      listener: 1
       enable-auto-commit: true
       poll-timeout: 1000
       auto-commit-interval-ms: 1000
@@ -25,10 +25,27 @@ spring:
     logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE)
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 15s # Connection timeout for OkHttpClient. (Default: 10s)
-
+    connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: ${HOME}/gorotis11/ketiClust/keti-consumer-weather/keti-consumer-weather.pid
+
+management:
+  health:
+    influxdb2:
+      enable: true
+  metrics:
+    export:
+      influx:
+        bucket: keti
+        org: wizontech
+        token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q==
+        uri: http://192.168.190.146:8086/api/v2
+        commpressed: true
+        step: 1m
+        num-threads: 2
+        batch-size: 10000
+        read-timeout: 15s
+        connect-timeout: 30s
 
 logging:
   path:

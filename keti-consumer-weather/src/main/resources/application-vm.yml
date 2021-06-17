@@ -8,7 +8,7 @@ spring:
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer
       auto-offset-reset: latest
-      task: 1
+      listener: 1
       enable-auto-commit: true
       poll-timeout: 1000
       auto-commit-interval-ms: 1000

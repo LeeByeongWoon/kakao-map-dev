@@ -3,16 +3,11 @@ package com.keti.kafka.producer.weather.service;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +57,6 @@ public class WeatherService {
         int enableVillageSize = enableVillageList.size();
         
         String today = now.format(DateTimeFormatter.ofPattern("yyyyMMdd HHmm"));
-
-        logger.info("today: " + today);
 
         String[] todayArr = today.split(" ");
         String date = todayArr[0];
@@ -145,7 +138,7 @@ public class WeatherService {
         return weatherDataList;
     }
 
-    public List<List<JSONObject>> getLeapData(List<int[]> enableVillageList) throws Exception {
+    public List<List<JSONObject>> getLeapTimeData(List<int[]> enableVillageList) throws Exception {
         List<List<JSONObject>> leapDataList = new ArrayList<>();
 
         List<LocalDateTime> minusHours = new ArrayList<>();
