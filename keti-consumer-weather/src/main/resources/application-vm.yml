@@ -25,7 +25,7 @@ spring:
     logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE)
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 15s # Connection timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: /app/keti-consumer-weather/keti-consumer-weather.pid
     

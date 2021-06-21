@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -51,27 +52,22 @@ public class WeatherService {
     private String serviceKey;
 
 
-    public List<JSONObject> getRequestPointData(LocalDateTime now, List<int[]> enableVillageList) throws Exception {
+    public List<JSONObject> getRequestPointData(List<Map<String, Object>> queryParams) throws Exception {
         List<JSONObject> weatherDataList = new ArrayList<>();
 
-        int enableVillageSize = enableVillageList.size();
-        
-        String today = now.format(DateTimeFormatter.ofPattern("yyyyMMdd HHmm"));
+        int queryParamsSize = queryParams.size();
+        for(int cnt=0; cnt<queryParamsSize; cnt++) {
+            Map<String, Object> queryParam = queryParams.get(cnt);
 
-        String[] todayArr = today.split(" ");
-        String date = todayArr[0];
-        String time = todayArr[1];
-
-        for(int cnt=0; cnt<enableVillageSize; cnt++) {
-            int[] point = enableVillageList.get(cnt);
-
-            String pageNo = "1";
-            String numOfRows = "32";
-            String dataType = "JSON";
-            String baseDate = date;
-            String baseTime = time;
-            int nx = point[0];
-            int ny = point[1];
+            String pageNo = queryParam.get("pageNo").toString();
+            String numOfRows = queryParam.get("numOfRows").toString();
+            String dataType = queryParam.get("dataType").toString();
+            Instant kst = Instant.parse(queryParam.get("kst").toString());
+            Instant utc = Instant.parse(queryParam.get("utc").toString());
+            String baseDate = queryParam.get("baseDate").toString();
+            String baseTime = queryParam.get("baseTime").toString();
+            int nx = Integer.parseInt(queryParam.get("nx").toString());
+            int ny = Integer.parseInt(queryParam.get("ny").toString());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -88,15 +84,15 @@ public class WeatherService {
                                     .queryParam("ny", ny)
                                     .build(true);
 
-            ResponseEntity<String> response = restTemplate.exchange(uri.toUri(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
+            ResponseEntity<String> response = 
+                    restTemplate.exchange(uri.toUri(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
             
-            Instant kst = now.toInstant(ZoneOffset.UTC);
-            Instant utc = now.minusHours(9).toInstant(ZoneOffset.UTC);
+            
             String convertKst = kst.toString();
             String convertUtc = utc.toString();
 
             int statusCodeValue = response.getStatusCodeValue();
-            logger.info(convertKst + " - [Collect(" + (cnt+1) + "/" + enableVillageSize + ") | HttpStatusCode=" + statusCodeValue + "]");
+            logger.info(convertKst + " - [Collect(" + (cnt+1) + "/" + queryParamsSize + ") | HttpStatusCode=" + statusCodeValue + "]");
 
             if(statusCodeValue >= 200 && statusCodeValue <= 300) { 
                 String key = nx + "." + ny;
@@ -131,30 +127,83 @@ public class WeatherService {
         return weatherDataList;
     }
 
+
     public List<JSONObject> getRealTimeData(List<int[]> enableVillageList) throws Exception {
+        List<JSONObject> weatherDataList = null;
+
+        
+        List<Map<String, Object>> queryParams = new ArrayList<>();
+        
         LocalDateTime now = LocalDateTime.now();
-        List<JSONObject> weatherDataList = getRequestPointData(now, enableVillageList);
+        LocalDateTime baseDt = now.minusHours(1);
+
+        String date = baseDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String time = baseDt.format(DateTimeFormatter.ofPattern("HH")) + "00";
+
+        for (int[] enableVillage : enableVillageList) {
+            Map<String, Object> queryParam = new HashMap<>();
+            queryParam.put("pageNo", "1");
+            queryParam.put("numOfRows", "12");
+            queryParam.put("dataType", "JSON");
+            queryParam.put("kst", now.toInstant(ZoneOffset.UTC));
+            queryParam.put("utc", now.minusHours(9).toInstant(ZoneOffset.UTC));
+            queryParam.put("baseDate", date);
+            queryParam.put("baseTime", time);
+            queryParam.put("nx", enableVillage[0]);
+            queryParam.put("ny", enableVillage[1]);
+
+            queryParams.add(queryParam);
+        }
+
+        weatherDataList = getRequestPointData(queryParams);
 
         return weatherDataList;
     }
 
+
     public List<List<JSONObject>> getLeapTimeData(List<int[]> enableVillageList) throws Exception {
         List<List<JSONObject>> leapDataList = new ArrayList<>();
 
-        List<LocalDateTime> minusHours = new ArrayList<>();
+
+        List<List<Map<String, Object>>> minusQueryParams = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        
         int min = 0;
         int max = 23;
-        LocalDateTime now = LocalDateTime.now();
         for(int cnt=max; cnt>min; cnt--) {
-            minusHours.add(now.minusHours(cnt));
+            List<Map<String, Object>> queryParams = new ArrayList<>();
+
+            
+            LocalDateTime baseDt = now.minusHours(cnt);
+
+            String date = baseDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String time = baseDt.format(DateTimeFormatter.ofPattern("HH")) + "00";
+
+            for (int[] enableVillage : enableVillageList) {
+                Map<String, Object> queryParam = new HashMap<>();
+                queryParam.put("pageNo", "1");
+                queryParam.put("numOfRows", "12");
+                queryParam.put("dataType", "JSON");
+                queryParam.put("kst", baseDt.toInstant(ZoneOffset.UTC));
+                queryParam.put("utc", baseDt.minusHours(9).toInstant(ZoneOffset.UTC));
+                queryParam.put("baseDate", date);
+                queryParam.put("baseTime", time);
+                queryParam.put("nx", enableVillage[0]);
+                queryParam.put("ny", enableVillage[1]);
+
+                queryParams.add(queryParam);
+            }
+
+            minusQueryParams.add(queryParams);
         }
 
-        for(LocalDateTime minusHour : minusHours) {
-            List<JSONObject> weatherDataList = getRequestPointData(minusHour, enableVillageList);
+        for(List<Map<String, Object>> minusQueryParam : minusQueryParams) {
+            List<JSONObject> weatherDataList = getRequestPointData(minusQueryParam);
 
             leapDataList.add(weatherDataList);
         }
 
         return leapDataList;
     }
+
 }

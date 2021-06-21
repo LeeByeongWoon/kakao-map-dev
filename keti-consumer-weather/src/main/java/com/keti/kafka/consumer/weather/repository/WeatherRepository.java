@@ -7,9 +7,6 @@ import com.keti.kafka.consumer.weather.entity.WeatherEntity;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -26,23 +23,12 @@ public class WeatherRepository {
     @Autowired
     private InfluxDBClient influxdb;
 
-    private WriteApi writeApi;
-
-    @PostConstruct
-    public void init() {
-        writeApi = influxdb.getWriteApi();
-    }
-    @PreDestroy
-    public void close() {
-        writeApi.close();
-    }
-
 
     public void save(final List<WeatherEntity> entities) {
-        //final WriteApi writeApi = influxdb.getWriteApi();
+        final WriteApi writeApi = influxdb.getWriteApi();
         writeApi.writeMeasurements(bucket, org, WritePrecision.NS, entities);
 
-        //writeApi.close();
+        writeApi.close();
     }
 
 }

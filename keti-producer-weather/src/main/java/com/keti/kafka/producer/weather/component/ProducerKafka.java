@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.kafka.common.protocol.types.Field.Bool;
 import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +58,7 @@ public class ProducerKafka {
 		setArgs();
 		setMappingPoint();
 		
-		List<String> keys = new ArrayList<>(_args.keySet());
+		Set<String> keys = _args.keySet();
 		
 		for (String key : keys) {
 			if(_args.get(key)) {
@@ -141,11 +140,11 @@ public class ProducerKafka {
 	}
 
 
-	@Scheduled(cron = "0 45 * * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	public void getRealTimeCollector() {
 		try {
 			logger.info("#########################################");
-			logger.info("##### Scheduled 0 45 * * * * Start #####");
+			logger.info("##### Scheduled 0 0 * * * * Start #####");
 			logger.info("#########################################");
 			
 			List<int[]> enablePointList = villageInfoService.getEnablePoint(true);

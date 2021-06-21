@@ -6,8 +6,8 @@ spring:
     consumer:
       bootstrap-servers: 192.168.190.146:9092
       topics: dev-keti-weather
-      group-id: dev-keti-weather-consumer
-      auto-offset-reset: latest
+      group-id: dev-keti-weather-consumer-01
+      auto-offset-reset: earliest
       listener: 1
       enable-auto-commit: true
       poll-timeout: 1000

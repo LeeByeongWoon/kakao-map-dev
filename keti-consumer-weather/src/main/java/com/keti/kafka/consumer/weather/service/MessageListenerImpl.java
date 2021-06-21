@@ -4,16 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.kafka.listener.MessageListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.json.simple.parser.JSONParser;
@@ -44,17 +49,27 @@ public class MessageListenerImpl implements MessageListener<String, String> {
         try {
             List<Map<String, Object>> weatherDatas = new ArrayList<>();
 
-            Map<String, Object> recordValue = objectMapper.readValue(consumerRecord.value(), new TypeReference<Map<String, Object>>(){});
+
+            Map<String, Object> recordValue =
+                    objectMapper.readValue(consumerRecord.value(), new TypeReference<Map<String, Object>>(){});
             List<Map<String, Object>> messages = 
                     objectMapper.convertValue(recordValue.get("messages"), new TypeReference<List<Map<String, Object>>>(){});
-                    
+
 
             int messagesSize = messages.size();
             for(int cnt=0; cnt<messagesSize; cnt++) {
                 Map<String, Object> message = messages.get(cnt);
 
-                Instant timestamp = Instant.parse(message.get("timestamp").toString());
-                
+                String sdt = message.get("timestamp").toString();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+                LocalDateTime ldt = LocalDateTime.parse(sdt, formatter).minusHours(1);
+                ZonedDateTime zdt = ldt.atZone(ZoneId.of("UTC"));
+
+                String date = zdt.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                String time = zdt.format(DateTimeFormatter.ISO_LOCAL_TIME);
+
+                Instant timestamp = Instant.parse(date + "T" + time.split(":")[0] + ":00:00.000000Z");
+                // Instant timestamp = Instant.parse(message.get("timestamp").toString());
 
                 String statusCode = message.get("statusCodeValue").toString();
                 Map<String, Object> requestData = 
@@ -74,28 +89,28 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                     List<Map<String, Object>> items =
                             objectMapper.convertValue(itemsObject, new TypeReference<List<Map<String, Object>>>(){});
 
-                    List<String> keys = new ArrayList<>(requestData.keySet());
-                    int keysSize = keys.size();
-                    int itemsSize = items.size();
+                    String baseDate = items.get(0).get("baseDate").toString();
+                    String baseTime = items.get(0).get("baseTime").toString();
 
                     Map<String, Object> weatherData = new HashMap<>();
                     weatherData.put("timestamp", timestamp);
                     weatherData.put("statusCode", statusCode);
                     weatherData.put("resultCode", resultCode);
+                    weatherData.put("baseDate", baseDate);
+                    weatherData.put("baseTime", baseTime);
 
-                    for(int keysCnt=0; keysCnt<keysSize; keysCnt++) {
-                        String key = keys.get(keysCnt);
-
+                    Set<String> keys = requestData.keySet();
+                    for (String key : keys) {
                         switch (key) {
                             case "vi02Phase":
-                                String vi02Phase = requestData.get("vi02Phase").toString();
+                                String vi02Phase = requestData.get(key).toString();
                                 String chk_vi02Phase = vi02Phase != "" ? vi02Phase : "전체";
 
                                 weatherData.put(key, chk_vi02Phase);
                                 break;
                             
                             case "vi03Phase":
-                                String vi03Phase = requestData.get("vi03Phase").toString();
+                                String vi03Phase = requestData.get(key).toString();
                                 String chk_vi03Phase = vi03Phase != "" ? vi03Phase : "전체";
 
                                 weatherData.put(key, chk_vi03Phase);
@@ -107,13 +122,9 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                         }
                     }
 
-                    weatherData.put("baseDate", items.get(0).get("baseDate"));
-                    weatherData.put("baseTime", items.get(0).get("baseTime"));
-                    
-                    for(int itemsCnt=0; itemsCnt<itemsSize; itemsCnt++) {
-                        Map<String, Object> item = items.get(itemsCnt);
+                    for (Map<String, Object> item : items) {
                         String category = item.get("category").toString();
-                        
+
                         weatherData.put(category.toLowerCase() + "Value", item.get("obsrValue"));
                     }
 
