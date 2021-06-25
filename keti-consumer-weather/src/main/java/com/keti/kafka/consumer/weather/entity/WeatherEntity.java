@@ -26,6 +26,8 @@ public class WeatherEntity {
 
     @Column(name = "vi_code", tag = true)
     private String viCode;
+    @Column(name = "vi_target_id", tag = true)
+    private String viTargetId;
     @Column(name = "vi_01_phase", tag = true)
     private String vi01Phase;
     @Column(name = "vi_02_phase", tag = true)
@@ -54,9 +56,6 @@ public class WeatherEntity {
     private Double viLongitude10milliseconds;
     @Column(name = "vi_latitude_10milliseconds", tag = true)
     private Double viLatitude10milliseconds;
-    
-    @Column(name = "vi_collect_active", tag = true)
-    private Boolean viCollectActive;
 
     @Column(name = "vi_update_date", tag = true)
     private Date viUpdateDate;

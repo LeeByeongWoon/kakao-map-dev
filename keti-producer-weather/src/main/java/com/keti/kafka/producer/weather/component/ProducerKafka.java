@@ -1,7 +1,6 @@
 package com.keti.kafka.producer.weather.component;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.keti.kafka.producer.weather.service.WeatherService;
 import com.keti.kafka.producer.weather.entity.VillageInfoEntity;
@@ -28,8 +27,14 @@ import com.keti.kafka.producer.weather.service.KafkaProducerService;
 @Component
 public class ProducerKafka {
 
-	@Autowired
-	ApplicationArguments applicationArguments;
+	@Value("${spring.target-id}")
+	private int targetId;
+
+	@Value("${spring.scheduled-cron}")
+	private String scheduledCron = null;
+
+	@Value("${spring.leap-time-collector}")
+	private Boolean leapTimeCollector = null;
 
 	@Autowired
     ObjectMapper objectMapper;
@@ -45,53 +50,28 @@ public class ProducerKafka {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public static final Map<String, Boolean> _args = new HashMap<>();
 	public static final Map<String, List<VillageInfoEntity>> _pointGroupData = new HashMap<>();
 
 
 	@PostConstruct
 	public void init() {
-		logger.info("##########################");
 		logger.info("##### Initialization #####");
-		logger.info("##########################");
+		logger.info("--target-id: " + targetId);
+		logger.info("--scheduled-cron: " + scheduledCron);
+		logger.info("--leap-time-collector: " + leapTimeCollector);
 
-		setArgs();
+
 		setMappingPoint();
-		
-		Set<String> keys = _args.keySet();
-		
-		for (String key : keys) {
-			if(_args.get(key)) {
-				switch (key) {
-					case "LeapTimeCollector":
-						getLeapTimeCollector();
-						_args.put("LeapTimeCollector", false);
-						break;
-				
-					default:
-						break;
-				}
-			}
-		}
-	}
 
-
-	public void setArgs() {
-		Set<String> optionNames = applicationArguments.getOptionNames();
-
-		for (String optionName : optionNames) {
-			List<String> optionValues = applicationArguments.getOptionValues(optionName);
-
-			for (String optionValue : optionValues) {
-				Boolean convertOptionValue = Boolean.parseBoolean(optionValue);
-				_args.put(optionName, convertOptionValue);
-			}
+		if(leapTimeCollector) {
+			getLeapTimeCollector();
+			leapTimeCollector = false;
 		}
 	}
 
 
 	public void setMappingPoint() {
-		List<VillageInfoEntity> viAll = villageInfoService.getViAll();
+		List<VillageInfoEntity> viAll = villageInfoService.getAllVi();
 		List<int[]> viPointGrpCnt = villageInfoService.getViPointGrpCnt();
 
 		int viAllSize = viAll.size();
@@ -106,9 +86,11 @@ public class ProducerKafka {
 			for(int i=0; i<viPointGrpCntListSize; i++) {
 				String nx = Integer.toString(viPointGrpCnt.get(i)[0]);
 				String ny = Integer.toString(viPointGrpCnt.get(i)[1]);
+				int pointCnt = viPointGrpCnt.get(i)[2];
+
 				String key = nx + "." + ny;
 				
-				end += viPointGrpCnt.get(i)[2];
+				end += pointCnt;
 
 				List<VillageInfoEntity> pointList = new ArrayList<>();
 
@@ -117,7 +99,7 @@ public class ProducerKafka {
 				}
 				_pointGroupData.put(key, pointList);
 
-				start += viPointGrpCnt.get(i)[2];
+				start += pointCnt;
 			}
 		}
 	}
@@ -125,9 +107,7 @@ public class ProducerKafka {
 	
 	public void getLeapTimeCollector() {
 		try {
-			logger.info("[Leap system setup status - " + _args.get("LeapTimeCollector") + "]");
-			
-			List<int[]> enablePointList = villageInfoService.getEnablePoint(true);
+			List<int[]> enablePointList = villageInfoService.getViTarget(targetId);
 			List<List<JSONObject>> leapDataList = weatherService.getLeapTimeData(enablePointList);
 
 			kafkaProducerService.sendLeapTimeData(leapDataList);
@@ -140,14 +120,12 @@ public class ProducerKafka {
 	}
 
 
-	@Scheduled(cron = "0 0 * * * *")
+	@Scheduled(cron = "${spring.scheduled-cron}")
 	public void getRealTimeCollector() {
 		try {
-			logger.info("#########################################");
-			logger.info("##### Scheduled 0 0 * * * * Start #####");
-			logger.info("#########################################");
+			logger.info("##### Scheduled " + scheduledCron + " Start #####");
 			
-			List<int[]> enablePointList = villageInfoService.getEnablePoint(true);
+			List<int[]> enablePointList = villageInfoService.getViTarget(targetId);
 			List<JSONObject> weatherDataList = weatherService.getRealTimeData(enablePointList);
 
 			kafkaProducerService.sendRealTimeData(weatherDataList);

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -45,15 +44,16 @@ public class WeatherService {
 
     JSONParser parser = new JSONParser();
 
-    @Value("${spring.api.weather.url}")
+    @Value("${spring.weather-api.url}")
     private String url;
 
-    @Value("${spring.api.weather.service-key}")
+    @Value("${spring.weather-api.service-key}")
     private String serviceKey;
 
 
     public List<JSONObject> getRequestPointData(List<Map<String, Object>> queryParams) throws Exception {
         List<JSONObject> weatherDataList = new ArrayList<>();
+
 
         int queryParamsSize = queryParams.size();
         for(int cnt=0; cnt<queryParamsSize; cnt++) {

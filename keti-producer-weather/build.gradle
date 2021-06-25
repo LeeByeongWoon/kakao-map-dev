@@ -60,14 +60,22 @@ dependencies {
 
 
 //gradle build
-//gradle bootRun -Dspring.profiles.active=local -Pargs=--LeapTimeCollector=false
+//gradle bootRun -Dspring.profiles.active=local -Dspring.target-id="1" -Dspring.scheduled-cron="0 * * * * *" -Dspring.leap-time-collector="false"
 bootRun {
     String activeProfile = System.properties['spring.profiles.active']
-    systemProperty "spring.profiles.active", activeProfile
+	String targetId = System.properties['spring.target-id']
+	String scheduledCron = System.properties['spring.scheduled-cron']
+	String leapTimeCollector = System.properties['spring.leap-time-collector']	// 개발용 옵션.. 상용에서 절대 사용하지 말것
+	String serviceKey = System.properties['spring.weather-api.service-key']	
 
-	if (project.hasProperty('args')) {
-        args project.args.split(',')
-    }
+	print serviceKey
+
+    systemProperty "spring.profiles.active", activeProfile
+	systemProperty "spring.target-id", targetId
+	systemProperty "spring.scheduled-cron", scheduledCron
+	systemProperty "spring.leap-time-collector", leapTimeCollector
+	systemProperty "spring.weather-api.service-key", serviceKey
+	
 }
 
 // test {

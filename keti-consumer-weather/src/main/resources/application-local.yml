@@ -4,7 +4,7 @@ spring:
       on-profile: "local"
   kafka:
     consumer:
-      bootstrap-servers: 192.168.190.146:9092
+      bootstrap-servers: 192.168.207.2:9092
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer-01
       auto-offset-reset: earliest
@@ -16,7 +16,7 @@ spring:
       key-deserializer-class-config: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influx2: 
-    url: http://192.168.190.146:8086 # URL to connect to InfluxDB.
+    url: http://192.168.207.2:8086 # URL to connect to InfluxDB.
     username: admin # Username to use in the basic auth.
     password: qwer1234!@ # Password to use in the basic auth.
     token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
@@ -28,24 +28,6 @@ spring:
     connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
   pid:
     file: ${HOME}/gorotis11/ketiClust/keti-consumer-weather/keti-consumer-weather.pid
-
-management:
-  health:
-    influxdb2:
-      enable: true
-  metrics:
-    export:
-      influx:
-        bucket: keti
-        org: wizontech
-        token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q==
-        uri: http://192.168.190.146:8086/api/v2
-        commpressed: true
-        step: 1m
-        num-threads: 2
-        batch-size: 10000
-        read-timeout: 15s
-        connect-timeout: 30s
 
 logging:
   path:

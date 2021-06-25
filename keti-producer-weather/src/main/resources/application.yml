@@ -4,6 +4,11 @@ spring:
       on-profile: "common"
   main:
     web-application-type: none
+
+  target-id: 0
+  scheduled-cron: 0 0 0/8 * * * *
+  leap-time-collector: false
+  
   restTemplate:
     factory:
       readTimeout: 1000
@@ -20,12 +25,9 @@ spring:
       ddl-auto: update
     generate-ddl: false
     show-sql: true
-  api:
-    weather:
-      url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst
-      # service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
-      service-key: nkrMhfspfYjvNTfgACykGqom2kLmq5zeNHa1VI1kDgT4xgZQ7M4UxQ5rub9RCQL%2BpvW0%2BQFDRncdJ5WLLUb4gA%3D%3D
-      request-interval: 6
+  weather-api:
+    url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst
+    service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
 
 info:
   app:

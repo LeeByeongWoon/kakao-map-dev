@@ -18,7 +18,10 @@ public interface VillageInfoRepository extends JpaRepository<VillageInfoEntity, 
     @Query(value = "SELECT vi_nx, vi_ny, COUNT(vi_code) AS vi_nxy_cnt FROM Village_Info GROUP BY vi_nx, vi_ny ORDER BY vi_nx, vi_ny", nativeQuery = true)
     public List<int[]> findByViPointGrpCnt();
 
-    @Query(value = "SELECT DISTINCT vi_nx, vi_ny FROM Village_Info WHERE vi_collect_active=?1", nativeQuery = true)
-    public List<int[]> findByViActivePoint(Boolean viCollectActive);
+    @Query(value = "SELECT DISTINCT vi_nx, vi_ny FROM Village_Info WHERE vi_target_id=?1", nativeQuery = true)
+    public List<int[]> findByViTarget(int targetId);
+
+    @Query(value = "SELECT DISTINCT vi_nx, vi_ny FROM Village_Info", nativeQuery = true)
+    public List<int[]> findByAllViTarget();
 
 }

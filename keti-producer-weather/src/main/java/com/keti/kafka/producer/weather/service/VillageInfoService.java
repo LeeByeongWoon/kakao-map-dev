@@ -17,7 +17,7 @@ public class VillageInfoService {
     private VillageInfoRepository villageInfoRepository;
 
 
-    public List<VillageInfoEntity> getViAll() {
+    public List<VillageInfoEntity> getAllVi() {
         List<VillageInfoEntity> viAll = villageInfoRepository.findByAll();
 
         return viAll;
@@ -29,16 +29,19 @@ public class VillageInfoService {
         ViPointGrpCnt = villageInfoRepository.findByViPointGrpCnt();
 
         return ViPointGrpCnt;
-        
     }
 
 
-    public List<int[]> getEnablePoint(Boolean active) {
+    public List<int[]> getViTarget(int targetId) {
         List<int[]> enablePointList = new ArrayList<>();
-        enablePointList = villageInfoRepository.findByViActivePoint(active);
 
-        return enablePointList;
+        if(targetId != -1) {
+            enablePointList = villageInfoRepository.findByViTarget(targetId);
+        } else {
+            enablePointList = villageInfoRepository.findByAllViTarget();
+        }
         
+        return enablePointList;
     }
     
 }
