@@ -61,15 +61,25 @@ dependencies {
 //gradle build
 //gradle bootRun -Dspring.profiles.active=local -Dspring.target-ids="1,2,3" -Dspring.scheduled-cron="0 * * * * *" -Dspring.leap-time-collector="false"
 bootRun {
-    String activeProfile = System.properties['spring.profiles.active']
-	String targetIds = System.properties['spring.target-ids']
-	String scheduledCron = System.properties['spring.scheduled-cron']
-	String leapTimeCollector = System.properties['spring.leap-time-collector']	// 개발용 옵션.. 상용에서 절대 사용하지 말것
+    String activeProfile = System.properties['active']
+	String targetIds = System.properties['target-ids']
+	String scrapInterval = System.properties['scrap-interval']
+	String scheduledCron = "0 0 * * * *"
+	String leapTimeCollector = System.properties['leap-time-collector']	// 개발용 옵션.. 상용에서 절대 사용하지 말것
+
+	if(scrapInterval == "1") {
+		scheduledCron = "0 0 * * * *"
+	} else if(scrapInterval == "24") {
+		scheduledCron = "0 0 0 * * *"
+	} else {
+		scheduledCron = "0 0 0/" + scrapInterval + " * * *"
+	}
 
     systemProperty "spring.profiles.active", activeProfile
-	systemProperty "spring.target-ids", targetIds
-	systemProperty "spring.scheduled-cron", scheduledCron
-	systemProperty "spring.leap-time-collector", leapTimeCollector
+	systemProperty "spring.weatherApi.target-ids", targetIds
+	systemProperty "spring.weatherApi.scrap-interval", scrapInterval
+	systemProperty "spring.weatherApi.scheduled-cron", scheduledCron
+	systemProperty "spring.weatherApi.leap-time-collector", leapTimeCollector
 	
 }
 

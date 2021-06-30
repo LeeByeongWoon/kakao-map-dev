@@ -1,0 +1,922 @@
+2021-06-30 15:59:15 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 11594 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 15:59:15 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 15:59:15 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 15:59:16 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 77 ms. Found 1 JPA repository interfaces.
+2021-06-30 15:59:16 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 15:59:16 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 15:59:16 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 15:59:17 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 15:59:17 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 15:59:17 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 15:59:17 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 15:59:17 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 15:59:18 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 15:59:18 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 15:59:18 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 15:59:18 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 15:59:18 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 15:59:18 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 15:59:18 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:18)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 15:59:43 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 11758 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 15:59:43 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 15:59:44 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 15:59:44 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 81 ms. Found 1 JPA repository interfaces.
+2021-06-30 15:59:44 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 15:59:44 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 15:59:45 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 15:59:45 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 15:59:45 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 15:59:45 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 15:59:46 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 15:59:46 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 15:59:46 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 15:59:46 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 15:59:46 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 15:59:46 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 15:59:46 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 15:59:46 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 15:59:46 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:18)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:00:52 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 11949 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:00:52 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:00:53 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:00:53 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 57 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:00:53 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:00:54 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:00:54 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:00:54 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:00:54 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:00:54 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:00:55 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:00:55 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:00:55 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:00:55 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:00:55 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:00:55 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:00:55 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:00:55 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:00:55 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:18)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:03:00 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12177 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:03:00 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:03:01 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:03:01 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 57 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:03:01 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:03:01 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:03:02 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:03:02 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:03:02 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:03:02 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:03:03 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:03:03 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:03:03 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:03:03 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:03:03 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:03:03 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:03:03 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:03:03 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:03:03 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:21)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:03:20 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12233 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:03:20 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:03:20 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:03:20 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 60 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:03:21 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:03:21 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:03:21 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:03:21 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:03:21 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:03:21 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:03:22 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:03:22 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:03:23 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:03:23 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:03:23 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:03:23 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:03:23 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:07:15 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12521 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:07:15 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:07:16 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:07:16 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 63 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:07:16 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:07:17 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:07:17 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:07:17 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:07:17 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:07:17 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:07:18 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:07:18 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:07:18 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:07:18 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:07:18 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:07:18 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:07:18 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:07:18 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:07:18 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:08:13 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12594 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:08:13 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:08:13 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:08:13 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 56 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:08:14 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:08:14 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:08:14 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:08:14 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:08:14 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:08:14 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:08:15 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:08:15 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:08:16 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:08:16 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:08:16 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:08:16 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:08:16 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:08:16 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:08:16 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:08:34 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12746 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:08:34 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:08:35 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:08:35 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 63 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:08:35 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:08:35 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:08:36 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:08:36 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:08:36 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:08:36 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:08:37 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:08:37 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:08:37 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:08:37 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:08:37 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:08:37 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:08:37 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:08:37 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:08:37 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:09:25 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 12824 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:09:25 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:09:25 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:09:25 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 55 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:09:26 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:09:26 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:09:26 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:09:26 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:09:26 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:09:26 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:09:27 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:09:27 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:09:27 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:09:28 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:09:28 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:09:28 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:09:28 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:09:28 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:09:28 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:17:43 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13051 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:17:43 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:17:44 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:17:44 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 66 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:17:44 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:17:44 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:17:45 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:17:45 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:17:45 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:17:45 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:17:46 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:17:46 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:17:46 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:17:47 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:17:47 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:17:47 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:17:47 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:17:47 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:17:47 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:17:57 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13120 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:17:57 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:17:58 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:17:58 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 64 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:17:59 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:17:59 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:17:59 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:17:59 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:17:59 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:17:59 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:18:00 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:18:00 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:18:01 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:18:01 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:18:01 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:18:01 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:18:01 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:18:01 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:18:01 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:18:54 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13198 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:18:54 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:18:55 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:18:55 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 74 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:18:56 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:18:56 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:18:56 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:18:56 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:18:57 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:18:57 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:18:57 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:18:57 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:18:58 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:18:58 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:18:58 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:18:58 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:18:58 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:18:58 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:18:58 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:19:42 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13389 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:19:42 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:19:43 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:19:43 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 69 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:19:43 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:19:44 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:19:44 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:19:44 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:19:44 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:19:44 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:19:45 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:19:45 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:19:45 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:19:45 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:19:45 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:19:45 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:19:45 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:19:45 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:19:46 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:32)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:20:01 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13463 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:20:01 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:20:01 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:20:02 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 58 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:20:02 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:20:02 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:20:02 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:20:02 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:20:03 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:20:03 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:20:03 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:20:03 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:20:04 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:20:04 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:20:04 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:20:04 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:20:04 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:20:04 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:20:04 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:32)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:20:23 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13622 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:20:23 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:20:23 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:20:23 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 61 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:20:24 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:20:24 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:20:24 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:20:24 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:20:24 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:20:24 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:20:25 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:20:25 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:20:25 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:20:25 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:20:25 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:20:25 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:20:26 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:20:26 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:20:26 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:20:26 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:20:26 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:20:26 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:20:26 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:20:26 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:33)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted
+2021-06-30 16:21:41 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 13801 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-06-30 16:21:41 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-06-30 16:21:42 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-06-30 16:21:42 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 62 ms. Found 1 JPA repository interfaces.
+2021-06-30 16:21:43 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-06-30 16:21:43 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-06-30 16:21:43 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-06-30 16:21:43 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-06-30 16:21:43 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-06-30 16:21:43 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-06-30 16:21:44 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-06-30 16:21:44 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:62] - ##### --target-id: 1,2
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 6
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/6 * * * *
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: false
+2021-06-30 16:21:44 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-06-30 16:21:45 [WARN ] [main] [AnnotationConfigApplicationContext:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+2021-06-30 16:21:45 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-06-30 16:21:45 [INFO ] [main] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-06-30 16:21:45 [INFO ] [main] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-06-30 16:21:45 [INFO ] [main] [ConditionEvaluationReportLoggingListener:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-06-30 16:21:45 [ERROR] [main] [SpringApplication:860] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'producerKafka' defined in URL [jar:file:/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/libs/keti-weather-collector-0.0.1-SNAPSHOT.jar!/BOOT-INF/classes!/com/keti/weather/collector/component/ProducerKafka.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:610)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:524)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:944)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:771)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:763)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:438)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:339)
+	at com.keti.weather.collector.KetiWeatherCollector.main(KetiWeatherCollector.java:33)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'getRealTimeCollector': Cron expression must consist of 6 fields (found 7 in "0 0 0/6 * * * *")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:511)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$null$1(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.lambda$postProcessAfterInitialization$2(ScheduledAnnotationBeanPostProcessor.java:374)
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:684)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:373)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:437)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1790)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602)
+	... 21 common frames omitted

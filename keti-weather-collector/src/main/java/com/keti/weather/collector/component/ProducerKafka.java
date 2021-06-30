@@ -27,13 +27,16 @@ import com.keti.weather.collector.service.KafkaProducerService;
 @Component
 public class ProducerKafka {
 
-	@Value("${spring.target-ids}")
+	@Value("${spring.weatherApi.target-ids}")
 	private String targetIds;
 
-	@Value("${spring.scheduled-cron}")
+	@Value("${spring.weatherApi.scrap-interval}")
+	private String scrapInterval = null;
+
+	@Value("${spring.weatherApi.scheduled-cron}")
 	private String scheduledCron = null;
 
-	@Value("${spring.leap-time-collector}")
+	@Value("${spring.weatherApi.leap-time-collector}")
 	private Boolean leapTimeCollector = null;
 
 	@Autowired
@@ -55,10 +58,12 @@ public class ProducerKafka {
 
 	@PostConstruct
 	public void init() {
-		logger.info("##### Initialization #####");
-		logger.info("--target-id: " + targetIds);
-		logger.info("--scheduled-cron: " + scheduledCron);
-		logger.info("--leap-time-collector: " + leapTimeCollector);
+		logger.info("################## Initialization ##################");
+		logger.info("##### --target-id: " + targetIds);
+		logger.info("##### --scrap-interval: " + scrapInterval);
+		logger.info("##### --scheduled-cron: " + scheduledCron);
+		logger.info("##### --leap-time-collector: " + leapTimeCollector);
+		logger.info("####################################################");
 
 
 		setMappingPoint();
@@ -107,8 +112,8 @@ public class ProducerKafka {
 	
 	public void getLeapTimeCollector() {
 		try {
-			List<int[]> enablePointList = villageInfoService.getViTarget(targetIds);
-			List<List<JSONObject>> leapDataList = weatherService.getLeapTimeData(enablePointList);
+			List<int[]> points = villageInfoService.getPoints(targetIds);
+			List<List<JSONObject>> leapDataList = weatherService.getLeapTimeData(points);
 
 			kafkaProducerService.sendLeapTimeData(leapDataList);
 
@@ -120,12 +125,12 @@ public class ProducerKafka {
 	}
 
 
-	@Scheduled(cron = "${spring.scheduled-cron}")
+	@Scheduled(cron = "${spring.weatherApi.scheduled-cron}")
 	public void getRealTimeCollector() {
 		try {
 			logger.info("##### Scheduled " + scheduledCron + " Start #####");
 			
-			List<int[]> points = villageInfoService.getViTarget(targetIds);
+			List<int[]> points = villageInfoService.getPoints(targetIds);
 			List<JSONObject> weatherDatas = weatherService.getRealTimeData(points);
 
 			kafkaProducerService.sendRealTimeData(weatherDatas);

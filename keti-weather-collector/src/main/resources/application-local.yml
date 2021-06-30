@@ -23,11 +23,10 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       compresstion-type: lz4
-  pid:
-    file: ${HOME}/gorotis11/ketiClust/keti-producer-weather/keti-producer-weather.pid
+      
 logging:
   path:
-    dir: ${HOME}/gorotis11/ketiClust/keti-producer-weather/logs
-    file: keti-producer-weather
+    dir: ${HOME}/gorotis11/ketiClust/keti-weather-collector/logs
+    file: keti-weather-collector
   level:
     root: info

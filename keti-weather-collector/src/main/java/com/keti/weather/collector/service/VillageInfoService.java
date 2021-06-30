@@ -33,7 +33,7 @@ public class VillageInfoService {
     }
 
 
-    public List<int[]> getViTarget(String targetIds) {
+    public List<int[]> getPoints(String targetIds) {
         List<int[]> points = new ArrayList<>();
 
         int[] convertTargetIds = Arrays

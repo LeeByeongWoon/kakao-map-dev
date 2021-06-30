@@ -4,11 +4,6 @@ spring:
       on-profile: "common"
   main:
     web-application-type: none
-
-  target-ids: 1,2
-  scheduled-cron: 0 0 0/8 * * * *
-  leap-time-collector: false
-  
   restTemplate:
     factory:
       readTimeout: 1000
@@ -27,14 +22,19 @@ spring:
     show-sql: true
   weatherApi:
     url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst
-    # service-key: nkrMhfspfYjvNTfgACykGqom2kLmq5zeNHa1VI1kDgT4xgZQ7M4UxQ5rub9RCQL%2BpvW0%2BQFDRncdJ5WLLUb4gA%3D%3D
     service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
+    target-ids: 1,2
+    scrap-interval: 6
+    scheduled-cron: 0 0 0/6 * * * *
+    leap-time-collector: false
+  pid:
+    file: ./keti-weather-collector.pid
 
 info:
   app:
-    name: keti-producer-weather
+    name: keti-weather-collector
     version: 0.0.1-SNAPSHOT
-    description: kafka producer
+    description: weather collector
 
 ---
 
