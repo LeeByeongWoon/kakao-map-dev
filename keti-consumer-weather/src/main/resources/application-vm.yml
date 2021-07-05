@@ -26,8 +26,6 @@ spring:
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
-  pid:
-    file: /app/keti-consumer-weather/keti-consumer-weather.pid
     
 logging:
   path:

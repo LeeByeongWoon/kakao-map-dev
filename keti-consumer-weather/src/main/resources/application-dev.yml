@@ -7,7 +7,7 @@ spring:
       bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer-04
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       listener: 3
       enable-auto-commit: true
       poll-timeout: 1000
@@ -26,8 +26,6 @@ spring:
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
-  pid:
-    file: /app/keti-consumer-weather/keti-consumer-weather.pid
     
 logging:
   path:

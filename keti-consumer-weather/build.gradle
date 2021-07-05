@@ -53,8 +53,8 @@ dependencies {
 }
 
 bootRun {
-    String activeProfile = System.properties['spring.profiles.active']
-    systemProperty "spring.profiles.active", activeProfile
+    String active = System.properties['active']
+    systemProperty "spring.profiles.active", active
 }
 
 // test {

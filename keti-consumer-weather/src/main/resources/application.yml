@@ -4,6 +4,8 @@ spring:
       on-profile: "common"
   main:
     web-application-type: none
+  pid:
+    file: ./keti-consumer-weather.pid
 
 info:
   app:

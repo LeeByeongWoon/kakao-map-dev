@@ -59,7 +59,7 @@ public class ProducerKafka {
 	@PostConstruct
 	public void init() {
 		logger.info("################## Initialization ##################");
-		logger.info("##### --target-id: " + targetIds);
+		logger.info("##### --target-ids: " + targetIds);
 		logger.info("##### --scrap-interval: " + scrapInterval);
 		logger.info("##### --scheduled-cron: " + scheduledCron);
 		logger.info("##### --leap-time-collector: " + leapTimeCollector);
@@ -112,6 +112,7 @@ public class ProducerKafka {
 	
 	public void getLeapTimeCollector() {
 		try {
+			logger.info("targetIds: " + targetIds);
 			List<int[]> points = villageInfoService.getPoints(targetIds);
 			List<List<JSONObject>> leapDataList = weatherService.getLeapTimeData(points);
 
