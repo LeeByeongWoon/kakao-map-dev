@@ -1,0 +1,426 @@
+2021-07-06 17:41:38 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 17541 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/classes/java/main started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-07-06 17:41:38 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-07-06 17:41:38 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-06 17:41:38 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 43 ms. Found 1 JPA repository interfaces.
+2021-07-06 17:41:39 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-07-06 17:41:39 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-07-06 17:41:39 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-07-06 17:41:39 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-07-06 17:41:39 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-07-06 17:41:39 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-07-06 17:41:40 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-07-06 17:41:40 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:62] - ##### --target-ids: 50
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 3
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/3 * * *
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: true
+2021-07-06 17:41:40 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-07-06 17:41:41 [INFO ] [main] [ProducerKafka:115] - targetIds: 50
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T18:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T19:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T20:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T21:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T22:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-05T23:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-06T00:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-06T01:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:41 [INFO ] [main] [WeatherService:94] - 2021-07-06T02:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T03:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T04:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T05:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T06:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T07:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T08:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T09:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T10:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T11:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T12:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T13:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T14:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T15:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [WeatherService:94] - 2021-07-06T16:41:41.306519Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:41:42 [INFO ] [main] [ProducerConfig:354] - ProducerConfig values: 
+	acks = -1
+	batch.size = 16384
+	bootstrap.servers = [192.168.207.2:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = lz4
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	internal.auto.downgrade.txn.commit = true
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 1
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2021-07-06 17:41:42 [INFO ] [main] [AppInfoParser:117] - Kafka version: 2.6.2
+2021-07-06 17:41:42 [INFO ] [main] [AppInfoParser:118] - Kafka commitId: da65af02e5856e34
+2021-07-06 17:41:42 [INFO ] [main] [AppInfoParser:119] - Kafka startTimeMs: 1625560902751
+2021-07-06 17:41:42 [INFO ] [kafka-producer-network-thread | producer-1] [Metadata:279] - [Producer clientId=producer-1] Cluster ID: J2a3v9KsTPei7n2LI4hssw
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=0]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=1]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=2]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=3]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=4]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=5]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=6]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=7]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=8]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=9]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=10]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=11]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=12]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=13]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=14]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=15]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=16]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=17]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=18]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=19]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=20]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=21]
+2021-07-06 17:41:43 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=22]
+2021-07-06 17:41:43 [INFO ] [main] [KetiWeatherCollector:61] - Started KetiWeatherCollector in 5.666 seconds (JVM running for 6.062)
+2021-07-06 17:42:15 [INFO ] [SpringContextShutdownHook] [KafkaProducer:1189] - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+2021-07-06 17:42:15 [INFO ] [SpringContextShutdownHook] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:42:15 [INFO ] [SpringContextShutdownHook] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-07-06 17:42:15 [INFO ] [SpringContextShutdownHook] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-07-06 17:42:18 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 17683 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/classes/java/main started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-07-06 17:42:18 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-07-06 17:42:19 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-06 17:42:19 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 35 ms. Found 1 JPA repository interfaces.
+2021-07-06 17:42:19 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-07-06 17:42:19 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-07-06 17:42:19 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-07-06 17:42:19 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-07-06 17:42:19 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-07-06 17:42:19 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-07-06 17:42:20 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-07-06 17:42:20 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:62] - ##### --target-ids: 50
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 3
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/3 * * *
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: true
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-07-06 17:42:20 [INFO ] [main] [ProducerKafka:115] - targetIds: 50
+2021-07-06 17:42:20 [INFO ] [main] [WeatherService:94] - 2021-07-05T18:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-05T19:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-05T20:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-05T21:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-05T22:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-05T23:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-06T00:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-06T01:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-06T02:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-06T03:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:21 [INFO ] [main] [WeatherService:94] - 2021-07-06T04:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T05:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T06:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T07:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T08:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T09:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T10:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T11:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T12:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T13:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T14:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T15:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [WeatherService:94] - 2021-07-06T16:42:20.814671Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:22 [INFO ] [main] [ProducerConfig:354] - ProducerConfig values: 
+	acks = -1
+	batch.size = 16384
+	bootstrap.servers = [192.168.207.2:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = lz4
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	internal.auto.downgrade.txn.commit = true
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 1
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2021-07-06 17:42:22 [INFO ] [main] [AppInfoParser:117] - Kafka version: 2.6.2
+2021-07-06 17:42:22 [INFO ] [main] [AppInfoParser:118] - Kafka commitId: da65af02e5856e34
+2021-07-06 17:42:22 [INFO ] [main] [AppInfoParser:119] - Kafka startTimeMs: 1625560942666
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [Metadata:279] - [Producer clientId=producer-1] Cluster ID: J2a3v9KsTPei7n2LI4hssw
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=23]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=24]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=25]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=26]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=27]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=28]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=29]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=30]
+2021-07-06 17:42:22 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=31]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=32]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=33]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=34]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=35]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=36]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=37]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=38]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=39]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=40]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=41]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=42]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=43]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=44]
+2021-07-06 17:42:23 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=45]
+2021-07-06 17:42:23 [INFO ] [main] [KetiWeatherCollector:61] - Started KetiWeatherCollector in 5.071 seconds (JVM running for 5.448)
+2021-07-06 17:42:31 [INFO ] [SpringContextShutdownHook] [KafkaProducer:1189] - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+2021-07-06 17:42:31 [INFO ] [SpringContextShutdownHook] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:42:31 [INFO ] [SpringContextShutdownHook] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-07-06 17:42:31 [INFO ] [SpringContextShutdownHook] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
+2021-07-06 17:42:34 [INFO ] [main] [KetiWeatherCollector:55] - Starting KetiWeatherCollector using Java 11.0.11 on gangbinpark-2.local with PID 17786 (/Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector/build/classes/java/main started by gangbinpark in /Users/gangbinpark/gorotis11/ketiClust/keti-weather-collector)
+2021-07-06 17:42:34 [INFO ] [main] [KetiWeatherCollector:668] - The following profiles are active: local,common
+2021-07-06 17:42:34 [INFO ] [main] [RepositoryConfigurationDelegate:128] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-07-06 17:42:34 [INFO ] [main] [RepositoryConfigurationDelegate:188] - Finished Spring Data repository scanning in 33 ms. Found 1 JPA repository interfaces.
+2021-07-06 17:42:34 [INFO ] [main] [LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-07-06 17:42:34 [INFO ] [main] [Version:44] - HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-07-06 17:42:35 [INFO ] [main] [Version:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-07-06 17:42:35 [INFO ] [main] [HikariDataSource:110] - HikariPool-1 - Starting...
+2021-07-06 17:42:35 [INFO ] [main] [HikariDataSource:123] - HikariPool-1 - Start completed.
+2021-07-06 17:42:35 [INFO ] [main] [Dialect:175] - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2021-07-06 17:42:35 [INFO ] [main] [JtaPlatformInitiator:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-07-06 17:42:35 [INFO ] [main] [LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:61] - ################## Initialization ##################
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:62] - ##### --target-ids: 50
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:63] - ##### --scrap-interval: 3
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:64] - ##### --scheduled-cron: 0 0 0/3 * * *
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:65] - ##### --leap-time-collector: true
+2021-07-06 17:42:35 [INFO ] [main] [ProducerKafka:66] - ####################################################
+2021-07-06 17:42:36 [INFO ] [main] [ProducerKafka:115] - targetIds: 50
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T18:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T19:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T20:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T21:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T22:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-05T23:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-06T00:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-06T01:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-06T02:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:36 [INFO ] [main] [WeatherService:94] - 2021-07-06T03:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T04:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T05:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T06:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T07:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T08:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T09:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T10:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T11:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T12:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T13:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T14:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T15:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [WeatherService:94] - 2021-07-06T16:42:36.083598Z - [Collect(1/1) | HttpStatusCode=200]
+2021-07-06 17:42:37 [INFO ] [main] [ProducerConfig:354] - ProducerConfig values: 
+	acks = -1
+	batch.size = 16384
+	bootstrap.servers = [192.168.207.2:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = lz4
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	internal.auto.downgrade.txn.commit = true
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 1
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2021-07-06 17:42:37 [INFO ] [main] [AppInfoParser:117] - Kafka version: 2.6.2
+2021-07-06 17:42:37 [INFO ] [main] [AppInfoParser:118] - Kafka commitId: da65af02e5856e34
+2021-07-06 17:42:37 [INFO ] [main] [AppInfoParser:119] - Kafka startTimeMs: 1625560957979
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [Metadata:279] - [Producer clientId=producer-1] Cluster ID: J2a3v9KsTPei7n2LI4hssw
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=46]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=47]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=48]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=49]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=50]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=51]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=52]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=53]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=54]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=55]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=56]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=57]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=58]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=59]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=60]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=61]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=62]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=63]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=64]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=65]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=66]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=67]
+2021-07-06 17:42:38 [INFO ] [kafka-producer-network-thread | producer-1] [KafkaProducerService:46] - [onSuccess(1/1) | offset=68]
+2021-07-06 17:42:38 [INFO ] [main] [KetiWeatherCollector:61] - Started KetiWeatherCollector in 5.031 seconds (JVM running for 5.366)
+2021-07-06 17:42:42 [INFO ] [SpringContextShutdownHook] [KafkaProducer:1189] - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 30000 ms.
+2021-07-06 17:42:42 [INFO ] [SpringContextShutdownHook] [LocalContainerEntityManagerFactoryBean:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-07-06 17:42:42 [INFO ] [SpringContextShutdownHook] [HikariDataSource:350] - HikariPool-1 - Shutdown initiated...
+2021-07-06 17:42:42 [INFO ] [SpringContextShutdownHook] [HikariDataSource:352] - HikariPool-1 - Shutdown completed.
