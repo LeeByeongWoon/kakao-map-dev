@@ -64,7 +64,7 @@ env = {
 props = {}
 
 
-def send_messages(messages):
+def send_messages(yfi_datas):
     kafka = env[props["env"]]["kafka"]
 
     producer = KafkaProducer(
@@ -73,8 +73,10 @@ def send_messages(messages):
                 bootstrap_servers=kafka["bootstrap_servers"],
                 value_serializer= kafka["serializer"]
            )
-    producer.send("dev-keti-finance", value=messages)
-    producer.flush()
+
+    for yfi_data in yfi_datas:
+        producer.send("dev-keti-finance", value={"messages": yfi_data})
+        producer.flush()
 
 
 def yfinance_data(yfi_params):
@@ -105,37 +107,31 @@ def yfinance_data(yfi_params):
     df_datas = pdr.get_data_yahoo(tickers, start_date, end_date, interval=interval, group_by=group_by)
 
     dict_datas = df_datas.to_dict()
-
     datas_keys = dict_datas.keys()
-    for datas_key in datas_keys:
-        yfi_data = {}
-
-        ticker = datas_key[0]
-        type = datas_key[1]
-
-        for cnt in range(0, len(tickers)):
-            if ticker == tickers[cnt]:
-                yfi_data["exchange"] = exchanges[cnt]
-                yfi_data["industry"] = industries[cnt]
-                yfi_data["company"] = companies[cnt]
-                yfi_data["ticker"] = ticker
-                yfi_data["type"] = type
-                yfi_data["items"] = []
-                
-
-        dict_data = dict_datas[datas_key]
-        data_keys = dict_data.keys()
-
-        for data_key in data_keys:
-            items = {
-                "timestamp": data_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                "value": dict_data[data_key]
+    for cnt in range(0, len(tickers)):
+        yfi_data = {
+            tickers[cnt]: {
+                "exchange": exchanges[cnt],
+                "industry": industries[cnt],
+                "company": companies[cnt],
+                "ticker": tickers[cnt]
             }
-            yfi_data["items"].append(items)
+        }
 
-        
+        for datas_key in datas_keys:
+            ticker = datas_key[0]
+            type = datas_key[1]
+            if tickers[cnt] == ticker:
+                dict_data = dict_datas[datas_key]
+                data_keys = dict_data.keys()
+                yfi_data[tickers[cnt]][type] = list(
+                    {
+                        "timestamp": data_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                        "key": type,
+                        "value": dict_data[data_key]
+                    } for data_key in data_keys)
+
         yfi_datas.append(yfi_data)
-
 
     return yfi_datas
 
@@ -216,7 +212,7 @@ def yfinance_collector():
     yfi_params = yfinance_params(yfi_infos)
     yfi_datas = yfinance_data(yfi_params)
 
-    send_messages({"messages": yfi_datas})
+    send_messages(yfi_datas)
 
 
 def yfinance_init():
