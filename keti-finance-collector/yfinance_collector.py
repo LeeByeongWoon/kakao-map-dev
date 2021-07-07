@@ -1,38 +1,83 @@
 #!/usr/bin/python3
 
-from json import dumps
-from datetime import datetime, timezone, timedelta
+import argparse
+
+import time
 import pytz
+from datetime import datetime, timezone, timedelta
 
 import pymysql
-
 import yfinance as yf
-from pandas_datareader import data as pdr
-
 from kafka import KafkaProducer
 
-
-username="keti"
-password="qwer1234!@"
-hostname="192.168.207.2"
-database="keti"
-charset="utf8"
-
-acks=-1
-compression_type="lz4"
-bootstrap_servers=["192.168.207.2:9092"]
+from json import dumps
+from pandas_datareader import data as pdr
 
 
-def send_messages(producer, messages):
+env = {
+    "local": {
+        "mariadb": {
+            "username": "keti",
+            "password": "qwer1234!@",
+            "hostname": "192.168.207.2",
+            "database": "keti",
+            "charset": "utf8"
+        },
+        "kafka": {
+            "acks": -1,
+            "compression_type": "lz4",
+            "bootstrap_servers": ["192.168.207.2:9092"],
+            "serializer": lambda x: dumps(x).encode('utf-8')
+        }
+    },
+    "dev": {
+        "mariadb": {
+            "username": "keti",
+            "password": "qwer1234!@",
+            "hostname": "192.168.100.41",
+            "database": "keti",
+            "charset": "utf8"
+        },
+        "kafka": {
+            "acks": -1,
+            "compression_type": "lz4",
+            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
+            "serializer": lambda x: dumps(x).encode('utf-8')
+        }
+    },
+    "prod": {
+        "mariadb": {
+            "username": "keti",
+            "password": "qwer1234!@",
+            "hostname": "192.168.100.41",
+            "database": "keti",
+            "charset": "utf8"
+        },
+        "kafka": {
+            "acks": -1,
+            "compression_type": "lz4",
+            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
+            "serializer": lambda x: dumps(x).encode('utf-8')
+        }
+    }
+}
+props = {}
+
+
+def send_messages(messages):
+    kafka = env[props["env"]]["kafka"]
+
+    producer = KafkaProducer(
+                acks=kafka["acks"],
+                compression_type=kafka["compression_type"],
+                bootstrap_servers=kafka["bootstrap_servers"],
+                value_serializer= kafka["serializer"]
+           )
     producer.send("dev-keti-finance", value=messages)
     producer.flush()
 
 
-def producer_conn():
-    return KafkaProducer(acks=acks, compression_type=compression_type, bootstrap_servers=bootstrap_servers, value_serializer=lambda x: dumps(x).encode('utf-8'))
-
-
-def yfinance_data(yfi_param):
+def yfinance_data(yfi_params):
     # 애플, 마이크로소프트, 아마존, 알파벳C, 알파벳A, 페이스북, 테슬라
     # dow = pdr.get_data_yahoo("AAPL MSFT AMZN GOOG GOOGL FB TSLA", start_date, end_date)
     # 애플, 마이크로소프트, 아마존, 알파벳C, 알파벳A, 페이스북, 테슬라
@@ -48,137 +93,149 @@ def yfinance_data(yfi_param):
 
     yf.pdr_override()
 
-    tickers = yfi_param["tickers"]
-    start_date = yfi_param["start_date"]
-    end_date = yfi_param["end_date"]
-    interval = yfi_param["interval"]
-    group_by = yfi_param["group_by"]
+    exchanges = yfi_params["exchanges"]
+    industries = yfi_params["industries"]
+    companies = yfi_params["companies"]
+    tickers = yfi_params["tickers"]
+    start_date = yfi_params["start_date"]
+    end_date = yfi_params["end_date"]
+    interval = yfi_params["interval"]
+    group_by = yfi_params["group_by"]
 
     df_datas = pdr.get_data_yahoo(tickers, start_date, end_date, interval=interval, group_by=group_by)
-    
+
     dict_datas = df_datas.to_dict()
 
     datas_keys = dict_datas.keys()
     for datas_key in datas_keys:
-        dict_ticker = datas_key[0]
-        dict_type = datas_key[1]
+        yfi_data = {}
+
+        ticker = datas_key[0]
+        type = datas_key[1]
+
+        for cnt in range(0, len(tickers)):
+            if ticker == tickers[cnt]:
+                yfi_data["exchange"] = exchanges[cnt]
+                yfi_data["industry"] = industries[cnt]
+                yfi_data["company"] = companies[cnt]
+                yfi_data["ticker"] = ticker
+                yfi_data["type"] = type
+                yfi_data["items"] = []
+                
 
         dict_data = dict_datas[datas_key]
-
         data_keys = dict_data.keys()
+
         for data_key in data_keys:
-            yfi_data = {
-                "ticker": dict_ticker,
-                "type": dict_type,
+            items = {
                 "timestamp": data_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "value": dict_data[data_key]
-
             }
+            yfi_data["items"].append(items)
 
-            yfi_datas.append(yfi_data)
+        
+        yfi_datas.append(yfi_data)
+
 
     return yfi_datas
 
 
-def yfinance_param(yfi_infos):
+def yfinance_params(yfi_infos):
+    yfi_params = {}
+
     day = timedelta(days=1)
     yes = datetime.now() - day
     now = datetime.now()
-    
+
     start_date = yes.strftime('%Y-%m-%d')
     end_date = now.strftime('%Y-%m-%d')
+    interval = "1h"
+    group_by = "ticker"
 
-    yfi_param = {
-        "KOSPI": {
-            "tickers": yfi_infos["KOSPI"]["value"],
-            "start_date": start_date,
-            "end_date": end_date,
-            "interval": "1h",
-            "group_by": "ticker"
-        },
-        "KOSDAQ": {
-            "tickers": yfi_infos["KOSDAQ"]["value"],
-            "start_date": start_date,
-            "end_date": end_date,
-            "interval": "1h",
-            "group_by": "ticker"
-        }
+    yfi_params = {
+        "exchanges": yfi_infos["yfi_exchange"],
+        "industries": yfi_infos["yfi_industry"],
+        "companies": yfi_infos["yfi_company"],
+        "tickers": yfi_infos["yfi_ticker"],
+        "start_date": start_date,
+        "end_date": end_date,
+        "interval": interval,
+        "group_by": group_by
     }
 
-    return yfi_param
+    return yfi_params
 
 
-def yfinance_info(conn):
+def yfinance_infos(conn):
     yfi_infos = {
-        "KOSPI": {
-            "key": [],
-            "value": []
-        },
-        "KOSDAQ": {
-            "key": [],
-            "value": []
-        }
+        "yfi_exchange": [],
+        "yfi_industry": [],
+        "yfi_company": [],
+        "yfi_ticker": []
     }
 
     cur = conn.cursor()
-    # cur.execute(
-    #     "SELECT yfi_exchange, yfi_industry, yfi_company, yfi_ticker" + " " +
-    #     "FROM yfinance_info" + " " +
-    #     "ORDER BY yfi_industry"
-    # )
     cur.execute(
         "SELECT yfi_exchange, yfi_industry, yfi_company, yfi_ticker" + " " +
         "FROM yfinance_info" + " " +
-        "WHERE yfi_company IN('삼성전자', 'SK하이닉스', '셀트리온헬스케어', '에이비프로바이오')" + " " +
-        "ORDER BY yfi_industry"
+        "WHERE yfi_country='" + props["country"] + "' " +
+        "AND yfi_exchange='" + props["exchange"] + "' " +
+        "ORDER BY yfi_exchange, yfi_industry, yfi_ticker"
         )
     rows = cur.fetchall()
 
     for row in rows:
-        key = row[2]
-        value = row[3]
-    
-        yfi_infos[row[0]]["key"].append(key)
-        yfi_infos[row[0]]["value"].append(value)
+        yfi_infos["yfi_exchange"].append(row[0])
+        yfi_infos["yfi_industry"].append(row[1])
+        yfi_infos["yfi_company"].append(row[2])
+        yfi_infos["yfi_ticker"].append(row[3])
 
     return yfi_infos
 
 
-def pymysql_conn(username, password, hostname, database, charset):
+def pymysql_conn():
+    mariadb = env[props["env"]]["mariadb"]
+
     conn = pymysql.connect(
-        user=username,
-        password=password,
-        host=hostname,
-        database=database,
-        charset=charset
+        user=mariadb["username"],
+        password=mariadb["password"],
+        host=mariadb["hostname"],
+        database=mariadb["database"],
+        charset=mariadb["charset"]
     )
 
     return conn
 
 
 def yfinance_collector():
-    conn = pymysql_conn(username, password, hostname, database, charset)
+    conn = pymysql_conn()
 
-    yfi_infos = yfinance_info(conn)
+    yfi_infos = yfinance_infos(conn)
     conn.close()
 
-    yfi_params = yfinance_param(yfi_infos)
-    yfi_kospi_params = yfi_params["KOSPI"]
-    yfi_kosdaq_params = yfi_params["KOSDAQ"]
+    yfi_params = yfinance_params(yfi_infos)
+    yfi_datas = yfinance_data(yfi_params)
+
+    send_messages({"messages": yfi_datas})
+
+
+def yfinance_init():
+    parser = argparse.ArgumentParser(description='증권데이터 수집 설정')
+    parser.add_argument("--env", required=True, help="어플리케이션 실행 환경")
+    parser.add_argument("--country", required=False, default="kr", help="수집대상 설정(국가코드)")
+    parser.add_argument("--exchange", required=False, default="kospi", help="수집대상 설정(시장영문이름)")
     
-    yfi_kospi_datas = yfinance_data(yfi_kospi_params)
-    yfi_kosdaq_datas = yfinance_data(yfi_kosdaq_params)
+    args = parser.parse_args()
 
-    messages = {
-        "messages": {
-            "KOSPI": yfi_kospi_datas,
-            "KOSDAQ": yfi_kosdaq_datas
-        }
-    }
-
-    producer = producer_conn()
-    send_messages(producer, messages)
+    props["env"] = args.env.lower()
+    props["country"] = args.country.upper()
+    props["exchange"] = args.exchange.upper()
 
 
 if __name__ == "__main__":
-    yfinance_collector()
+    yfinance_init()
+
+    if props["env"] != "local" and props["env"] != "dev" and props["env"] != "prod":
+        print("--env: " + props["env"] + " is Illegal parameters")
+    else:
+        yfinance_collector()
