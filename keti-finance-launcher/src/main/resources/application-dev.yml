@@ -1,0 +1,35 @@
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  kafka:
+    consumer:
+      bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
+      topics: dev-keti-finance
+      group-id: dev-keti-finance-consumer-01
+      auto-offset-reset: latest
+      listener: 3
+      enable-auto-commit: true
+      poll-timeout: 1000
+      auto-commit-interval-ms: 1000
+      session-timeout-ms: 30000
+      key-deserializer-class-config: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
+  influx2: 
+    url: http://192.168.100.46:8086 # URL to connect to InfluxDB.
+    username: wizontech # Username to use in the basic auth.
+    password: qwer1234!@ # Password to use in the basic auth.
+    token: Y1Mbv0p1giQ1lPiKL7Ea7JstVN3eyIJCstxV1dRneRlhnnYtc2pedaMeMDWR4p0NI_95fvmxlmKArDmghyRVpA== # Token to use for the authorization.
+    org: wizontech # Default destination organization for writes and queries.
+    bucket: wizontech # Default destination bucket for writes.
+    logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE) BODY
+    readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
+    writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
+    connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
+    
+logging:
+  path:
+    dir: /applog/keti-finance-launcher
+    file: keti-finance-launcher
+  level:
+    root: info

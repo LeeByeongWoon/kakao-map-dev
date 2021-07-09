@@ -4,7 +4,6 @@ import argparse
 
 import json
 from bisect import bisect
-import numpy as np
 import pytz
 from datetime import datetime, timedelta
 
@@ -137,7 +136,11 @@ def yfinance_messages(yfi_datas):
                 results_datas[companies[idx]][time]["industry"] = industries[idx]
                 results_datas[companies[idx]][time]["company"] = companies[idx]
                 results_datas[companies[idx]][time]["ticker"] = tickers[idx]
-                results_datas[companies[idx]][time][dicts_key[1].lower() + "Values"] = dict_data[dict_key]
+
+                if dicts_key[1].lower() != "adj close":
+                    results_datas[companies[idx]][time][dicts_key[1].lower() + "Values"] = dict_data[dict_key]
+                else:
+                    results_datas[companies[idx]][time]["adjCloseValues"] = dict_data[dict_key]
 
 
     for results_key in results_datas.keys():
