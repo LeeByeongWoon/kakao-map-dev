@@ -2,15 +2,16 @@
 
 import argparse
 
-import time
+import json
+from bisect import bisect
+import numpy as np
 import pytz
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 
 import pymysql
 import yfinance as yf
 from kafka import KafkaProducer
 
-from json import dumps
 from pandas_datareader import data as pdr
 
 
@@ -27,7 +28,7 @@ env = {
             "acks": -1,
             "compression_type": "lz4",
             "bootstrap_servers": ["192.168.207.2:9092"],
-            "serializer": lambda x: dumps(x).encode('utf-8')
+            "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     },
     "dev": {
@@ -42,7 +43,7 @@ env = {
             "acks": -1,
             "compression_type": "lz4",
             "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
-            "serializer": lambda x: dumps(x).encode('utf-8')
+            "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     },
     "prod": {
@@ -57,26 +58,95 @@ env = {
             "acks": -1,
             "compression_type": "lz4",
             "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
-            "serializer": lambda x: dumps(x).encode('utf-8')
+            "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     }
 }
+
 props = {}
 
 
-def send_messages(yfi_datas):
+def send_messages(yfi_messages):
     kafka = env[props["env"]]["kafka"]
 
     producer = KafkaProducer(
                 acks=kafka["acks"],
                 compression_type=kafka["compression_type"],
                 bootstrap_servers=kafka["bootstrap_servers"],
-                value_serializer= kafka["serializer"]
+                value_serializer=kafka["serializer"]
            )
 
-    for yfi_data in yfi_datas:
-        producer.send("dev-keti-finance", value={"messages": yfi_data})
+    for messages_key in yfi_messages.keys():
+        messages = {
+            messages_key: yfi_messages[messages_key]
+        }
+        producer.send("dev-keti-finance", value={"messages": messages})
         producer.flush()
+
+
+def yfinance_messages(yfi_datas):
+    messages = {}
+
+    keys = []
+    params = []
+    datas = []
+    for key in yfi_datas["idx_0"].keys():
+        keys.append(key)
+    
+    for datas_key in yfi_datas.keys():
+        yfi_data = yfi_datas[datas_key]
+
+        params.append(yfi_data[keys[0]])
+        datas.append(yfi_data[keys[1]])
+
+    results_datas = {} 
+    for row in range(0, len(datas)):
+        dicts_params = params[row]
+        dicts_datas = datas[row].to_dict()
+
+        countries = dicts_params["countries"]
+        exchanges = dicts_params["exchanges"]
+        industries = dicts_params["industries"]
+        companies = dicts_params["companies"]
+        tickers = dicts_params["tickers"]
+
+        for company in companies:
+            results_datas[company] = {}
+
+        for dicts_key in dicts_datas.keys():
+            idx = bisect(tickers, dicts_key[0])-1
+
+            dict_data = dicts_datas[dicts_key]
+            
+            for dict_key in dict_data.keys():
+                time = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H")
+                results_datas[companies[idx]][time] = {}
+                messages[companies[idx]] = []
+
+        for dicts_key in dicts_datas.keys():
+            idx = bisect(tickers, dicts_key[0])-1
+
+            dict_data = dicts_datas[dicts_key]
+
+            for dict_key in dict_data.keys():
+                time = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H")
+
+                results_datas[companies[idx]][time]["timestamp"] = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                results_datas[companies[idx]][time]["country"] = countries[idx]
+                results_datas[companies[idx]][time]["exchange"] = exchanges[idx]
+                results_datas[companies[idx]][time]["industry"] = industries[idx]
+                results_datas[companies[idx]][time]["company"] = companies[idx]
+                results_datas[companies[idx]][time]["ticker"] = tickers[idx]
+                results_datas[companies[idx]][time][dicts_key[1].lower() + "Values"] = dict_data[dict_key]
+
+
+    for results_key in results_datas.keys():
+        results_data = results_datas[results_key]
+
+        for result_key in results_data.keys():
+            messages[results_key].append(results_datas[results_key][result_key])
+
+    return messages
 
 
 def yfinance_data(yfi_params):
@@ -91,47 +161,27 @@ def yfinance_data(yfi_params):
     # kospi = pdr.get_data_yahoo("005930.KS 000660.KS 035720.KS 035420.KS 005935.KS 051910.KS 207940.KS", start_date, end_date)
     # 셀트리온헬스케어, 셀트리온제약, 에코프로비엠, 씨젠, 펄어비스, 카카오게임즈, CJ ENM
     # kosdaq = pdr.get_data_yahoo("091990.KQ 068760.KQ 247540.KQ 096530.KQ 263750.KQ 293490.KQ 035760.KQ", start_date)
-    yfi_datas = []
+    yfi_datas = {}
 
     yf.pdr_override()
 
-    exchanges = yfi_params["exchanges"]
-    industries = yfi_params["industries"]
-    companies = yfi_params["companies"]
-    tickers = yfi_params["tickers"]
-    start_date = yfi_params["start_date"]
-    end_date = yfi_params["end_date"]
-    interval = yfi_params["interval"]
-    group_by = yfi_params["group_by"]
+    for yfi_param in yfi_params:
+        countries = yfi_params[yfi_param]["countries"]
+        exchanges = yfi_params[yfi_param]["exchanges"]
+        industries = yfi_params[yfi_param]["industries"]
+        companies = yfi_params[yfi_param]["companies"]
+        tickers = yfi_params[yfi_param]["tickers"]
+        start_date = yfi_params[yfi_param]["start_date"]
+        end_date = yfi_params[yfi_param]["end_date"]
+        interval = yfi_params[yfi_param]["interval"]
+        group_by = yfi_params[yfi_param]["group_by"]
 
-    df_datas = pdr.get_data_yahoo(tickers, start_date, end_date, interval=interval, group_by=group_by)
+        df_datas = pdr.get_data_yahoo(tickers, start_date, end_date, interval=interval, group_by=group_by)
 
-    dict_datas = df_datas.to_dict()
-    datas_keys = dict_datas.keys()
-    for cnt in range(0, len(tickers)):
-        yfi_data = {
-            tickers[cnt]: {
-                "exchange": exchanges[cnt],
-                "industry": industries[cnt],
-                "company": companies[cnt],
-                "ticker": tickers[cnt]
-            }
+        yfi_datas[yfi_param] = {
+            "params": yfi_params[yfi_param],
+            "datas": df_datas
         }
-
-        for datas_key in datas_keys:
-            ticker = datas_key[0]
-            type = datas_key[1]
-            if tickers[cnt] == ticker:
-                dict_data = dict_datas[datas_key]
-                data_keys = dict_data.keys()
-                yfi_data[tickers[cnt]][type] = list(
-                    {
-                        "timestamp": data_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                        "key": type,
-                        "value": dict_data[data_key]
-                    } for data_key in data_keys)
-
-        yfi_datas.append(yfi_data)
 
     return yfi_datas
 
@@ -148,43 +198,69 @@ def yfinance_params(yfi_infos):
     interval = "1h"
     group_by = "ticker"
 
-    yfi_params = {
-        "exchanges": yfi_infos["yfi_exchange"],
-        "industries": yfi_infos["yfi_industry"],
-        "companies": yfi_infos["yfi_company"],
-        "tickers": yfi_infos["yfi_ticker"],
-        "start_date": start_date,
-        "end_date": end_date,
-        "interval": interval,
-        "group_by": group_by
-    }
+    yfi_infos_keys = yfi_infos.keys()
+    for yfi_infos_key in yfi_infos_keys:
+        key = str(yfi_infos_key)
+        value = {
+            "countries": yfi_infos[key]["yfi_country"],
+            "exchanges": yfi_infos[key]["yfi_exchange"],
+            "industries": yfi_infos[key]["yfi_industry"],
+            "companies": yfi_infos[key]["yfi_company"],
+            "tickers": yfi_infos[key]["yfi_ticker"],
+            "start_date": start_date,
+            "end_date": end_date,
+            "interval": interval,
+            "group_by": group_by
+        }
+
+        yfi_params[key] = value
 
     return yfi_params
 
 
 def yfinance_infos(conn):
-    yfi_infos = {
-        "yfi_exchange": [],
-        "yfi_industry": [],
-        "yfi_company": [],
-        "yfi_ticker": []
-    }
+    yfi_infos = {}
 
     cur = conn.cursor()
     cur.execute(
-        "SELECT yfi_exchange, yfi_industry, yfi_company, yfi_ticker" + " " +
+        "SELECT yfi_country, yfi_exchange, yfi_industry, yfi_company, yfi_ticker" + " " +
         "FROM yfinance_info" + " " +
         "WHERE yfi_country='" + props["country"] + "' " +
         "AND yfi_exchange='" + props["exchange"] + "' " +
-        "ORDER BY yfi_exchange, yfi_industry, yfi_ticker"
+        "ORDER BY yfi_ticker"
         )
+
     rows = cur.fetchall()
 
+    length = len(rows)
+    batch = int(props["batch"])
+
+    min = 0
+    max = int(length/batch)+1
+    for cnt in range(min, max):
+        key = "idx_" + str(cnt)
+        value = {
+            "yfi_country": [],
+            "yfi_exchange": [],
+            "yfi_industry": [],
+            "yfi_company": [],
+            "yfi_ticker": []
+        }
+
+        yfi_infos[key] = value
+
+    num = 0
     for row in rows:
-        yfi_infos["yfi_exchange"].append(row[0])
-        yfi_infos["yfi_industry"].append(row[1])
-        yfi_infos["yfi_company"].append(row[2])
-        yfi_infos["yfi_ticker"].append(row[3])
+        index = int(num/batch)
+        idx = "idx_" + str(index)
+        
+        yfi_infos[idx]["yfi_country"].append(row[0])
+        yfi_infos[idx]["yfi_exchange"].append(row[1])
+        yfi_infos[idx]["yfi_industry"].append(row[2])
+        yfi_infos[idx]["yfi_company"].append(row[3])
+        yfi_infos[idx]["yfi_ticker"].append(row[4])
+
+        num += 1
 
     return yfi_infos
 
@@ -211,8 +287,9 @@ def yfinance_collector():
 
     yfi_params = yfinance_params(yfi_infos)
     yfi_datas = yfinance_data(yfi_params)
+    yfi_messages = yfinance_messages(yfi_datas)
 
-    send_messages(yfi_datas)
+    send_messages(yfi_messages)
 
 
 def yfinance_init():
@@ -220,12 +297,14 @@ def yfinance_init():
     parser.add_argument("--env", required=True, help="어플리케이션 실행 환경")
     parser.add_argument("--country", required=False, default="kr", help="수집대상 설정(국가코드)")
     parser.add_argument("--exchange", required=False, default="kospi", help="수집대상 설정(시장영문이름)")
+    parser.add_argument("--batch", required=False, default="128", help="수집 횟수")
     
     args = parser.parse_args()
 
     props["env"] = args.env.lower()
     props["country"] = args.country.upper()
     props["exchange"] = args.exchange.upper()
+    props["batch"] = args.batch
 
 
 if __name__ == "__main__":
