@@ -34,7 +34,7 @@ dependencies {
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 	implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.7.1'
 	implementation 'com.influxdb:influxdb-spring:2.2.0'
-	implementation "io.micrometer:micrometer-registry-influx:1.7.0"
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'

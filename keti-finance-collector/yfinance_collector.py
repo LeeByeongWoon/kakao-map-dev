@@ -3,7 +3,9 @@
 import argparse
 
 import json
+import time
 from bisect import bisect
+from time import sleep
 import pytz
 from datetime import datetime, timedelta
 
@@ -24,9 +26,10 @@ env = {
             "charset": "utf8"
         },
         "kafka": {
+            "bootstrap_servers": ["192.168.207.2:9092"],
+            "topic": "dev-keti-finance",
             "acks": -1,
             "compression_type": "lz4",
-            "bootstrap_servers": ["192.168.207.2:9092"],
             "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     },
@@ -39,9 +42,10 @@ env = {
             "charset": "utf8"
         },
         "kafka": {
+            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
+            "topic": "dev-keti-finance",
             "acks": -1,
             "compression_type": "lz4",
-            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
             "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     },
@@ -54,9 +58,10 @@ env = {
             "charset": "utf8"
         },
         "kafka": {
+            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
+            "topic": "dev-keti-finance",
             "acks": -1,
             "compression_type": "lz4",
-            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
             "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     }
@@ -79,7 +84,7 @@ def send_messages(yfi_messages):
         messages = {
             messages_key: yfi_messages[messages_key]
         }
-        producer.send("dev-keti-finance", value={"messages": messages})
+        producer.send(kafka["topic"], value={"messages": messages})
         producer.flush()
 
 
@@ -138,9 +143,9 @@ def yfinance_messages(yfi_datas):
                 results_datas[companies[idx]][time]["ticker"] = tickers[idx]
 
                 if dicts_key[1].lower() != "adj close":
-                    results_datas[companies[idx]][time][dicts_key[1].lower() + "Values"] = dict_data[dict_key]
+                    results_datas[companies[idx]][time][dicts_key[1].lower() + "Value"] = dict_data[dict_key]
                 else:
-                    results_datas[companies[idx]][time]["adjCloseValues"] = dict_data[dict_key]
+                    results_datas[companies[idx]][time]["adjCloseValue"] = dict_data[dict_key]
 
 
     for results_key in results_datas.keys():
@@ -148,6 +153,7 @@ def yfinance_messages(yfi_datas):
 
         for result_key in results_data.keys():
             messages[results_key].append(results_datas[results_key][result_key])
+
 
     return messages
 
@@ -181,10 +187,14 @@ def yfinance_data(yfi_params):
 
         df_datas = pdr.get_data_yahoo(tickers, start_date, end_date, interval=interval, group_by=group_by)
 
+        print(df_datas)
+
         yfi_datas[yfi_param] = {
             "params": yfi_params[yfi_param],
             "datas": df_datas
         }
+
+        time.sleep(60)
 
     return yfi_datas
 
@@ -192,12 +202,8 @@ def yfinance_data(yfi_params):
 def yfinance_params(yfi_infos):
     yfi_params = {}
 
-    day = timedelta(days=1)
-    yes = datetime.now() - day
-    now = datetime.now()
-
-    start_date = yes.strftime('%Y-%m-%d')
-    end_date = now.strftime('%Y-%m-%d')
+    start_date = props["start"]
+    end_date = props["end"]
     interval = "1h"
     group_by = "ticker"
 
@@ -296,11 +302,17 @@ def yfinance_collector():
 
 
 def yfinance_init():
+    start = datetime.now()-timedelta(days=1)
+    end = datetime.now()
+
     parser = argparse.ArgumentParser(description='증권데이터 수집 설정')
     parser.add_argument("--env", required=True, help="어플리케이션 실행 환경")
     parser.add_argument("--country", required=False, default="kr", help="수집대상 설정(국가코드)")
     parser.add_argument("--exchange", required=False, default="kospi", help="수집대상 설정(시장영문이름)")
-    parser.add_argument("--batch", required=False, default="128", help="수집 횟수")
+    parser.add_argument("--batch", required=False, default="100", help="수집 횟수")
+    parser.add_argument("--start", required=False, default=start.strftime('%Y-%m-%d'), help="시작")
+    parser.add_argument("--end", required=False, default=end.strftime('%Y-%m-%d'), help="끝")
+
     
     args = parser.parse_args()
 
@@ -308,6 +320,8 @@ def yfinance_init():
     props["country"] = args.country.upper()
     props["exchange"] = args.exchange.upper()
     props["batch"] = args.batch
+    props["start"] = args.start
+    props["end"] = args.end
 
 
 if __name__ == "__main__":

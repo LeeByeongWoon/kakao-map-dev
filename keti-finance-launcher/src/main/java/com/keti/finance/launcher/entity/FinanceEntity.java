@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Date;
 
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
@@ -29,17 +28,17 @@ public class FinanceEntity {
     @Column(name = "ticker", tag = true)
     private String ticker;
     
-    @Column(name = "open_values")
-    private Double openValues;
-    @Column(name = "high_values")
-    private Double highValues;
-    @Column(name = "low_values")
-    private Double lowValues;
-    @Column(name = "close_values")
-    private Double closeValues;
-    @Column(name = "adj_close_values")
-    private Double adjCloseValues;
-    @Column(name = "volume_values")
-    private Double volumeValues;
+    @Column(name = "open_value")
+    private Double openValue;
+    @Column(name = "high_value")
+    private Double highValue;
+    @Column(name = "low_value")
+    private Double lowValue;
+    @Column(name = "close_value")
+    private Double closeValue;
+    @Column(name = "adj_close_value")
+    private Double adjCloseValue;
+    @Column(name = "volume_value")
+    private Double volumeValue;
 
 }

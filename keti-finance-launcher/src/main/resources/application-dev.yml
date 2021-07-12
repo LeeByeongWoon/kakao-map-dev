@@ -6,8 +6,8 @@ spring:
     consumer:
       bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
       topics: dev-keti-finance
-      group-id: dev-keti-finance-consumer-01
-      auto-offset-reset: latest
+      group-id: dev-keti-finance-consumer-04
+      auto-offset-reset: earliest
       listener: 3
       enable-auto-commit: true
       poll-timeout: 1000
