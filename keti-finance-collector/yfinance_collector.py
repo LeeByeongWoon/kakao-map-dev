@@ -4,9 +4,9 @@ import argparse
 
 import json
 import time
+import pytz
 from bisect import bisect
 from time import sleep
-import pytz
 from datetime import datetime, timedelta
 
 import pymysql
@@ -123,7 +123,7 @@ def yfinance_messages(yfi_datas):
             dict_data = dicts_datas[dicts_key]
             
             for dict_key in dict_data.keys():
-                time = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H")
+                time = dict_key.strftime("%Y-%m-%d")
                 results_datas[companies[idx]][time] = {}
                 messages[companies[idx]] = []
 
@@ -133,9 +133,10 @@ def yfinance_messages(yfi_datas):
             dict_data = dicts_datas[dicts_key]
 
             for dict_key in dict_data.keys():
-                time = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H")
-
-                results_datas[companies[idx]][time]["timestamp"] = dict_key.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                time = dict_key.strftime("%Y-%m-%d")
+                utc = datetime.strptime(dict_key.strftime("%Y-%m-%d %H:%M:%S.%f"), "%Y-%m-%d %H:%M:%S.%f").astimezone(pytz.utc)
+                
+                results_datas[companies[idx]][time]["timestamp"] = utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 results_datas[companies[idx]][time]["country"] = countries[idx]
                 results_datas[companies[idx]][time]["exchange"] = exchanges[idx]
                 results_datas[companies[idx]][time]["industry"] = industries[idx]
@@ -175,10 +176,6 @@ def yfinance_data(yfi_params):
     yf.pdr_override()
 
     for yfi_param in yfi_params:
-        countries = yfi_params[yfi_param]["countries"]
-        exchanges = yfi_params[yfi_param]["exchanges"]
-        industries = yfi_params[yfi_param]["industries"]
-        companies = yfi_params[yfi_param]["companies"]
         tickers = yfi_params[yfi_param]["tickers"]
         start_date = yfi_params[yfi_param]["start_date"]
         end_date = yfi_params[yfi_param]["end_date"]
@@ -204,7 +201,7 @@ def yfinance_params(yfi_infos):
 
     start_date = props["start"]
     end_date = props["end"]
-    interval = "1h"
+    interval = "1d"
     group_by = "ticker"
 
     yfi_infos_keys = yfi_infos.keys()
@@ -245,7 +242,7 @@ def yfinance_infos(conn):
     batch = int(props["batch"])
 
     min = 0
-    max = int(length/batch)+1
+    max = int((length-1)/batch)+1
     for cnt in range(min, max):
         key = "idx_" + str(cnt)
         value = {
@@ -302,8 +299,8 @@ def yfinance_collector():
 
 
 def yfinance_init():
-    start = datetime.now()-timedelta(days=1)
-    end = datetime.now()
+    start = datetime.now()
+    end = datetime.now()+timedelta(days=1)
 
     parser = argparse.ArgumentParser(description='증권데이터 수집 설정')
     parser.add_argument("--env", required=True, help="어플리케이션 실행 환경")
