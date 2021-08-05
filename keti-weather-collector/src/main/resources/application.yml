@@ -22,7 +22,7 @@ spring:
       maxConnPerRoute: 4
   collector:
     target: 50
-    interval: -1
+    interval: 24
   weatherApi:
     end-point: http://apis.data.go.kr/1360000/VilageFcstInfoService/
     end-point-service: getUltraSrtNcst

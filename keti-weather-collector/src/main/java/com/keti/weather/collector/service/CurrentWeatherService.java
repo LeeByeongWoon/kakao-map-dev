@@ -92,8 +92,6 @@ public class CurrentWeatherService extends AbstractWeatherService {
                 Map<String, Object> weatherData = new HashMap<>();
                 weatherData.put("messages", messages);
                 
-                logger.info("weatherData: " + new JSONObject(weatherData));
-                
                 weatherDataList.add(new JSONObject(weatherData));
             }
         }

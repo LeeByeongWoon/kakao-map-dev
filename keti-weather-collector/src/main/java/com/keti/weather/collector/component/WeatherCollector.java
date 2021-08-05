@@ -50,6 +50,10 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 
 	@PostConstruct
 	public void init() {
+		logger.info("##### Init Configuration");
+		logger.info("##### target " + target);
+		logger.info("##### interval " + interval);
+
 		pointList = villageInfoService.getPoints(target);
 		groupPointMap = villageInfoService.getGroupPointMap();
 	}
@@ -58,7 +62,7 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 	@Override
 	public void runner() {
 		try {
-			logger.info("##### Job Start #####");
+			logger.info("##### Scheduler Job");
 			List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
 			kafkaProducerService.sendMessage(weatherDataList);
 		} catch (Exception e) {
@@ -86,13 +90,12 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 		
 			default:
 				if(interval > 1 && interval < 24) {
-					cron = "0 0/" + interval  + " * * * *";
+					cron = "0 0 0/" + interval  + " * * *";
 				}
 				break;
 		}
 
-		logger.info("##### Scheduled " + cron + " Start #####");
-
+		logger.info("##### cron " + cron);
 		return new CronTrigger(cron);
 	}
 

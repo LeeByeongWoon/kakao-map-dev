@@ -17,7 +17,7 @@ public abstract class AbstractDynamicScheduled {
 
 
     public AbstractDynamicScheduled() {
-        this(2, "weather-collector-");
+        this(1, "weather-collector-");
     }
 
 
@@ -35,8 +35,9 @@ public abstract class AbstractDynamicScheduled {
 
     
     public void startScheduler() {
-        logger.info("##### poolSize: " + poolSize + "#####");
-        logger.info("##### threadNamePrefix: " + threadNamePrefix + "#####");
+		logger.info("##### Scheduler Configuration");
+        logger.info("##### poolSize: " + poolSize);
+        logger.info("##### threadNamePrefix: " + threadNamePrefix);
 
         scheduler = new ThreadPoolTaskScheduler();
         scheduler.initialize();
