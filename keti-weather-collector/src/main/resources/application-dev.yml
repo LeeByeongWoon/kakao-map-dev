@@ -9,7 +9,7 @@ spring:
     password: 'qwer1234!@'
   kafka:
     producer:
-      bootstrap-servers: 192.168.100.71:9092,192.168.100.72:9092,192.168.100.73:9092
+      bootstrap-servers: 192.168.7.182:9092,192.168.7.183:9092,192.168.7.184:9092
       topic: dev-keti-weather
       acks: -1
       retries: 1
