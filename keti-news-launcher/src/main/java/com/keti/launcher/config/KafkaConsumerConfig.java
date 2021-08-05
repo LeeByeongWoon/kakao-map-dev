@@ -1,4 +1,4 @@
-package com.keti.finance.launcher.config;
+package com.keti.launcher.config;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class KafkaConsumerConfig {
 	private KafkaConsumerProperties properties = null;
 
     @Autowired
-    private MessageListener<String, String> messageListener = null;
+    private MessageListener messageListener = null;
 
 
     @Bean

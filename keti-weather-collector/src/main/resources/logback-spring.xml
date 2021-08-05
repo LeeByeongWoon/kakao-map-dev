@@ -4,10 +4,10 @@
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
     <springProperty scope="context" name="LOG_DIR" source="logging.path.dir"/>
     <springProperty scope="context" name="LOG_FILE" source="logging.path.file"/>
-    <springProperty scope="context" name="SCRAP_INTERVAL" source="spring.weatherApi.scrap-interval"/>
+    <springProperty scope="context" name="LOG_INTERVAL" source="spring.collector.interval"/>
 
-    <property name="LOG_DIR_NAME" value="${LOG_DIR}-${SCRAP_INTERVAL}h"/>
-    <property name="LOG_FILE_NAME" value="${LOG_FILE}_${SCRAP_INTERVAL}h"/>
+    <property name="LOG_DIR_NAME" value="${LOG_DIR}-${LOG_INTERVAL}h"/>
+    <property name="LOG_FILE_NAME" value="${LOG_FILE}_${LOG_INTERVAL}h"/>
     <property name="ERR_LOG_FILE_NAME" value="${LOG_FILE_NAME}_err"/>
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] - %msg%n"/>
 

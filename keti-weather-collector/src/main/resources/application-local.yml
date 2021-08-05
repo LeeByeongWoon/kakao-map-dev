@@ -26,7 +26,7 @@ spring:
       
 logging:
   path:
-    dir: ${HOME}/gorotis11/ketiClust/keti-weather-collector/logs
+    dir: ./logs
     file: keti-weather-collector
   level:
     root: info

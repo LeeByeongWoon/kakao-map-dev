@@ -1,4 +1,4 @@
-package com.keti.weather.launcher.component;
+package com.keti.launcher.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 
 @Component
-public class ConsumerKafka implements CommandLineRunner {
+public class DataSourceComponent implements CommandLineRunner {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -23,7 +23,7 @@ public class ConsumerKafka implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		logger.info("#################################");
-		logger.info("##### KETI WEATHER CONSUMER #####");
+		logger.info("##### KETI NEWS CONSUMER #####");
 		logger.info("#################################");
 
 		kafkaMessageListenerContainer.start();

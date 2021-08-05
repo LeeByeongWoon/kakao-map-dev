@@ -4,13 +4,6 @@ spring:
       on-profile: "common"
   main:
     web-application-type: none
-  restTemplate:
-    factory:
-      readTimeout: 1000
-      connectTimeout: 3000
-    httpClient:
-      maxConnTotal: 80
-      maxConnPerRoute: 4
   jpa:
     database-platform: org.hibernate.dialect.MariaDB103Dialect
     hibernate:
@@ -20,13 +13,20 @@ spring:
       ddl-auto: update
     generate-ddl: false
     show-sql: true
+  restTemplate:
+    factory:
+      readTimeout: 1000
+      connectTimeout: 3000
+    httpClient:
+      maxConnTotal: 80
+      maxConnPerRoute: 4
+  collector:
+    target: 50
+    interval: -1
   weatherApi:
-    url: http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst
-    service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
-    target-ids: 1,2
-    scrap-interval: 6
-    scheduled-cron: 0 0 0/6 * * * *
-    leap-time-collector: false
+    end-point: http://apis.data.go.kr/1360000/VilageFcstInfoService/
+    end-point-service: getUltraSrtNcst
+    end-point-service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
   pid:
     file: ./keti-weather-collector.pid
 

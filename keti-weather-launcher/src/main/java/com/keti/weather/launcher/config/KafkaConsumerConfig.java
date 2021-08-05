@@ -26,7 +26,7 @@ public class KafkaConsumerConfig {
 	private KafkaConsumerProperties properties = null;
 
     @Autowired
-    private MessageListener messageListener = null;
+    private MessageListener<String, String> messageListener = null;
 
 
     @Bean

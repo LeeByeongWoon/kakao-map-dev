@@ -17,7 +17,7 @@ public class ConsumerKafka implements CommandLineRunner {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private ConcurrentMessageListenerContainer kafkaMessageListenerContainer;
+	private ConcurrentMessageListenerContainer<String, String> kafkaMessageListenerContainer;
 
 
 	@Override

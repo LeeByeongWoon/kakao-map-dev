@@ -1,13 +1,13 @@
 spring:
   config:
     activate:
-      on-profile: "vm"
+      on-profile: "local"
   kafka:
     consumer:
-      bootstrap-servers: 192.168.207.2:9092
-      topics: dev-keti-weather
-      group-id: dev-keti-weather-consumer-01
-      auto-offset-reset: latest
+      bootstrap-servers: 192.168.7.182:9092,192.168.7.183:9092,192.168.7.184:9092
+      topics: dev-keti-news
+      group-id: dev-keti-news-consumer-02
+      auto-offset-reset: earliest
       listener: 1
       enable-auto-commit: true
       poll-timeout: 1000
@@ -17,7 +17,7 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influx2: 
     url: http://192.168.207.2:8086 # URL to connect to InfluxDB.
-    username: wiz # Username to use in the basic auth.
+    username: admin # Username to use in the basic auth.
     password: qwer1234!@ # Password to use in the basic auth.
     token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
     org: wizontech # Default destination organization for writes and queries.
@@ -26,10 +26,10 @@ spring:
     readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
     writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
     connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
-    
+
 logging:
   path:
-    dir: /applog/keti-weather-launcher
-    file: keti-weather-launcher
+    dir: ./logs
+    file: keti-news-launcher
   level:
     root: info

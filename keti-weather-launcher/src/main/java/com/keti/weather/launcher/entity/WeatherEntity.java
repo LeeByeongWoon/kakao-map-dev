@@ -12,7 +12,7 @@ import com.influxdb.annotations.Measurement;
 
 @Data
 @NoArgsConstructor
-@Measurement(name = "kor-weather")
+@Measurement(name = "weather")
 public class WeatherEntity {
 
     @Column(timestamp = true)

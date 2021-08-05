@@ -11,7 +11,7 @@ import com.influxdb.annotations.Measurement;
 
 @Data
 @NoArgsConstructor
-@Measurement(name = "kor-finance")
+@Measurement(name = "finance")
 public class FinanceEntity {
 
     @Column(timestamp = true)

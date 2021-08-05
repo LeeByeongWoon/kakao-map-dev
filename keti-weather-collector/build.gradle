@@ -57,29 +57,14 @@ dependencies {
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.2'
 }
 
-
-//gradle build
-//gradle bootRun -Dspring.profiles.active=local -Dspring.target-ids="1,2,3" -Dspring.scheduled-cron="0 * * * * *" -Dspring.leap-time-collector="false"
 bootRun {
-    String activeProfile = System.properties['active']
-	String targetIds = System.properties['target-ids']
-	String scrapInterval = System.properties['scrap-interval']
-	String scheduledCron = "0 0 * * * *"
-	String leapTimeCollector = System.properties['leap-time-collector']	// 개발용 옵션.. 상용에서 절대 사용하지 말것
+    String springProfilesActive = System.properties['spring.profiles.active']
+	String springCollectorTarget = System.properties['spring.collector.target']
+	String springCollectorInterval = System.properties['spring.collector.interval']
 
-	if(scrapInterval == "1") {
-		scheduledCron = "0 0 * * * *"
-	} else if(scrapInterval == "24") {
-		scheduledCron = "0 0 0 * * *"
-	} else {
-		scheduledCron = "0 0 0/" + scrapInterval + " * * *"
-	}
-
-    systemProperty "spring.profiles.active", activeProfile
-	systemProperty "spring.weatherApi.target-ids", targetIds
-	systemProperty "spring.weatherApi.scrap-interval", scrapInterval
-	systemProperty "spring.weatherApi.scheduled-cron", scheduledCron
-	systemProperty "spring.weatherApi.leap-time-collector", leapTimeCollector
+    systemProperty "spring.profiles.active", springProfilesActive
+	systemProperty "spring.collector.target", springCollectorTarget
+	systemProperty "spring.collector.interval", springCollectorInterval
 	
 }
 

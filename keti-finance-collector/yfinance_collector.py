@@ -42,7 +42,7 @@ env = {
             "charset": "utf8"
         },
         "kafka": {
-            "bootstrap_servers": ["192.168.100.71:9092","192.168.100.72:9092","192.168.100.73:9092"],
+            "bootstrap_servers": ["192.168.7.182:9092","192.168.7.183:9092","192.168.7.184:9092"],
             "topic": "dev-keti-finance",
             "acks": -1,
             "compression_type": "lz4",
