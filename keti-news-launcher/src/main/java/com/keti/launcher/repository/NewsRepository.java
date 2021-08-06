@@ -1,32 +1,38 @@
 package com.keti.launcher.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.spring.influx.InfluxDB2Properties;
 
 import com.keti.launcher.entity.NewsEntity;
 
 
 @Repository
+@EnableConfigurationProperties(InfluxDB2Properties.class)
 public class NewsRepository {
 
-    @Value("${spring.influx2.bucket}")
-    private String bucket;
+    private final InfluxDBClient influxdb;
+    private final InfluxDB2Properties properties;
 
-    @Value("${spring.influx2.org}")
-    private String org;
 
-    @Autowired
-    private InfluxDBClient influxdb;
+    public NewsRepository(InfluxDBClient influxdb, InfluxDB2Properties influxDB2Properties) {
+        this.influxdb = influxdb;
+        this.properties = influxDB2Properties;
+    }
 
 
     public void save(final NewsEntity entity) {
         final WriteApi writeApi = influxdb.getWriteApi();
-        writeApi.writeMeasurement(bucket, org, WritePrecision.NS, entity);
+        writeApi.writeMeasurement(
+                properties.getBucket(),
+                properties.getOrg(),
+                WritePrecision.NS,
+                entity
+        );
         writeApi.close();
     }
 

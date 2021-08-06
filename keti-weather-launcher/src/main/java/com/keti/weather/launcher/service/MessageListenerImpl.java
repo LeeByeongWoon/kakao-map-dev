@@ -15,14 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.MessageListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.keti.weather.launcher.entity.WeatherEntity;
 import com.keti.weather.launcher.repository.WeatherRepository;
 
@@ -30,15 +29,15 @@ import com.keti.weather.launcher.repository.WeatherRepository;
 @Service
 public class MessageListenerImpl implements MessageListener<String, String> {
 
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper;
+    private final WeatherRepository weatherRepository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    JSONParser parser = new JSONParser();
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    WeatherRepository weatherRepository;
+    public MessageListenerImpl(ObjectMapper objectMapper, WeatherRepository weatherRepository) {
+        this.objectMapper = objectMapper;
+        this.weatherRepository = weatherRepository;
+    }
 
     
     @Override

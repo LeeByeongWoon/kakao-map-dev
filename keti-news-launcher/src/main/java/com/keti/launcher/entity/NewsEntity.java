@@ -10,8 +10,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 

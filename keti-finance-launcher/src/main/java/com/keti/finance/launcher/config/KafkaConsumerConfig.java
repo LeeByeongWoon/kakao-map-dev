@@ -4,29 +4,28 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-
-import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.MessageListener;
-// import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 
 @Configuration
 @EnableConfigurationProperties(KafkaConsumerProperties.class)
 public class KafkaConsumerConfig {
 
-    @Autowired
-	private KafkaConsumerProperties properties = null;
+	private final KafkaConsumerProperties properties;
+    private final MessageListener<String, String> messageListener;
 
-    @Autowired
-    private MessageListener<String, String> messageListener = null;
+
+    public KafkaConsumerConfig(KafkaConsumerProperties properties, MessageListener<String, String> messageListener) {
+        this.properties = properties;
+        this.messageListener = messageListener;
+    }
 
 
     @Bean
@@ -34,29 +33,13 @@ public class KafkaConsumerConfig {
         ContainerProperties containerProperties = new ContainerProperties(properties.getTopics());
         containerProperties.setPollTimeout(properties.getPollTimeout());
 
-        ConcurrentMessageListenerContainer<String, String> container = new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
+        ConcurrentMessageListenerContainer<String, String> container = 
+                new ConcurrentMessageListenerContainer<>(new DefaultKafkaConsumerFactory<>(consumerConfigs()), containerProperties);
         container.setupMessageListener(messageListener);
         container.setConcurrency(properties.getListener());
 		container.setAutoStartup(false);
 
         return container;
-    }
-
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-    //     ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-    //     factory.setConsumerFactory(consumerFactory());
-    //     factory.setConcurrency(properties.getTask());
-    //     factory.setAutoStartup(false);
-    //     factory.getContainerProperties().setPollTimeout(properties.getPollTimeout());
-
-    //     return factory;
-    // }
-
-    
-    public ConsumerFactory<String, String> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
     

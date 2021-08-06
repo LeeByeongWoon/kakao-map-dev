@@ -7,7 +7,7 @@ spring:
       bootstrap-servers: 192.168.7.182:9092,192.168.7.183:9092,192.168.7.184:9092
       topics: dev-keti-news
       group-id: dev-keti-news-consumer-01
-      auto-offset-reset: latest
+      auto-offset-reset: earliest
       listener: 3
       enable-auto-commit: true
       poll-timeout: 1000

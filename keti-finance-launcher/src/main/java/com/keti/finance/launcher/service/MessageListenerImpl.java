@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.MessageListener;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.keti.finance.launcher.entity.FinanceEntity;
 import com.keti.finance.launcher.repository.FinanceRepository;
 
@@ -22,13 +23,15 @@ import com.keti.finance.launcher.repository.FinanceRepository;
 @Service
 public class MessageListenerImpl implements MessageListener<String, String> {
 
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper;
+    private final FinanceRepository financeRepository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    ObjectMapper objectMapper;
 
-    @Autowired
-    FinanceRepository financeRepository;
+    public MessageListenerImpl(ObjectMapper objectMapper, FinanceRepository financeRepository) {
+        this.objectMapper = objectMapper;
+        this.financeRepository = financeRepository;
+    }
 
     
     @Override
@@ -41,7 +44,7 @@ public class MessageListenerImpl implements MessageListener<String, String> {
             Map<String, Object> messages = 
                     objectMapper.convertValue(records.get("messages"), new TypeReference<Map<String, Object>>(){});
 
-            Set keys = messages.keySet();
+            Set<String> keys = messages.keySet();
             for (Object key : keys) {
                 List<FinanceEntity> data = 
                         objectMapper.convertValue(messages.get(key), new TypeReference<List<FinanceEntity>>(){});
