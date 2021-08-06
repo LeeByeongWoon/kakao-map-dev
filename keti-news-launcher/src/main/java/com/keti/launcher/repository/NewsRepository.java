@@ -27,7 +27,6 @@ public class NewsRepository {
     public void save(final NewsEntity entity) {
         final WriteApi writeApi = influxdb.getWriteApi();
         writeApi.writeMeasurement(bucket, org, WritePrecision.NS, entity);
-
         writeApi.close();
     }
 
