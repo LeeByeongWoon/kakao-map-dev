@@ -1,7 +1,5 @@
 package com.keti.launcher.repository;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -26,9 +24,9 @@ public class NewsRepository {
     private InfluxDBClient influxdb;
 
 
-    public void save(final List<NewsEntity> entities) {
+    public void save(final NewsEntity entity) {
         final WriteApi writeApi = influxdb.getWriteApi();
-        writeApi.writeMeasurements(bucket, org, WritePrecision.NS, entities);
+        writeApi.writeMeasurement(bucket, org, WritePrecision.NS, entity);
 
         writeApi.close();
     }

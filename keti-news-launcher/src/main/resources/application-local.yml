@@ -6,7 +6,7 @@ spring:
     consumer:
       bootstrap-servers: 192.168.7.182:9092,192.168.7.183:9092,192.168.7.184:9092
       topics: dev-keti-news
-      group-id: dev-keti-news-consumer-02
+      group-id: test-001
       auto-offset-reset: earliest
       listener: 1
       enable-auto-commit: true
