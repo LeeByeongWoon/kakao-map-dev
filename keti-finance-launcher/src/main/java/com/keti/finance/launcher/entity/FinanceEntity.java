@@ -29,16 +29,16 @@ public class FinanceEntity {
     private String ticker;
     
     @Column(name = "open_value")
-    private Double openValue;
+    private double openValue;
     @Column(name = "high_value")
-    private Double highValue;
+    private double highValue;
     @Column(name = "low_value")
-    private Double lowValue;
+    private double lowValue;
     @Column(name = "close_value")
-    private Double closeValue;
+    private double closeValue;
     @Column(name = "adj_close_value")
-    private Double adjCloseValue;
+    private double adjCloseValue;
     @Column(name = "volume_value")
-    private Double volumeValue;
+    private double volumeValue;
 
 }

@@ -45,11 +45,11 @@ public class YoutubeEntity {
     @Column(name = "view_count")
     private String viewCount;
     @Column(name = "like_count")
-    private Double likeCount;
+    private double likeCount;
     @Column(name = "hate_count")
-    private Double hateCount;
+    private double hateCount;
     @Column(name = "comment_count")
-    private Double commentCount;
+    private double commentCount;
 
 
     public void setArticleDate(String sdt) {

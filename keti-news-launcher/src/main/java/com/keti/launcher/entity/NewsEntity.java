@@ -47,17 +47,17 @@ public class NewsEntity {
     private String content;
     
     @Column(name = "good_count")
-    private Double goodCount;
+    private double goodCount;
     @Column(name = "warm_count")
-    private Double warmCount;
+    private double warmCount;
     @Column(name = "sad_count")
-    private Double sadCount;
+    private double sadCount;
     @Column(name = "angry_count")
-    private Double angryCount;
+    private double angryCount;
     @Column(name = "want_count")
-    private Double wantCount;
+    private double wantCount;
     @Column(name = "comment_count")
-    private Double commentCount;
+    private double commentCount;
 
 
     public void setArticleDate(String sdt) {

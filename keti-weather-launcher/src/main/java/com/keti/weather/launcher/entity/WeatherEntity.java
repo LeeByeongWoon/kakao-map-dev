@@ -41,21 +41,21 @@ public class WeatherEntity {
     private int viNy;
 
     @Column(name = "vi_longitude_hours", tag = true)
-    private Double viLongitudeHours;
+    private double viLongitudeHours;
     @Column(name = "vi_longitude_minutes", tag = true)
-    private Double viLongitudeMinutes;
+    private double viLongitudeMinutes;
     @Column(name = "vi_longitude_seconds", tag = true)
-    private Double viLongitudeSeconds;
+    private double viLongitudeSeconds;
     @Column(name = "vi_latitude_hours", tag = true)
-    private Double viLatitudeHours;
+    private double viLatitudeHours;
     @Column(name = "vi_latitude_minutes", tag = true)
-    private Double viLatitudeMinutes;
+    private double viLatitudeMinutes;
     @Column(name = "vi_latitude_seconds", tag = true)
-    private Double viLatitudeSeconds;
+    private double viLatitudeSeconds;
     @Column(name = "vi_longitude_10milliseconds", tag = true)
-    private Double viLongitude10milliseconds;
+    private double viLongitude10milliseconds;
     @Column(name = "vi_latitude_10milliseconds", tag = true)
-    private Double viLatitude10milliseconds;
+    private double viLatitude10milliseconds;
 
     @Column(name = "vi_update_date", tag = true)
     private Date viUpdateDate;
@@ -67,20 +67,20 @@ public class WeatherEntity {
     private String baseTime;
     
     @Column(name = "T1H_value")
-    private Double t1hValue;
+    private double t1hValue;
     @Column(name = "RN1_value")
-    private Double rn1Value;
+    private double rn1Value;
     @Column(name = "UUU_value")
-    private Double uuuValue;
+    private double uuuValue;
     @Column(name = "VVV_value")
-    private Double vvvValue;
+    private double vvvValue;
     @Column(name = "REH_value")
-    private Double rehValue;
+    private double rehValue;
     @Column(name = "PTY_value")
-    private Double ptyValue;
+    private double ptyValue;
     @Column(name = "VEC_value")
-    private Double vecValue;
+    private double vecValue;
     @Column(name = "WSD_value")
-    private Double wsdValue;
+    private double wsdValue;
 
 }
