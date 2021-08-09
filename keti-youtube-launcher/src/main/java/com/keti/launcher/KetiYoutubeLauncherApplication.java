@@ -6,10 +6,10 @@ import org.springframework.boot.context.ApplicationPidFileWriter;
 
 
 @SpringBootApplication
-public class KetiNewsLauncherApplication {
+public class KetiYoutubeLauncherApplication {
 
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(KetiNewsLauncherApplication.class);
+		SpringApplication app = new SpringApplication(KetiYoutubeLauncherApplication.class);
 		app.addListeners(new ApplicationPidFileWriter());
 		app.run(args);
 	}

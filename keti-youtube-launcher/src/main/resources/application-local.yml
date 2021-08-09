@@ -4,9 +4,9 @@ spring:
       on-profile: "local"
   kafka:
     consumer:
-      bootstrap-servers: 192.168.207.2:9092
-      topics: dev-keti-finance
-      group-id: dev-keti-finance-consumer-01
+      bootstrap-servers: 192.168.7.182:9092,192.168.7.183:9092,192.168.7.184:9092
+      topics: dev-keti-youtube
+      group-id: dev-keti-youtube-consumer-02
       auto-offset-reset: earliest
       listener: 1
       enable-auto-commit: true
@@ -30,6 +30,6 @@ spring:
 logging:
   path:
     dir: ./logs
-    file: keti-finance-launcher
+    file: keti-youtube-launcher
   level:
     root: info
