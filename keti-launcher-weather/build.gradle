@@ -30,13 +30,10 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.4.9'
 	implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.7.1'
 	implementation 'com.github.miwurster:spring-data-influxdb:1.8'
     implementation 'org.influxdb:influxdb-java:2.20'
-	implementation 'com.influxdb:influxdb-spring:2.2.0'
-	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'

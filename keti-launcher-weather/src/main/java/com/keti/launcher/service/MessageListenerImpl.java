@@ -23,20 +23,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import com.keti.launcher.entity.WeatherEntity;
-import com.keti.launcher.repository.WeatherRepository;
 
 
 @Service
 public class MessageListenerImpl implements MessageListener<String, String> {
 
     private final ObjectMapper objectMapper;
-    private final WeatherRepository weatherRepository;
+    private final InfluxService influxService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public MessageListenerImpl(ObjectMapper objectMapper, WeatherRepository weatherRepository) {
+    public MessageListenerImpl(ObjectMapper objectMapper, InfluxService influxService) {
         this.objectMapper = objectMapper;
-        this.weatherRepository = weatherRepository;
+        this.influxService = influxService;
     }
 
     
@@ -115,6 +114,7 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                             default:
                                 weatherData.put(key, requestData.get(key));
                                 break;
+
                         }
                     }
 
@@ -135,8 +135,8 @@ public class MessageListenerImpl implements MessageListener<String, String> {
             if(weatherDatasSize > 0) {
                 List<WeatherEntity> entities =
                         objectMapper.convertValue(weatherDatas, new TypeReference<List<WeatherEntity>>(){});
-                        
-                weatherRepository.save(entities);
+
+                influxService.save(entities);
             }
 
         } catch (Exception e) {

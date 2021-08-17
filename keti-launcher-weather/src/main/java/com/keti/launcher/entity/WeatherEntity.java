@@ -1,13 +1,17 @@
 package com.keti.launcher.entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Date;
 
-import com.influxdb.annotations.Column;
-import com.influxdb.annotations.Measurement;
+import org.influxdb.annotation.Column;
+import org.influxdb.annotation.TimeColumn;
+import org.influxdb.annotation.Measurement;
 
 
 @Data
@@ -15,7 +19,10 @@ import com.influxdb.annotations.Measurement;
 @Measurement(name = "weather")
 public class WeatherEntity {
 
-    @Column(timestamp = true)
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @TimeColumn
+    @Column(name = "time")
     private Instant timestamp;
 
     @Column(name = "status_code", tag = true)
@@ -36,26 +43,26 @@ public class WeatherEntity {
     private String vi03Phase;
 
     @Column(name = "vi_nx", tag = true)
-    private int viNx;
+    private String viNx;
     @Column(name = "vi_ny", tag = true)
-    private int viNy;
+    private String viNy;
 
     @Column(name = "vi_longitude_hours", tag = true)
-    private double viLongitudeHours;
+    private String viLongitudeHours;
     @Column(name = "vi_longitude_minutes", tag = true)
-    private double viLongitudeMinutes;
+    private String viLongitudeMinutes;
     @Column(name = "vi_longitude_seconds", tag = true)
-    private double viLongitudeSeconds;
+    private String viLongitudeSeconds;
     @Column(name = "vi_latitude_hours", tag = true)
-    private double viLatitudeHours;
+    private String viLatitudeHours;
     @Column(name = "vi_latitude_minutes", tag = true)
-    private double viLatitudeMinutes;
+    private String viLatitudeMinutes;
     @Column(name = "vi_latitude_seconds", tag = true)
-    private double viLatitudeSeconds;
+    private String viLatitudeSeconds;
     @Column(name = "vi_longitude_10milliseconds", tag = true)
-    private double viLongitude10milliseconds;
+    private String viLongitude10milliseconds;
     @Column(name = "vi_latitude_10milliseconds", tag = true)
-    private double viLatitude10milliseconds;
+    private String viLatitude10milliseconds;
 
     @Column(name = "vi_update_date", tag = true)
     private Date viUpdateDate;
@@ -67,20 +74,20 @@ public class WeatherEntity {
     private String baseTime;
     
     @Column(name = "T1H_value")
-    private double t1hValue;
+    private Double t1hValue;
     @Column(name = "RN1_value")
-    private double rn1Value;
+    private Double rn1Value;
     @Column(name = "UUU_value")
-    private double uuuValue;
+    private Double uuuValue;
     @Column(name = "VVV_value")
-    private double vvvValue;
+    private Double vvvValue;
     @Column(name = "REH_value")
-    private double rehValue;
+    private Double rehValue;
     @Column(name = "PTY_value")
-    private double ptyValue;
+    private Double ptyValue;
     @Column(name = "VEC_value")
-    private double vecValue;
+    private Double vecValue;
     @Column(name = "WSD_value")
-    private double wsdValue;
+    private Double wsdValue;
 
 }
