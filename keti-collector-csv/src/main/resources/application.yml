@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+     prefix: classpath:/templates/
+     check-template: true
+     suffix: .html
+     cache: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+  config:
+    activate:
+      on-profile: "common"
+  pid:
+    file: ./keti-collector-csv.pid
+
+info:
+  app:
+    name: keti-collector-csv
+    version: 0.0.1-SNAPSHOT
+
+---
+
+spring:
+  profiles:
+    group:
+      "local": "common,local"
+      "dev": "common,dev"
+      "prod": "common,prod"
