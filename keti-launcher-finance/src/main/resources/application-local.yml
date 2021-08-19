@@ -17,13 +17,13 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
     url: http://192.168.207.2:8086
-    database: keti
+    database: keti_rtd
     username: admin
     password: qwer1234!@
     retention-policy: autogen
-    connect-timeout: 10
+    connect-timeout: 15
     read-timeout: 30
-    write-timeout: 10
+    write-timeout: 15
     gzip: true
 
 logging:

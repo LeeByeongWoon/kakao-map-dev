@@ -21,7 +21,6 @@ public class KafkaConsumerConfig {
 	private final KafkaConsumerProperties properties;
     private final MessageListener<String, String> messageListener;
 
-
     public KafkaConsumerConfig(KafkaConsumerProperties properties, MessageListener<String, String> messageListener) {
         this.properties = properties;
         this.messageListener = messageListener;

@@ -13,10 +13,10 @@ public class WeatherRepository {
 
     private final InfluxDBTemplate<Point> influxDBTemplate;
 
-    
     public WeatherRepository(InfluxDBTemplate<Point> influxDBTemplate) {
         this.influxDBTemplate = influxDBTemplate;
     }
+    
 
     public void save(List<Point> entities) {
         influxDBTemplate.write(entities);

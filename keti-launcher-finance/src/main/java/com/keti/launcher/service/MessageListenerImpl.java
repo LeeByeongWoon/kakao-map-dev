@@ -28,7 +28,6 @@ public class MessageListenerImpl implements MessageListener<String, String> {
     private final FinanceRepository repository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     public MessageListenerImpl(ObjectMapper objectMapper, FinanceRepository repository) {
         this.objectMapper = objectMapper;
         this.repository = repository;

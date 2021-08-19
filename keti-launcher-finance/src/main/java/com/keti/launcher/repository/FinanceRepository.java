@@ -12,7 +12,6 @@ public class FinanceRepository {
 
     private final InfluxDBTemplate<Point> influxDBTemplate;
 
-    
     public FinanceRepository(InfluxDBTemplate<Point> influxDBTemplate) {
         this.influxDBTemplate = influxDBTemplate;
     }

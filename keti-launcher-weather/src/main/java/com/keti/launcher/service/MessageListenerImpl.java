@@ -34,7 +34,6 @@ public class MessageListenerImpl implements MessageListener<String, String> {
     private final WeatherRepository repository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     public MessageListenerImpl(ObjectMapper objectMapper, WeatherRepository repository) {
         this.objectMapper = objectMapper;
         this.repository = repository;
@@ -128,6 +127,7 @@ public class MessageListenerImpl implements MessageListener<String, String> {
 
                     WeatherEntity weatherEntity = objectMapper.convertValue(weatherData, new TypeReference<WeatherEntity>(){});
                     Point pointEntity = Point.measurementByPOJO(WeatherEntity.class).addFieldsFromPOJO(weatherEntity).build();
+                    
                     weatherDatas.add(pointEntity);
                 }
 
