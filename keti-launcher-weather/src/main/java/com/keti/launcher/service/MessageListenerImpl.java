@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.influxdb.dto.Point;
 
 import org.springframework.stereotype.Service;
 import org.springframework.kafka.listener.MessageListener;
@@ -23,26 +24,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import com.keti.launcher.entity.WeatherEntity;
+import com.keti.launcher.repository.WeatherRepository;
 
 
 @Service
 public class MessageListenerImpl implements MessageListener<String, String> {
 
     private final ObjectMapper objectMapper;
-    private final InfluxService influxService;
+    private final WeatherRepository repository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public MessageListenerImpl(ObjectMapper objectMapper, InfluxService influxService) {
+    public MessageListenerImpl(ObjectMapper objectMapper, WeatherRepository repository) {
         this.objectMapper = objectMapper;
-        this.influxService = influxService;
+        this.repository = repository;
     }
 
     
     @Override
 	public void onMessage(ConsumerRecord<String, String> consumerRecord) {
         try {
-            List<Map<String, Object>> weatherDatas = new ArrayList<>();
+            List<Point> weatherDatas = new ArrayList<>();
 
 
             Map<String, Object> recordValue =
@@ -124,20 +126,15 @@ public class MessageListenerImpl implements MessageListener<String, String> {
                         weatherData.put(category.toLowerCase() + "Value", item.get("obsrValue"));
                     }
 
-                    weatherDatas.add(weatherData);
+                    WeatherEntity weatherEntity = objectMapper.convertValue(weatherData, new TypeReference<WeatherEntity>(){});
+                    Point pointEntity = Point.measurementByPOJO(WeatherEntity.class).addFieldsFromPOJO(weatherEntity).build();
+                    weatherDatas.add(pointEntity);
                 }
 
                 logger.info("[Consume(" + (cnt+1) + "/" + messagesSize + ") | resultCode=" + resultCode + ", resultMsg=" + resultMsg + "]");
             }
 
-            int weatherDatasSize = weatherDatas.size();
-            
-            if(weatherDatasSize > 0) {
-                List<WeatherEntity> entities =
-                        objectMapper.convertValue(weatherDatas, new TypeReference<List<WeatherEntity>>(){});
-
-                influxService.save(entities);
-            }
+            repository.save(weatherDatas);
 
         } catch (Exception e) {
             logger.info("[Exception: " + e + " ]");

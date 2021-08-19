@@ -5,8 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-import com.influxdb.annotations.Column;
-import com.influxdb.annotations.Measurement;
+import org.influxdb.annotation.Column;
+import org.influxdb.annotation.TimeColumn;
+import org.influxdb.annotation.Measurement;
 
 
 @Data
@@ -14,7 +15,8 @@ import com.influxdb.annotations.Measurement;
 @Measurement(name = "finance")
 public class FinanceEntity {
 
-    @Column(timestamp = true)
+    @TimeColumn
+    @Column(name = "time")
     private Instant timestamp;
 
     @Column(name = "country", tag = true)

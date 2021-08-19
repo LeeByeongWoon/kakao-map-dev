@@ -1,3 +1,30 @@
+package com.keti.launcher.repository;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.data.influxdb.InfluxDBTemplate;
+import org.influxdb.dto.Point;
+
+
+
+@Repository
+public class WeatherRepository {
+
+    private final InfluxDBTemplate<Point> influxDBTemplate;
+
+    
+    public WeatherRepository(InfluxDBTemplate<Point> influxDBTemplate) {
+        this.influxDBTemplate = influxDBTemplate;
+    }
+
+    public void save(List<Point> entities) {
+        influxDBTemplate.write(entities);
+    }
+    
+}
+
+
 // package com.keti.launcher.repository;
 
 // import java.util.List;

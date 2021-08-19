@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.kafka.listener.MessageListener;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.influxdb.dto.Point;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,21 +25,19 @@ import com.keti.launcher.repository.FinanceRepository;
 public class MessageListenerImpl implements MessageListener<String, String> {
 
     private final ObjectMapper objectMapper;
-    private final FinanceRepository financeRepository;
+    private final FinanceRepository repository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public MessageListenerImpl(ObjectMapper objectMapper, FinanceRepository financeRepository) {
+    public MessageListenerImpl(ObjectMapper objectMapper, FinanceRepository repository) {
         this.objectMapper = objectMapper;
-        this.financeRepository = financeRepository;
+        this.repository = repository;
     }
 
     
     @Override
 	public void onMessage(ConsumerRecord<String, String> consumerRecord) {
         try {
-            List<List<FinanceEntity>> datas = new ArrayList<>();
-
             Map<String, Object> records = 
                     objectMapper.readValue(consumerRecord.value(), new TypeReference<Map<String, Object>>(){});
             Map<String, Object> messages = 
@@ -46,16 +45,18 @@ public class MessageListenerImpl implements MessageListener<String, String> {
 
             Set<String> keys = messages.keySet();
             for (Object key : keys) {
-                List<FinanceEntity> data = 
+                List<Point> pointsEntities = new ArrayList<>();
+
+                List<FinanceEntity> financeEntities = 
                         objectMapper.convertValue(messages.get(key), new TypeReference<List<FinanceEntity>>(){});
+                
+                for (FinanceEntity financeEntity : financeEntities) {
+                    Point pointEntity = Point.measurementByPOJO(FinanceEntity.class).addFieldsFromPOJO(financeEntity).build();
+                    pointsEntities.add(pointEntity);
+                }
 
-                datas.add(data);
+                repository.save(pointsEntities);
             }
-
-            for (List<FinanceEntity> data : datas) {
-                financeRepository.save(data);
-            }
-
         } catch (Exception e) {
             logger.info("[Exception: " + e + " ]");
         }   
