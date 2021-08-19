@@ -37,12 +37,12 @@ env = {
         "mariadb": {
             "username": "keti",
             "password": "qwer1234!@",
-            "hostname": "192.168.100.41",
+            "hostname": "203.253.128.158",
             "database": "keti",
             "charset": "utf8"
         },
         "kafka": {
-            "bootstrap_servers": ["192.168.207.2:9092"],
+            "bootstrap_servers": ["203.253.128.158:9092"],
             "topic": "dev-keti-finance",
             "acks": -1,
             "compression_type": "lz4",

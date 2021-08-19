@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.keti.collector.entity.VillageInfoEntity;
@@ -16,8 +15,11 @@ import com.keti.collector.repository.VillageInfoRepository;
 @Service
 public class VillageInfoService {
 
-    @Autowired
-    private VillageInfoRepository villageInfoRepository;
+    private final VillageInfoRepository villageInfoRepository;
+
+    public VillageInfoService(VillageInfoRepository villageInfoRepository) {
+        this.villageInfoRepository = villageInfoRepository;
+    }
 
 
     public List<VillageInfoEntity> getAllVi() {

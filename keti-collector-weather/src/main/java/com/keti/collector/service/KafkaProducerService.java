@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -22,10 +21,12 @@ public class KafkaProducerService {
 	@Value("${spring.kafka.producer.topic}")
     private String topic;
 
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	final Logger logger = LoggerFactory.getLogger(this.getClass());
+	public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+		this.kafkaTemplate = kafkaTemplate;
+	}
 
     
     public void sendMessage(List<JSONObject> weatherDataList) throws Exception {

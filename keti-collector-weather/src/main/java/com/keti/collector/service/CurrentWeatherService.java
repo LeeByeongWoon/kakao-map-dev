@@ -30,19 +30,19 @@ public class CurrentWeatherService extends AbstractWeatherService {
 
     @Value("${spring.weatherApi.end-point}")
     private String endPoint;
-
     @Value("${spring.weatherApi.end-point-service}")
     private String endPointService;
-
     @Value("${spring.weatherApi.end-point-service-key}")
     private String endPointServiceKey;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private JSONParser parser = new JSONParser();
 
-    JSONParser parser = new JSONParser();
+    private final ObjectMapper objectMapper;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    public CurrentWeatherService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
     
 
     @Override

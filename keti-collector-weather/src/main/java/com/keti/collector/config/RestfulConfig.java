@@ -2,7 +2,6 @@ package com.keti.collector.config;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,8 +13,11 @@ import org.springframework.web.client.RestTemplate;
 @EnableConfigurationProperties(RestfulProperties.class)
 public class RestfulConfig {
 
-    @Autowired
-    RestfulProperties properties;
+    private final RestfulProperties properties;
+
+    public RestfulConfig(RestfulProperties properties) {
+        this.properties = properties;
+    }
 
     
     @Bean

@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.kafka.core.ProducerFactory;
@@ -17,8 +16,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 @EnableConfigurationProperties(KafkaProducerProperties.class)
 public class KafkaProducerConfig {
 
-    @Autowired
-    private KafkaProducerProperties properties;
+    private final KafkaProducerProperties properties;
+
+    public KafkaProducerConfig(KafkaProducerProperties properties) {
+        this.properties = properties;
+    }
     
 
     @Bean
