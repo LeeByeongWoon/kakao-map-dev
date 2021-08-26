@@ -1,20 +1,7 @@
-buildscript {
-	ext {
-		springBootVersion = "2.4.9"
-	}
-
-	repositories {
-		mavenCentral()
-		jcenter()
-	}
-
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
-}
-
 plugins {
 	id 'java'
+	id "com.moowork.node" version "1.3.1"
+	id "com.moowork.gulp" version "1.3.0"
 	id 'application'
 	id 'org.springframework.boot' version '2.4.9'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -66,6 +53,45 @@ bootRun {
     String springProfilesActive = System.properties['spring.profiles.active']
     systemProperty "spring.profiles.active", springProfilesActive
 }
+
+task npm_start(type: NpmTask) {
+	workingDir = file("src/main/webapp")
+	args = ["start"]
+}
+
+task npm_install(type: NpmTask) {
+	workingDir = file("src/main/webapp")
+	args = ["install"]
+}
+
+task npm_build(type: NpmTask) {
+	workingDir = file("src/main/webapp")
+	args = ["run", "build"]
+	// script = file("src/main/webapp/scripts/build.js")
+}
+
+task copy_build(type: Copy) {
+	from file("src/main/webapp/build/.")
+	into file("src/main/resources/static")
+}
+
+task copy_index(type: Copy) {
+	from file("src/main/webapp/build/index.html")
+	into file("src/main/resources/templates")
+}
+
+task copy_main(type: Copy) {
+	from file("src/main/webapp/build/index.html")
+	into file("src/main/resources/templates")
+	rename { String name -> name.replace("index.html", "main.html") }
+}
+
+
+npm_build.dependsOn npm_install
+copy_build.dependsOn npm_build
+copy_index.dependsOn copy_build
+copy_main.dependsOn copy_index
+compileJava.dependsOn copy_main
 
 // test {
 // 	useJUnitPlatform()

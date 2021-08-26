@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 
-import CsvUpload from "./components/CsvUpload";
+import CsvPreviewUpload from "./components/CsvPreviewUpload";
 import CsvViewer from "./components/CsvViewer";
 
 import BasicInfomation from "./components/BasicInfomation";
@@ -72,7 +72,7 @@ const CsvImporter = () => {
                     <Col md="12">
                         <Card>
 
-                            <CsvUpload
+                            <CsvPreviewUpload
                                 defaultCsvData={defaultCsvData}
                                 handleOnUploadCsvData={handleOnUploadCsvData}
                                 handleOnUpdateCsvData={handleOnUpdateCsvData}
