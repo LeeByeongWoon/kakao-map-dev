@@ -2,8 +2,8 @@
 <!-- 300초마다 설정 파일의 변경을 확인 하여 변경시 갱신 -->
 <configuration scan="true" scanPeriod="300 seconds">
     <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
-    <springProperty scope="context" name="LOG_DIR" source="logging.path.dir"/>
-    <springProperty scope="context" name="LOG_FILE" source="logging.path.file"/>
+    <springProperty scope="context" name="LOG_DIR" source="logging.dir"/>
+    <springProperty scope="context" name="LOG_FILE" source="logging.file"/>
 
     <property name="ERR_LOG_FILE_NAME" value="${LOG_FILE}_err"/>
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] - %msg%n"/>

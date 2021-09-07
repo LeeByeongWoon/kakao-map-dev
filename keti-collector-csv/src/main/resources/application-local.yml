@@ -2,20 +2,31 @@ spring:
   config:
     activate:
       on-profile: "local"
-  influx2: 
-    url: http://192.168.207.2:8086 # URL to connect to InfluxDB.
-    username: admin # Username to use in the basic auth.
-    password: qwer1234!@ # Password to use in the basic auth.
-    token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
-    org: wizontech # Default destination organization for writes and queries.
-    bucket: keti # Default destination bucket for writes.
-    logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE)
-    readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
-    writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
-    connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
+  multipart:
+    location: /Users/gangbinpark/gorotis11/ketiClust/keti-collector-csv/
+  influxdb:
+    url: http://192.168.207.2:8086
+    database: wiz
+    username: admin
+    password: qwer1234!@
+    retention-policy: autogen
+    connect-timeout: 30
+    read-timeout: 30
+    write-timeout: 30
+    gzip: true
+  # influx2: 
+  #   url: http://192.168.207.2:8086 # URL to connect to InfluxDB.
+  #   username: admin # Username to use in the basic auth.
+  #   password: qwer1234!@ # Password to use in the basic auth.
+  #   token: N69q12IRj4Hr-8pZEvxfy-ZPkvXFteqCFOKV4GQ7pmUa4H6Wuvdp-1NmudjD3RWq9mD2wWuGR8-PauKbUABm-Q== # Token to use for the authorization.
+  #   org: wizontech # Default destination organization for writes and queries.
+  #   bucket: keti # Default destination bucket for writes.
+  #   logLevel: BASIC # The log level for logging the HTTP request and HTTP response. (Default: NONE)
+  #   readTimeout: 15s # Read timeout for OkHttpClient. (Default: 10s)
+  #   writeTimeout: 15s # Write timeout for OkHttpClient. (Default: 10s)
+  #   connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
 logging:
-  path:
-    dir: ./logs
-    file: keti-collector-csv
+  dir: ./logs
+  file: keti-collector-csv
   level:
     root: info

@@ -2,6 +2,8 @@ spring:
   config:
     activate:
       on-profile: "dev"
+  multipart:
+    location: /appdata/keti-collector-csv/
   influx2: 
     url: http://192.168.100.46:8086 # URL to connect to InfluxDB.
     username: wizontech # Username to use in the basic auth.
@@ -15,8 +17,7 @@ spring:
     connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
     
 logging:
-  path:
-    dir: /applog/keti-collector-csv
-    file: keti-collector-csv
+  dir: /applog/keti-collector-csv
+  file: keti-collector-csv
   level:
     root: info
