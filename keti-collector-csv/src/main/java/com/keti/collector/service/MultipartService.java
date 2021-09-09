@@ -1,24 +1,24 @@
 package com.keti.collector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
+import java.util.UUID;
 import java.util.HashMap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,50 +32,46 @@ public class MultipartService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
-    public Map<String, String> fileUpload(HttpServletRequest request) throws FileUploadException, IOException {
+    public JSONObject fileUpload(HttpServletRequest request) throws FileUploadException, IOException {
+        Map<String, String> fileMap = new HashMap<>();
+
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+        if (!isMultipart) {
+            fileMap.put("type", "isMultipart");
+            fileMap.put("message", "request is not multipart");
+
+            return new JSONObject(fileMap); 
+        }
+
         ServletFileUpload upload = new ServletFileUpload();
         FileItemIterator iter = upload.getItemIterator(request);
             
-        Map<String, String> save = new HashMap<>();
+        UUID uuid = UUID.randomUUID();
+        String uuidFileName = uuid.toString() + ".csv";
 
         while (iter.hasNext()) {
             FileItemStream item = iter.next();
             String name = item.getFieldName();
 
-            switch (name) {
-                case "files":
-                    if (!item.isFormField()) {
-                        InputStream filesInputStream = item.openStream();
-                        String path = location + item.getName();
-                        File files = new File(path);
-                        OutputStream out = new FileOutputStream(files);
-                        IOUtils.copy(filesInputStream, out);
+            if (!item.isFormField()) {
+                InputStream filesInputStream = item.openStream();
+                String fileName = item.getName();
+                String filePath = location + uuidFileName;
 
-                        save.put("files", path);
+                File files = new File(filePath);
+                OutputStream out = new FileOutputStream(files);
+                IOUtils.copy(filesInputStream, out);
 
-                        out.close();
-                        filesInputStream.close(); 
-                    }
+                fileMap.put("type", "success");
+                fileMap.put("file_name", fileName);
+                fileMap.put("uuid_file_name", uuidFileName);
 
-                    break;
-                        
-                case "params":
-                    InputStream paramsInputStream = item.openStream();
-                    StringWriter writer = new StringWriter();
-                    String rules = IOUtils.toString(paramsInputStream, "UTF-8");
-
-                    save.put("rules", rules);
-                    
-                    paramsInputStream.close();
-                            
-                    break;
-                
-                default:
-                    break;
+                out.close();
+                filesInputStream.close(); 
             }
         }
             
-        return save;
+        return new JSONObject(fileMap);
     }
 
 }
