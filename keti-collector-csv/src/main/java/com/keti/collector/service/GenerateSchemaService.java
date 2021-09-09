@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -30,6 +31,9 @@ import com.keti.collector.vo.GenerateVo;
 
 @Service
 public class GenerateSchemaService {
+
+    @Value("${spring.multipart.location}")
+    private String location = null;
     
     private final InfluxDBRepository influxDBRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,7 +55,12 @@ public class GenerateSchemaService {
     public void generateSeries(GenerateVo generateVo) throws IOException, ParseException {
         String uuidFileName = generateVo.getUuidFileName();
         String encode = generateVo.getEncode();
-        File file = new File("/Users/gangbinpark/gorotis11/ketiClust/keti-collector-csv/" + uuidFileName);
+        
+        JSONObject measurementObject = generateVo.getMeasurement();
+        String measurement = measurementObject.get("value").toString();
+
+
+        File file = new File(location + uuidFileName);
         LineIterator it = FileUtils.lineIterator(file, encode);
 
         int cnt = -1;
@@ -77,7 +86,7 @@ public class GenerateSchemaService {
 
                 logger.info("commonIO: " + cnt);
 
-                Builder builder = Point.measurement("batch_test_01");
+                Builder builder = Point.measurement(measurement);
                                        
                 builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
                 builder.tag("serial", entity[2]);
