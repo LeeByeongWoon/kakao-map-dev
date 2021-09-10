@@ -12,26 +12,36 @@ import {
     UncontrolledTooltip
 } from "reactstrap";
 
-const keySet = [
-    { label: "field", value: "field" },
-    { label: "tag", value: "tag" }
-];
 
 const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
-    const { key_set, value } = val;
+    const dataSet = [
+        { label: "field", value: "field" },
+        { label: "tag", value: "tag" }
+    ];
+    
+    const dataType = [
+        { label: "Float", value: "Float" },
+        { label: "Char", value: "Char" }
+    ];
+
+    const { data_set, data_type, value } = val;
 
     const [display, setDisplay] = useState("none");
     const [editResult, setEditResult] = useState({
         column_name: value,
-        key_set: {
-            label: key_set,
-            value: key_set
+        data_set: {
+            label: data_set,
+            value: data_set
+        },
+        data_type: {
+            label: data_type,
+            value: data_type
         }
     });
 
 
     return (
-        <div style={{ position: "relative", display: "inline-block"}} >
+        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "72px"}} >
             {value}
             {" "}
             <Button
@@ -99,7 +109,7 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                             }}
                             >
                                 Column Name
-                                <Input 
+                                <Input
                                     style={{
                                         "display": "inline",
                                         "width": "150px"
@@ -120,14 +130,34 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                                 fontSize: "10px"
                             }}
                             >
-                                Key Set
+                                Data Set
                                 <Select
                                     className="react-select"
                                     classNamePrefix="react-select"
-                                    name="mainDomainSelect"
-                                    value={editResult.key_set}
-                                    onChange={ v => setEditResult({ ...editResult, key_set: v }) }
-                                    options={keySet}
+                                    name="dataSetSelect"
+                                    value={editResult.data_set}
+                                    onChange={ v => setEditResult({ ...editResult, data_set: v }) }
+                                    options={dataSet}
+                                    placeholder="option"
+                                    />
+                                <br />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col
+                            style={{
+                                fontWeight: "1",
+                                fontSize: "10px"
+                            }}
+                            >
+                                Data Type
+                                <Select
+                                    className="react-select"
+                                    classNamePrefix="react-select"
+                                    name="dataTypeSelect"
+                                    value={editResult.data_type}
+                                    onChange={ v => setEditResult({ ...editResult, data_type: v }) }
+                                    options={dataType}
                                     placeholder="option"
                                     />
                                 <br />
@@ -148,7 +178,8 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                                         const newData = {
                                             ...val,
                                             value: editResult.column_name,
-                                            key_set: editResult.key_set.value
+                                            data_set: editResult.data_set.value,
+                                            data_type: editResult.data_type.value
                                         };
                                         
                                         handleOnEdit(val, newData);

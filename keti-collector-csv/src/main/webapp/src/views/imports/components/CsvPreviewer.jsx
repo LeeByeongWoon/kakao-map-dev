@@ -27,11 +27,11 @@ const defaultCsvData = {
     "columns": 
     [
         [
-            {"index": 0, "key_set": "field", "data_type": "String", "value": "Column-1"},
-            {"index": 1, "key_set": "field", "data_type": "String", "value": "Column-2"},
-            {"index": 2, "key_set": "field", "data_type": "String", "value": "Column-3"},
-            {"index": 3, "key_set": "field", "data_type": "String", "value": "Column-4"},
-            {"index": 4, "key_set": "field", "data_type": "String", "value": "Column-5"}
+            {"index": 0, "data_set": "field", "data_type": "Char", "value": "Column-1"},
+            {"index": 1, "data_set": "field", "data_type": "Char", "value": "Column-2"},
+            {"index": 2, "data_set": "field", "data_type": "Char", "value": "Column-3"},
+            {"index": 3, "data_set": "field", "data_type": "Char", "value": "Column-4"},
+            {"index": 4, "data_set": "field", "data_type": "Char", "value": "Column-5"}
         ]
     ],
     "rows":
@@ -117,18 +117,36 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
 
         if(files.length !== 0) {
             Papa.parse(
-                files[0].slice(0, 102400),
+                files[0].slice(0, 102400 * 10),
                 {
                     encoding: encode !== null ? encode.value : "utf-8",
                     complete: (results, parser) => {
                         const { data } = results;
 
+                        const rows = data.slice(1, data.length);
+
                         const columns = data.slice(0, 1).map(
                             v => v.map(
-                                (val, idx) => ({"index": idx, "key_set": "field", "data_type": "String", "value": val})
+                                (val, idx) => {
+                                    let data_type = "";
+                                    
+                                    for (let index = 0; index < rows.length; index++) {
+                                        const value = rows[index];
+                                        const index_value = value[idx] !== undefined ? value[idx] : -1;
+                                        const index_value_isNaN  = !isNaN(index_value);
+                                            
+                                        if(index_value_isNaN) {
+                                            data_type = "Float";
+                                        } else {
+                                            data_type = "Char";
+                                            break;        
+                                        }
+                                    };
+
+                                    return {"index": idx, "data_set": "field", "data_type": data_type, "data_format": "", "value": val};
+                                }
                             )
                         );
-                        const rows = data.slice(1, data.length);
                         
                         const table = {
                             "columns": columns,
@@ -350,7 +368,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        csvData.rows.slice(0, 5).map((v, i) => {
+                                        csvData.rows.slice(0, 7).map((v, i) => {
                                             return (
                                                 <tr key={"csv_table_" + i + "_" + v}>
                                                     {

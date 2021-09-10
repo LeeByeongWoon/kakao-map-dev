@@ -11,7 +11,6 @@ public class GenerateVo {
     private String uuidFileName;
     private String domain;
     private JSONObject measurement;
-    private JSONObject timeIndex;
     private String encode;
     private List<JSONObject> columns;    
 }

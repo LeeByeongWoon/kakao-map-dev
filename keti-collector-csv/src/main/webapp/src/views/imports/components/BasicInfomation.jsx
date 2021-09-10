@@ -75,11 +75,17 @@ const BasicInfomation = ({ files, rules }) => {
         const params = {
             uuidFileName: uuid_file_name,
             domain: domain.target_domain,
-            timeIndex: timeIndex,
             measurement: measurement,
             encode: encode,
-            columns: columns
+            columns: columns.map(
+                v => {
+                    const column = v.value !== timeIndex.value ? v : { ...v, data_set: "time", data_type: "Char", data_format: timeIndex.format };
+                    return column;
+                }
+            )
         };
+
+        console.log(params);
 
         axios({
             url: url,
@@ -429,8 +435,8 @@ const BasicInfomation = ({ files, rules }) => {
                                         <Button
                                             color="primary"
                                             style={{ margin: 0 }}
-                                            // onClick={ () => files.length !==0 ? handleOnFileUpload(files) : null }
-                                            onClick={ () => handleOnFileUpload(files) }
+                                            onClick={ () => files.length !==0 ? handleOnFileUpload(files) : null }
+                                            // onClick={ () => handleOnGenerator({ uuid_file_name: "aa.csv" }) }
                                             >
                                                 commit
                                         </Button>

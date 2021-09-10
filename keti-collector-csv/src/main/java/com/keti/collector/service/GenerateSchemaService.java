@@ -3,7 +3,6 @@ package com.keti.collector.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.IOException;
@@ -11,19 +10,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.influxdb.dto.BoundParameterQuery;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.Point.Builder;
+import org.json.simple.JSONObject;
 
 import com.keti.collector.repository.InfluxDBRepository;
 import com.keti.collector.vo.GenerateVo;
@@ -52,13 +47,11 @@ public class GenerateSchemaService {
     }
 
 
-    public void generateSeries(GenerateVo generateVo) throws IOException, ParseException {
+    public void generateSeries(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
         String uuidFileName = generateVo.getUuidFileName();
         String encode = generateVo.getEncode();
-        
-        JSONObject measurementObject = generateVo.getMeasurement();
-        String measurement = measurementObject.get("value").toString();
-
+        String measurement = generateVo.getMeasurement().get("value").toString();
+        List<JSONObject> columns = generateVo.getColumns();
 
         File file = new File(location + uuidFileName);
         LineIterator it = FileUtils.lineIterator(file, encode);
@@ -79,19 +72,50 @@ public class GenerateSchemaService {
                 entities = new ArrayList<Point>();
             } else {
                 String[] entity = line.split(",", -1);
-                String sdt = entity[1];
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd-hh:mm:ss");
-                Date dt = format.parse(sdt);
+                Builder builder = Point.measurement(measurement);
+
+                for (JSONObject column : columns) {
+                    int index = Integer.parseInt(column.get("index").toString());
+                    String dataSet = column.get("data_set").toString();
+                    String dataType = column.get("data_type").toString();
+                    String dataFormat = column.get("data_format").toString();
+                    String value = column.get("value").toString();
+
+                    switch (dataSet) {
+                        case "time":
+                            String sdt = entity[index];
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
+                            Date dt = simpleDateFormat.parse(sdt);
+
+                            builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
+
+                            break;
+
+                        case "tag":
+                            builder.tag(value, entity[index]);
+                            
+                            break;
+
+                        case "field":
+                            logger.info("entity[index]: " + entity[index]);
+                            builder.addField(value, entity[index]);
+
+                            break;
+                    }
+                }
+                // String sdt = entity[1];
+                
+                // Date dt = simpleDateFormat.parse(sdt);
 
                 logger.info("commonIO: " + cnt);
 
-                Builder builder = Point.measurement(measurement);
+                // Builder builder = Point.measurement(measurement);
                                        
-                builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
-                builder.tag("serial", entity[2]);
-                builder.addField("index", entity[0]);
-                builder.addField("pm25", entity[8]);
+                // builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
+                // builder.tag("serial", entity[2]);
+                // builder.addField("index", entity[0]);
+                // builder.addField("pm25", entity[8]);
 
                 Point point = builder.build();
 
@@ -106,10 +130,12 @@ public class GenerateSchemaService {
             }
         };
 
-        influxDBRepository.save(entities);
+        if(cnt % 100 != 0) {
+            influxDBRepository.save(entities);
 
-        entities.clear();
-        entities = null;
+            entities.clear();
+            entities = null;
+        }
     }
 
 }

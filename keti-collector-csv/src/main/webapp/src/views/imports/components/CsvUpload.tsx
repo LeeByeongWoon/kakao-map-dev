@@ -55,7 +55,7 @@ export function CsvPreviewUpload({ csvFiles }: CsvPreviewUploadProps) {
                                 (val, idx) => ({"index": idx, "type": "field", "label": val, "value": val})
                             )
                         );
-                        const rows = data.slice(1, data.length);
+                        const rows = data.slice(1, data.length)
                         
                         const table = {
                             "columns": columns,
