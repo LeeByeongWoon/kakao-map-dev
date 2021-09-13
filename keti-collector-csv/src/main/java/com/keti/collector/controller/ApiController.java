@@ -55,13 +55,33 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/generate", method = RequestMethod.PUT)
-    public ResponseEntity<JSONObject> apiGenerate(@RequestBody GenerateVo generateVo) {
+    @RequestMapping(value = "/generate/input", method = RequestMethod.PUT)
+    public ResponseEntity<JSONObject> apiGenerateByInput(@RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
 
         try {
             generateSchemaService.generateDatabase(generateVo);
-            generateSchemaService.generateSeries(generateVo);
+            generateSchemaService.generateByInput(generateVo);
+
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
+
+        } catch (ParseException ex) {
+            responseEntity = responseExcetion("ParseException", ex.getMessage());
+        } catch (IOException ex) {
+            responseEntity = responseExcetion("IOException", ex.getMessage());
+        }
+
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/generate/columns", method = RequestMethod.PUT)
+    public ResponseEntity<JSONObject> apiGenerateByColumns(@RequestBody GenerateVo generateVo) {
+        ResponseEntity<JSONObject> responseEntity = null;
+
+        try {
+            generateSchemaService.generateDatabase(generateVo);
+            generateSchemaService.generateByColumns(generateVo);
 
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
 

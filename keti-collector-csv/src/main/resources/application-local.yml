@@ -5,7 +5,7 @@ spring:
   multipart:
     location: /Users/gangbinpark/gorotis11/ketiClust/keti-collector-csv/
   influxdb:
-    url: http://192.168.207.2:8086
+    url: http://192.168.7.182:8086
     database: wiz
     username: admin
     password: qwer1234!@

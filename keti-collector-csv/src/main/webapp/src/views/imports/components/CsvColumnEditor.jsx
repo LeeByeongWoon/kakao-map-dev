@@ -41,7 +41,7 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
 
 
     return (
-        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "72px"}} >
+        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "96px"}} >
             {value}
             {" "}
             <Button

@@ -1,13 +1,11 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 
 import axios from "axios";
 
 import Select from "react-select";
-
 import {
     ProgressBar
 } from "react-bootstrap"
-
 import {
     Row,
     Col,
@@ -45,15 +43,15 @@ const BasicInfomation = ({ files, rules }) => {
         main_domain: {
             value: ""
         },
-        sub_domain: "",
+        sub_domain: "test_01",
         target_domain: ""
     });
     const [timeIndex, setTimeIndex] = useState({
-        format: "",
+        format: "yyyy/MM/dd-HH:mm:ss",
         value: ""
     });
     const [measurement, setMeasurement] = useState({
-        radio: "user",
+        type: "input",
         value: ""
     });
     const [functionRules, setFunctionRules] = useState(
@@ -67,7 +65,9 @@ const BasicInfomation = ({ files, rules }) => {
 
     const handleOnGenerator = (data) => {
         const { uuid_file_name } = data;
-        const url = "/api/generate";
+        const { type } = measurement;
+
+        const url = "/api/generate/" + type;
         const method= "PUT";
         const headers = {
             "Content-Type": "application/json"
@@ -84,8 +84,6 @@ const BasicInfomation = ({ files, rules }) => {
                 }
             )
         };
-
-        console.log(params);
 
         axios({
             url: url,
@@ -249,7 +247,7 @@ const BasicInfomation = ({ files, rules }) => {
                         </Row>
                         <Row>
                             <Label md="2">Measurement</Label>
-                            <Col md="2">
+                            <Col md="3">
                                 <FormGroup>
                                     <div
                                         style={{ marginTop: "8px" }}
@@ -262,14 +260,14 @@ const BasicInfomation = ({ files, rules }) => {
                                                     id="userCreate"
                                                     name="measurement"
                                                     type="radio"
-                                                    onClick={ e => setMeasurement({...measurement, "radio": "user"}) }
+                                                    onClick={ e => setMeasurement({...measurement, "type": "input"}) }
                                                     />
-                                                        user-generated <span className="form-check-sign" />
+                                                        generated-by-input<span className="form-check-sign" />
                                             </Label>
                                     </div>
                                 </FormGroup>
                             </Col>
-                            <Col md="2">
+                            <Col md="3">
                                 <FormGroup>
                                     <div
                                         style={{ marginTop: "8px" }}
@@ -281,9 +279,9 @@ const BasicInfomation = ({ files, rules }) => {
                                                     id="autoCreate"
                                                     name="measurement"
                                                     type="radio"
-                                                    onClick={ e => setMeasurement({...measurement, "radio": "auto"}) }
+                                                    onClick={ e => setMeasurement({...measurement, "type": "columns"}) }
                                                     />
-                                                        auto-generated <span className="form-check-sign" />
+                                                        generated-by-columns <span className="form-check-sign" />
                                             </Label>
                                     </div>
                                 </FormGroup>
@@ -294,7 +292,7 @@ const BasicInfomation = ({ files, rules }) => {
                             <Col md="3">
                                 <FormGroup
                                     style={{
-                                        display: measurement.radio !== "user" ? "none" : "block"
+                                        display: measurement.type !== "input" ? "none" : "block"
                                     }}
                                     >
                                         <Input
@@ -306,7 +304,7 @@ const BasicInfomation = ({ files, rules }) => {
                                 </FormGroup>
                                 <FormGroup
                                     style={{
-                                        display: measurement.radio !== "auto" ? "none" : "block"
+                                        display: measurement.type !== "columns" ? "none" : "block"
                                     }}
                                     >
                                         <Select
@@ -314,7 +312,10 @@ const BasicInfomation = ({ files, rules }) => {
                                             classNamePrefix="react-select"
                                             name="measurement"
                                             value={measurement || ""}
-                                            onChange={ e => setMeasurement({ ...measurement, ...e }) }
+                                            onChange={ e => {
+                                                console.log(measurement, e);
+                                                setMeasurement({ ...measurement, ...e });
+                                            } }
                                             options={
                                                 rules.columns !== undefined
                                                 ?
