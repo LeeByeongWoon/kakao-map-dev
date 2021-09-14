@@ -3,8 +3,6 @@ package com.keti.collector.repository;
 import java.util.List;
 
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 import org.springframework.data.influxdb.InfluxDBConnectionFactory;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.data.influxdb.InfluxDBProperties;

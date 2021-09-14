@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,36 +56,30 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/generate/input", method = RequestMethod.PUT)
-    public ResponseEntity<JSONObject> apiGenerateByInput(@RequestBody GenerateVo generateVo) {
+    @RequestMapping(value = "/generate/{type}", method = RequestMethod.PUT)
+    public ResponseEntity<JSONObject> apiGenerateSchema(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
+        Map<String, String> apiResponse = new HashMap<>();
 
         try {
-            generateSchemaService.generateDatabase(generateVo);
-            generateSchemaService.generateByInput(generateVo);
-
-            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
-
-        } catch (ParseException ex) {
-            responseEntity = responseExcetion("ParseException", ex.getMessage());
-        } catch (IOException ex) {
-            responseEntity = responseExcetion("IOException", ex.getMessage());
-        }
-
-        return responseEntity;
-    }
-
-
-    @RequestMapping(value = "/generate/columns", method = RequestMethod.PUT)
-    public ResponseEntity<JSONObject> apiGenerateByColumns(@RequestBody GenerateVo generateVo) {
-        ResponseEntity<JSONObject> responseEntity = null;
-
-        try {
-            generateSchemaService.generateDatabase(generateVo);
-            generateSchemaService.generateByColumns(generateVo);
-
-            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
-
+            switch (type) {
+                case "input":
+                    apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
+                    // apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
+                    apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
+        
+                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+                    break;
+                
+                case "columns":
+                    apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
+                    apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
+                    apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
+        
+                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+                    break;
+            }
+            
         } catch (ParseException ex) {
             responseEntity = responseExcetion("ParseException", ex.getMessage());
         } catch (IOException ex) {

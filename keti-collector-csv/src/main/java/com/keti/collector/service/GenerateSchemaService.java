@@ -39,15 +39,74 @@ public class GenerateSchemaService {
     }
 
 
-    public void generateDatabase(GenerateVo generateVo) {
+    public String generateDatabase(GenerateVo generateVo) {
         String dbName = generateVo.getDomain();
 
         influxDBRepository.createDatabase(dbName);
-        influxDBRepository.swapDatabase(dbName);
+
+        return "success";
     }
 
 
-    public void generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
+    public String useDatabase(GenerateVo generateVo) {
+        String dbName = generateVo.getDomain();
+
+        influxDBRepository.swapDatabase(dbName);
+
+        return dbName;
+    }
+
+
+    public String generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
+        String uuidFileName = generateVo.getUuidFileName();
+        String encode = generateVo.getEncode();
+        String measurement = generateVo.getMeasurement().get("value").toString();
+        List<JSONObject> columns = generateVo.getColumns();
+
+        LineIterator it = csvFileReader(encode, uuidFileName);
+
+        int cnt = -1;
+        List<Point> entities = null;
+
+        while(it.hasNext()) {
+            cnt++;
+            String line = it.nextLine();
+
+            if(cnt == 0) {
+                continue;
+            }
+            
+            if(entities == null) {
+                entities = new ArrayList<Point>();
+            }
+
+            String[] entity = line.split(",", -1);
+            Point point = generateSeries(measurement, columns, entity);
+
+            entities.add(point);
+
+            if(cnt % 1000 == 0) {
+                logger.info("commit: " + cnt/1000);
+                influxDBRepository.save(entities);
+
+                entities.clear();
+                entities = null;
+            }
+        }
+
+        if(cnt % 1000 != 0) {
+            logger.info("commit: " + cnt/1000);
+            influxDBRepository.save(entities);
+
+            entities.clear();
+            entities = null;
+        }
+
+        return Integer.toString(cnt);
+    }
+
+
+    public String generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
         String uuidFileName = generateVo.getUuidFileName();
         String encode = generateVo.getEncode();
         int measurementIndex = Integer.parseInt(generateVo.getMeasurement().get("index").toString());
@@ -78,8 +137,8 @@ public class GenerateSchemaService {
 
             entities.add(point);
 
-            if(cnt % 100 == 0) {
-                logger.info("commit: " + cnt/100);
+            if(cnt % 1000 == 0) {
+                logger.info("commit: " + cnt/1000);
                 influxDBRepository.save(entities);
 
                 entities.clear();
@@ -87,62 +146,15 @@ public class GenerateSchemaService {
             }
         }
 
-        if(cnt % 100 != 0) {
-            logger.info("commit: " + cnt/100);
-            influxDBRepository.save(entities);
-
-            entities.clear();
-            entities = null;
-        }
-    }
-
-
-    public void generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        String uuidFileName = generateVo.getUuidFileName();
-        String encode = generateVo.getEncode();
-        String measurement = generateVo.getMeasurement().get("value").toString();
-        List<JSONObject> columns = generateVo.getColumns();
-
-        LineIterator it = csvFileReader(encode, uuidFileName);
-
-        int cnt = -1;
-        List<Point> entities = null;
-
-        while(it.hasNext()) {
-            cnt++;
-
-            String line = it.nextLine();
-
-            if(cnt == 0) {
-                continue;
-            }
-            
-            if(entities == null) {
-                entities = new ArrayList<Point>();
-            }
-
-            String[] entity = line.split(",", -1);
-            Point point = generateSeries(measurement, columns, entity);
-
-            entities.add(point);
-
-            if(cnt % 100 == 0) {
-                logger.info("commit: " + cnt/100);
-                influxDBRepository.save(entities);
-
-                entities.clear();
-                entities = null;
-            }
-        }
-
-        if(cnt % 100 != 0) {
-            logger.info("commit: " + cnt/100);
+        if(cnt % 1000 != 0) {
+            logger.info("commit: " + cnt/1000);
             influxDBRepository.save(entities);
 
             entities.clear();
             entities = null;
         }
 
+        return Integer.toString(cnt);
     }
 
 
@@ -178,11 +190,24 @@ public class GenerateSchemaService {
                     }
 
                     break;
+
+                case "all":
+                    builder.tag(value, entity[index]);
+
+                    if(dataType.equals("Float")) {
+                        float series = !entity[index].isEmpty() ? Float.parseFloat(entity[index]) : 0;
+                        builder.addField(value, series);
+                    } else {
+                        builder.addField(value, entity[index]);
+                    }
+
+                    break;
             }
         }
         
         return builder.build();
     }
+
 
     public LineIterator csvFileReader(String encode, String fileName) throws IOException {
         File file = new File(location + fileName);

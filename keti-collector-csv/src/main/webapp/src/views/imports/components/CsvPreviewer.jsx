@@ -1,12 +1,9 @@
 import React, { memo, useRef, useState } from "react";
 
 import Papa from "papaparse";
-
-import { CsvPreviewUpload } from "./CsvUpload.tsx";
 import CsvColumnEditor from "./CsvColumnEditor";
 
 import Select from "react-select";
-
 import {
     Row,
     Col,
@@ -17,10 +14,7 @@ import {
     Form,
     FormGroup,
     Table,
-    Label,
     Button,
-    Input,
-    UncontrolledTooltip
 } from "reactstrap";
 
 const defaultCsvData = {
@@ -139,7 +133,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                             data_type = "Float";
                                         } else {
                                             data_type = "Char";
-                                            break;        
+                                            break;
                                         }
                                     };
 

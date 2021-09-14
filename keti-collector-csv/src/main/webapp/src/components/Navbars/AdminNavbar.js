@@ -113,7 +113,7 @@ function AdminNavbar(props) {
             </div>
             <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
               <span className="d-none d-md-block">
-                Paper Dashboard PRO React
+                KETI 대용량 CSV 업로드
               </span>
               <span className="d-block d-md-none">PD PRO React</span>
             </NavbarBrand>
@@ -137,7 +137,7 @@ function AdminNavbar(props) {
             navbar
             isOpen={collapseOpen}
           >
-            <Form>
+            {/* <Form>
               <InputGroup className="no-border">
                 <Input defaultValue="" placeholder="Search..." type="text" />
                 <InputGroupAddon addonType="append">
@@ -146,8 +146,8 @@ function AdminNavbar(props) {
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-            </Form>
-            <Nav navbar>
+            </Form> */}
+            {/* <Nav navbar>
               <NavItem>
                 <NavLink
                   className="btn-magnify"
@@ -211,7 +211,7 @@ function AdminNavbar(props) {
                   </p>
                 </NavLink>
               </NavItem>
-            </Nav>
+            </Nav> */}
           </Collapse>
         </Container>
       </Navbar>

@@ -312,10 +312,7 @@ const BasicInfomation = ({ files, rules }) => {
                                             classNamePrefix="react-select"
                                             name="measurement"
                                             value={measurement || ""}
-                                            onChange={ e => {
-                                                console.log(measurement, e);
-                                                setMeasurement({ ...measurement, ...e });
-                                            } }
+                                            onChange={ e => setMeasurement({ ...measurement, ...e }) }
                                             options={
                                                 rules.columns !== undefined
                                                 ?

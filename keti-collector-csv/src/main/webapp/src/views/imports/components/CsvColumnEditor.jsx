@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState } from 'react';
 
 import Select from "react-select";
 import {
@@ -15,8 +15,9 @@ import {
 
 const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
     const dataSet = [
+        { label: "tag", value: "tag" },
         { label: "field", value: "field" },
-        { label: "tag", value: "tag" }
+        { label: "all", value: "all" }
     ];
     
     const dataType = [

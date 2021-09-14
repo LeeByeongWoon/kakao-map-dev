@@ -94,7 +94,7 @@ function Admin(props) {
         activeColor={activeColor}
       />
       <div className="main-panel" ref={mainPanel}>
-        {/* <AdminNavbar {...props} handleMiniClick={handleMiniClick} /> */}
+        <AdminNavbar {...props} handleMiniClick={handleMiniClick} />
         <Switch>{getRoutes(routes)}</Switch>
         {
           // we don't want the Footer to be rendered on full screen maps page
