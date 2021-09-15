@@ -65,7 +65,7 @@ public class ApiController {
             switch (type) {
                 case "input":
                     apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
-                    // apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
+                    apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
                     apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
         
                     responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);

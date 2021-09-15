@@ -18,6 +18,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+
+import indicator from "modules/store/indicator";
+
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 
@@ -26,13 +31,19 @@ import "assets/scss/paper-dashboard.scss?v=1.3.0";
 import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
+const store = createStore(
+    indicator
+);
+
 ReactDOM.render(
-  <BrowserRouter>
-    <Switch>
-      <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect to="/admin/csv_importer" />
-    </Switch>
-  </BrowserRouter>,
+  <Provider store={store}>
+      <BrowserRouter>
+          <Switch>
+              <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
+              <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+              <Redirect to="/admin/csv_importer" />
+          </Switch>
+      </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );

@@ -1,4 +1,7 @@
 import React, { memo, useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { active, inactive } from "modules/store/indicator";
 
 import axios from "axios";
 
@@ -37,6 +40,7 @@ const defaultMainDomain = [
 
 
 const BasicInfomation = ({ files, rules }) => {
+    const dispatch = useDispatch();
     const { encode, columns } = rules;
 
     const [domain, setDomain] = useState({
@@ -85,6 +89,7 @@ const BasicInfomation = ({ files, rules }) => {
             )
         };
 
+        dispatch(inactive());
         axios({
             url: url,
             method: method,
@@ -93,9 +98,11 @@ const BasicInfomation = ({ files, rules }) => {
         })
         .then(res => {
             console.log(res);
+            dispatch(active());
         })
         .catch(error => {
             console.log(error);
+            dispatch(active());
         })
 
     }

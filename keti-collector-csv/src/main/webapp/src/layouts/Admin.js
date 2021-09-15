@@ -15,6 +15,7 @@
 
 */
 import React from "react";
+import { useSelector } from "react-redux";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Switch, useLocation } from "react-router-dom";
@@ -26,9 +27,26 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
+import { css } from "@emotion/react";
+import ClockLoader from "react-spinners/ClockLoader";
+
+
 var ps;
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+  height: 75px;
+`;
+
 function Admin(props) {
+  const {
+      indicator
+  } = useSelector( state => ({
+      indicator: state.indicator
+  }));
+
   const location = useLocation();
   const [backgroundColor, setBackgroundColor] = React.useState("black");
   const [activeColor, setActiveColor] = React.useState("info");
@@ -87,30 +105,64 @@ function Admin(props) {
   };
   return (
     <div className="wrapper">
-      <Sidebar
-        {...props}
-        routes={routes}
-        bgColor={backgroundColor}
-        activeColor={activeColor}
-      />
-      <div className="main-panel" ref={mainPanel}>
-        <AdminNavbar {...props} handleMiniClick={handleMiniClick} />
-        <Switch>{getRoutes(routes)}</Switch>
+        <Sidebar
+          {...props}
+          routes={routes}
+          bgColor={backgroundColor}
+          activeColor={activeColor}
+        />
+        <div className="main-panel" ref={mainPanel}>
+          <AdminNavbar {...props} handleMiniClick={handleMiniClick} />
+          <Switch>{getRoutes(routes)}</Switch>
+          {
+            // we don't want the Footer to be rendered on full screen maps page
+            props.location.pathname.indexOf("full-screen-map") !== -1 ? null : (
+              <Footer fluid />
+            )
+          }
+        </div>
+        {/* <FixedPlugin
+          bgColor={backgroundColor}
+          activeColor={activeColor}
+          sidebarMini={sidebarMini}
+          handleActiveClick={handleActiveClick}
+          handleBgClick={handleBgClick}
+          handleMiniClick={handleMiniClick}
+        /> */}
         {
-          // we don't want the Footer to be rendered on full screen maps page
-          props.location.pathname.indexOf("full-screen-map") !== -1 ? null : (
-            <Footer fluid />
-          )
+          indicator
+          ?
+            <div
+              style={{
+                zIndex: 9999,
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#F8F8F8AD"
+              }}
+              >
+                <div
+                  className="sweet-loading"
+                  style={{
+                    width: "100%",
+                    height: "45%",
+                  }}
+                  />
+                <div
+                  className="sweet-loading"
+                  style={{
+                    width: "100%",
+                    height: "55%",
+                  }}>
+                    <ClockLoader color="#36D7B7" loading={indicator} css={override} size={75} />
+                </div>
+            </div>
+          :
+            ""
         }
-      </div>
-      {/* <FixedPlugin
-        bgColor={backgroundColor}
-        activeColor={activeColor}
-        sidebarMini={sidebarMini}
-        handleActiveClick={handleActiveClick}
-        handleBgClick={handleBgClick}
-        handleMiniClick={handleMiniClick}
-      /> */}
+        
     </div>
   );
 }

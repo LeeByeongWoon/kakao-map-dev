@@ -53,7 +53,7 @@ public class GenerateSchemaService {
 
         influxDBRepository.swapDatabase(dbName);
 
-        return dbName;
+        return "success";
     }
 
 
