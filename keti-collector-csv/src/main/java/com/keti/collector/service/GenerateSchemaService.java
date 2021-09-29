@@ -20,6 +20,8 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
 import org.json.simple.JSONObject;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keti.collector.repository.InfluxDBRepository;
 import com.keti.collector.vo.GenerateVo;
 
@@ -31,39 +33,43 @@ public class GenerateSchemaService {
     private String location = null;
     
     private final InfluxDBRepository influxDBRepository;
+    private final ObjectMapper objectMapper;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
-    public GenerateSchemaService(InfluxDBRepository influxDBRepository) {
+    public GenerateSchemaService(InfluxDBRepository influxDBRepository, ObjectMapper objectMapper) {
         this.influxDBRepository = influxDBRepository;
+        this.objectMapper = objectMapper;
     }
 
 
     public String generateDatabase(GenerateVo generateVo) {
-        String dbName = generateVo.getDomain();
+        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
+        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
 
-        influxDBRepository.createDatabase(dbName);
+        influxDBRepository.createDatabase(database);
 
-        return "success";
+        return database;
     }
 
 
     public String useDatabase(GenerateVo generateVo) {
-        String dbName = generateVo.getDomain();
+        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
+        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
 
-        influxDBRepository.swapDatabase(dbName);
+        influxDBRepository.swapDatabase(database);
 
-        return "success";
+        return database;
     }
 
 
     public String generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        String uuidFileName = generateVo.getUuidFileName();
-        String encode = generateVo.getEncode();
-        String measurement = generateVo.getMeasurement().get("value").toString();
-        List<JSONObject> columns = generateVo.getColumns();
+        String encode = generateVo.getFile().getFlEncode();
+        String fileName = generateVo.getFile().getFlName();
+        String measurement = generateVo.getInfluxdb().getIfxMeasurement().get("mt_value").toString();
+        List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
 
-        LineIterator it = csvFileReader(encode, uuidFileName);
+        LineIterator it = csvFileReader(encode, fileName);
 
         int cnt = -1;
         List<Point> entities = null;
@@ -107,12 +113,12 @@ public class GenerateSchemaService {
 
 
     public String generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        String uuidFileName = generateVo.getUuidFileName();
-        String encode = generateVo.getEncode();
-        int measurementIndex = Integer.parseInt(generateVo.getMeasurement().get("index").toString());
-        List<JSONObject> columns = generateVo.getColumns();
+        String encode = generateVo.getFile().getFlEncode();
+        String fileName = generateVo.getFile().getFlName();
+        int measurementIndex = Integer.parseInt(generateVo.getInfluxdb().getIfxMeasurement().get("mt_index").toString());
+        List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
 
-        LineIterator it = csvFileReader(encode, uuidFileName);
+        LineIterator it = csvFileReader(encode, fileName);
 
         int cnt = -1;
         List<Point> entities = null;
@@ -158,47 +164,80 @@ public class GenerateSchemaService {
     }
 
 
+    public String compareToValue(String type, String data, List<JSONObject> funcs) {
+        String result = "";
+
+        int funcsLength = funcs.size();
+        if(funcsLength != 0) {
+            for (JSONObject func : funcs) {
+                String compareSign = func.get("compare_sign").toString();
+                String compareValue = func.get("compare_value").toString();
+    
+                switch (compareSign) {
+                    case "!=":
+                        if(!data.equals(compareValue)) {
+                            result = data;
+                        }
+                        break;
+                              
+                    case "==":
+                        if(data.equals(compareValue)) {
+                            result = data;
+                        }
+                        break;
+                }
+            }
+        } else {
+            result = data;
+        }
+
+        return result;
+    }
+
+
     public Point generateSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
         Builder builder = Point.measurement(measurement);
 
         for (JSONObject column : columns) {
-            int index = Integer.parseInt(column.get("index").toString());
+            int dataIndex = Integer.parseInt(column.get("data_index").toString());
             String dataSet = column.get("data_set").toString();
             String dataType = column.get("data_type").toString();
             String dataFormat = column.get("data_format").toString();
-            String value = column.get("value").toString();
+            String dataValue = column.get("data_value").toString();
+            List<JSONObject> dataFunc = objectMapper.convertValue(column.get("data_func"), new TypeReference<List<JSONObject>>(){});
+
+            String compareEntity = compareToValue(dataType, entity[dataIndex], dataFunc);
 
             switch (dataSet) {
                 case "time":
-                    String sdt = entity[index];
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
-                    Date dt = simpleDateFormat.parse(sdt);
+                    Date dt = simpleDateFormat.parse(entity[dataIndex]);
 
                     builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
                     break;
 
                 case "tag":
-                    builder.tag(value, entity[index]);
+                    builder.tag(dataValue, compareEntity);
                     break;
 
                 case "field":
                     if(dataType.equals("Float")) {
-                        float series = !entity[index].isEmpty() ? Float.parseFloat(entity[index]) : 0;
-                        builder.addField(value, series);
+                        float series = !compareEntity.isEmpty() ? Float.parseFloat(compareEntity) : 0;
+                        builder.addField(dataValue, series);
                     } else {
-                        builder.addField(value, entity[index]);
+                        builder.addField(dataValue, compareEntity);
                     }
 
                     break;
 
                 case "all":
-                    builder.tag(value, entity[index]);
+                    builder.tag(dataValue, compareEntity);
 
                     if(dataType.equals("Float")) {
-                        float series = !entity[index].isEmpty() ? Float.parseFloat(entity[index]) : 0;
-                        builder.addField(value, series);
+                        float series = !compareEntity.isEmpty() ? Float.parseFloat(compareEntity) : 0;
+                        builder.addField(dataValue, series);
                     } else {
-                        builder.addField(value, entity[index]);
+                        builder.addField(dataValue, compareEntity);
                     }
 
                     break;

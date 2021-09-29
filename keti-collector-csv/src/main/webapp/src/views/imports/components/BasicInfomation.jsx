@@ -38,31 +38,38 @@ const defaultMainDomain = [
     { value: "Economy", label: "Economy" }
 ];
 
+const sign = {
+    char: [
+        { value: "!=", label: "!=" },
+        { value: "==", label: "==" }
+    ],
+    float: [
+        { value: "!=", label: "!=" },
+        { value: "==", label: "==" },
+        { value: ">", label: ">" },
+        { value: "<", label: "<" }
+    ]
+};
+
 
 const BasicInfomation = ({ files, rules }) => {
     const dispatch = useDispatch();
     const { encode, columns } = rules;
 
     const [domain, setDomain] = useState({
-        main_domain: {
-            value: ""
-        },
+        main_domain: {},
         sub_domain: "test_01",
         target_domain: ""
     });
     const [timeIndex, setTimeIndex] = useState({
-        format: "yyyy/MM/dd-HH:mm:ss",
-        value: ""
+        format: "yyyy/MM/dd-HH:mm:ss"
     });
     const [measurement, setMeasurement] = useState({
-        type: "input",
-        value: ""
+        type: "input"
     });
-    const [functionRules, setFunctionRules] = useState(
-        [
-            {"index": 0, "column": "", "value": "", "func": ""}
-        ]
-    );
+    const [compareRules, setCompareRules] = useState([
+        {}
+    ]);
 
     const [progress, setProgress] = useState(0);
     const [uploadResponse, setUploadResponse] = useState({});
@@ -76,20 +83,60 @@ const BasicInfomation = ({ files, rules }) => {
         const headers = {
             "Content-Type": "application/json"
         };
+
         const params = {
-            uuidFileName: uuid_file_name,
-            domain: domain.target_domain,
-            measurement: measurement,
-            encode: encode,
-            columns: columns.map(
-                v => {
-                    const column = v.value !== timeIndex.value ? v : { ...v, data_set: "time", data_type: "Char", data_format: timeIndex.format };
-                    return column;
-                }
-            )
+            file: {
+                fl_type: "csv",
+                fl_encode: encode,
+                fl_name: uuid_file_name
+            },
+            influxdb: {
+                ifx_database: {
+                    db_main: domain.main_domain.value,
+                    db_sub: domain.sub_domain
+                },
+                ifx_measurement: {
+                    mt_type: measurement.type,
+                    mt_index: measurement.index,
+                    mt_value: measurement.value
+                },
+                ifx_columns: columns.map(
+                    v => {
+                        const compareData = compareRules.filter(val => v.value === (val.compareColumn !== undefined ? val.compareColumn.value : []));
+                        const column = 
+                            v.value !== timeIndex.value 
+                            ?
+                                {
+                                    data_index: v.index,
+                                    data_set: v.data_set,
+                                    data_type: v.data_type,
+                                    data_format: v.data_format,
+                                    data_value: v.value,
+                                    data_func: compareData.map(
+                                        val => ({
+                                            compare_sign: val.compareSign.value,
+                                            compare_value: val.compareValue
+                                        })
+                                    )
+                                }
+                            :
+                                {
+                                    data_index: v.index,
+                                    data_set: "time",
+                                    data_type: "Date",
+                                    data_format: timeIndex.format,
+                                    data_value: v.value,
+                                    data_func: []
+                                }
+                        
+                        return column;
+                    }
+                )
+            }
         };
 
         dispatch(inactive());
+
         axios({
             url: url,
             method: method,
@@ -101,13 +148,12 @@ const BasicInfomation = ({ files, rules }) => {
             dispatch(active());
         })
         .catch(error => {
-            console.log(error);
+            console.log(error.response);
             dispatch(active());
         })
-
     }
 
-    const handleOnFileUpload = async (files) => {
+    const handleOnFileUpload = async (data) => {
         try {
             const url = "/api/files";
             const method= "POST";
@@ -116,9 +162,9 @@ const BasicInfomation = ({ files, rules }) => {
             };
 
             const formData = new FormData();
-            formData.append("files", files[0]);
+            formData.append("files", data[0]);
 
-            const response = await axios({
+            const res = await axios({
                 url: url,
                 method: method,
                 headers: headers,
@@ -129,17 +175,52 @@ const BasicInfomation = ({ files, rules }) => {
                 },
             });
 
-            const { data, status } = response;
+            setUploadResponse(res);
             
-            if(status === 200) {
-                handleOnGenerator(data);
-                setUploadResponse(response);
+            if(res.status === 200) {
+                handleOnGenerator(res.data);
             }
 
         } catch (error) {
             setUploadResponse(error);
             console.error(error);
         }
+    }
+
+    const handleOnVerify = () => {
+        const { main_domain, sub_domain } = domain;
+        const md_value = main_domain.value;
+
+        const ti_format = timeIndex.format;
+        const ti_value = timeIndex.value;
+
+        const mt_type = measurement.type;
+        const mt_value = measurement.value;
+
+        if(md_value === undefined || md_value === null || md_value === ""
+                || sub_domain === undefined || sub_domain === null || sub_domain === "") {
+            alert("Main domain, Sub domain을 입력해주세요.");
+            return false;
+        }
+
+        if(ti_format === undefined || ti_format === null || ti_format === ""
+                || ti_value === undefined || ti_value === null || ti_value === "") {
+            alert("Time Index Column을 입력해주세요.");
+            return false;
+        }
+
+        if(mt_type === undefined || mt_type === null || mt_type === ""
+                || mt_value === undefined || mt_value === null || mt_value === "") {
+            alert("Measurement를 입력해주세요.");
+            return false;
+        }
+
+        if(files.length === 0) {
+            alert("파일을 저장해주세요.");
+            return false;
+        }
+
+        handleOnFileUpload(files);
     }
 
     return (
@@ -159,7 +240,13 @@ const BasicInfomation = ({ files, rules }) => {
                                         className="react-select primary"
                                         classNamePrefix="react-select"
                                         name="mainDomain"
-                                        value={domain.main_domain}
+                                        value={
+                                            domain.main_domain.value !== undefined
+                                            ?
+                                                domain.main_domain || ""
+                                            :
+                                                ""
+                                        }
                                         onChange={
                                             v => setDomain({
                                                 ...domain,
@@ -218,8 +305,14 @@ const BasicInfomation = ({ files, rules }) => {
                                         className="react-select primary"
                                         classNamePrefix="react-select"
                                         name="timeIndex"
-                                        value={timeIndex || ""}
-                                        onChange={ v => setTimeIndex({ ...timeIndex, data_type: "date", label: v.label, value: v.value }) }
+                                        value={
+                                            timeIndex.value !== undefined
+                                            ?
+                                                timeIndex || ""
+                                            :
+                                                ""
+                                        }
+                                        onChange={ v => setTimeIndex({ ...timeIndex, data_type: "Char", label: v.label, value: v.value }) }
                                         options={
                                             rules.columns !== undefined
                                             ?
@@ -318,7 +411,13 @@ const BasicInfomation = ({ files, rules }) => {
                                             className="react-select primary"
                                             classNamePrefix="react-select"
                                             name="measurement"
-                                            value={measurement || ""}
+                                            value={
+                                                measurement.value !== undefined
+                                                ?
+                                                    measurement || ""
+                                                :
+                                                    ""
+                                            }
                                             onChange={ e => setMeasurement({ ...measurement, ...e }) }
                                             options={
                                                 rules.columns !== undefined
@@ -342,31 +441,115 @@ const BasicInfomation = ({ files, rules }) => {
                 </CardHeader>
                 <CardBody>
                     {
-                        functionRules.map((v, i) => {
-                            const { index, column, value, func } = v;
+                        compareRules.map((v, i) => {
                             return (
-                                <Row key={"functionRules" + i + "_" + v}>
+                                <Row key={"compareRules" + i + "_" + v}>
                                     <Col md="3">
                                         <Form action="#" method="#">
-                                            <label>Column_{index+1}</label>
+                                            <label>Column_{i+1}</label>
                                             <FormGroup>
-                                                <Input placeholder={column} type="email" />
+                                                <Select
+                                                    className="react-select primary"
+                                                    classNamePrefix="react-select"
+                                                    name={"compareColumn_" + i}
+                                                    value={
+                                                        compareRules[i]["compareColumn"] !== undefined
+                                                        ?
+                                                            compareRules[i]["compareColumn"] || ""
+                                                        :
+                                                        ""
+                                                    }
+                                                    onChange={
+                                                        e => {
+                                                            const temp = [
+                                                                ...compareRules
+                                                            ];
+                                                            temp[i] = {
+                                                                // ...compareRules[i],
+                                                                compareColumn: e
+                                                            };
+
+                                                            setCompareRules(temp);
+                                                        }
+                                                    }
+                                                    options={
+                                                        rules.columns !== undefined
+                                                        ?
+                                                            columns.map(v => {
+                                                                return { ...v, label: v.value };
+                                                            })
+                                                        :
+                                                            []
+                                                    }
+                                                    placeholder="option"
+                                                />
                                             </FormGroup>
                                         </Form>
                                     </Col>
                                     <Col md="3">
                                         <Form action="#" method="#">
-                                            <label>Value_{index+1}</label>
+                                            <label>Function_{i+1}</label>
                                             <FormGroup>
-                                                <Input placeholder={value} type="email" />
+                                                <Select
+                                                    className="react-select primary"
+                                                    classNamePrefix="react-select"
+                                                    name="compareSign"
+                                                    value={
+                                                        compareRules[i]["compareSign"] !== undefined
+                                                        ?
+                                                            compareRules[i]["compareSign"] || ""
+                                                        :
+                                                        ""
+                                                    }
+                                                    onChange={
+                                                        e => {
+                                                            const temp = [
+                                                                ...compareRules
+                                                            ];
+                                                            temp[i] = {
+                                                                ...compareRules[i],
+                                                                compareSign: e
+                                                            };
+
+                                                            setCompareRules(temp);
+                                                        }
+                                                    }
+                                                    options={
+                                                        compareRules[i]["compareColumn"] !== undefined
+                                                        ?
+                                                            compareRules[i]["compareColumn"].data_type !== "Float"
+                                                            ?
+                                                                sign.char
+                                                            :
+                                                                sign.float
+                                                        :
+                                                            []
+                                                    }
+                                                    placeholder="option"
+                                                    />
                                             </FormGroup>
                                         </Form>
                                     </Col>
                                     <Col md="3">
                                         <Form action="#" method="#">
-                                            <label>Function_{index+1}</label>
+                                            <label>Value_{i+1}</label>
                                             <FormGroup>
-                                                <Input placeholder={func} type="email" />
+                                                <Input
+                                                    type="text"
+                                                    onChange={
+                                                        (e) => {
+                                                            const temp = [
+                                                                ...compareRules
+                                                            ];
+                                                            temp[i] = {
+                                                                ...compareRules[i],
+                                                                compareValue: e.target.value
+                                                            };
+
+                                                            setCompareRules(temp);
+                                                        }
+                                                    }
+                                                    />
                                             </FormGroup>
                                         </Form>
                                     </Col>
@@ -387,10 +570,10 @@ const BasicInfomation = ({ files, rules }) => {
                                     size="sm"
                                     onClick={
                                         () => {
-                                            const temp = [...functionRules];
-                                            temp.push({"index": temp.length, "column": "", "value": "", "func": ""});
+                                            const temp = [...compareRules];
+                                            temp.push({});
 
-                                            setFunctionRules(temp);
+                                            setCompareRules(temp);
                                         }
                                     }
                                     >
@@ -401,10 +584,10 @@ const BasicInfomation = ({ files, rules }) => {
                                     size="sm"
                                     onClick={
                                         () => {
-                                            const temp = [...functionRules];
+                                            const temp = [...compareRules];
                                             temp.splice(temp.length-1, 1);
 
-                                            setFunctionRules(temp);
+                                            setCompareRules(temp);
                                         }
                                     }
                                     >
@@ -440,8 +623,7 @@ const BasicInfomation = ({ files, rules }) => {
                                         <Button
                                             color="primary"
                                             style={{ margin: 0 }}
-                                            onClick={ () => files.length !==0 ? handleOnFileUpload(files) : null }
-                                            // onClick={ () => handleOnGenerator({ uuid_file_name: "aa.csv" }) }
+                                            onClick={ () => handleOnVerify() }
                                             >
                                                 commit
                                         </Button>

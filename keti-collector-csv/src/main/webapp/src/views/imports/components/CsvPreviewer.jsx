@@ -137,7 +137,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                         }
                                     };
 
-                                    return {"index": idx, "data_set": "field", "data_type": data_type, "data_format": "", "value": val};
+                                    return {"index": idx, "data_set": "field", "data_type": data_type, "value": val, data_format: "", data_func: []};
                                 }
                             )
                         );

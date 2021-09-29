@@ -33,6 +33,7 @@ public class ApiController {
     private final GenerateSchemaService generateSchemaService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
     public ApiController(MultipartService multipartService, GenerateSchemaService generateSchemaService) {
         this.multipartService = multipartService;
         this.generateSchemaService = generateSchemaService;
@@ -47,9 +48,9 @@ public class ApiController {
             responseEntity = new ResponseEntity<JSONObject>(multipartService.fileUpload(request), HttpStatus.OK);
             
         } catch (FileUploadException ex) {
-            responseEntity = responseExcetion("FileUploadException", ex.getMessage());
+            responseEntity = responseExcetion("FileUploadException", ex.toString());
         } catch (IOException ex) {
-            responseEntity = responseExcetion("IOException", ex.getMessage());
+            responseEntity = responseExcetion("IOException", ex.toString());
         }
 
         return responseEntity;
@@ -59,9 +60,10 @@ public class ApiController {
     @RequestMapping(value = "/generate/{type}", method = RequestMethod.PUT)
     public ResponseEntity<JSONObject> apiGenerateSchema(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
-        Map<String, String> apiResponse = new HashMap<>();
 
         try {
+            Map<String, String> apiResponse = new HashMap<>();
+
             switch (type) {
                 case "input":
                     apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
@@ -81,9 +83,9 @@ public class ApiController {
             }
             
         } catch (ParseException ex) {
-            responseEntity = responseExcetion("ParseException", ex.getMessage());
+            responseEntity = responseExcetion("ParseException", ex.toString());
         } catch (IOException ex) {
-            responseEntity = responseExcetion("IOException", ex.getMessage());
+            responseEntity = responseExcetion("IOException", ex.toString());
         }
 
         return responseEntity;

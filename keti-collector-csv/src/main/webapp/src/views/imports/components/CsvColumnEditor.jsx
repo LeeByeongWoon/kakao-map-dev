@@ -21,8 +21,8 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
     ];
     
     const dataType = [
-        { label: "Float", value: "Float" },
-        { label: "Char", value: "Char" }
+        { label: "Char", value: "Char" },
+        { label: "Float", value: "Float" }
     ];
 
     const { data_set, data_type, value } = val;
@@ -57,8 +57,6 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                         e.preventDefault();
                         if(display !== "block") {
                             setDisplay("block");
-                        } else {
-                            
                         }
                     }
                 }
@@ -88,15 +86,15 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                 >
                     Remove
             </UncontrolledTooltip>
-            <Card 
+            <Card
                 style={{
-                        opacity: 1,
-                        display: display,
-                        position: "absolute",
-                        zIndex: 99999,
-                        backgroundColor: "#ffffff",
-                        paddingTop: "10px"
-                    }}
+                    opacity: 1,
+                    display: display,
+                    position: "absolute",
+                    zIndex: 99999,
+                    backgroundColor: "#ffffff",
+                    paddingTop: "10px"
+                }}
                 >
                 <CardHeader style={{ padding: 10, fontSize: "12px"}}>
                     Editor
@@ -110,6 +108,7 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
                             }}
                             >
                                 Column Name
+                                <br />
                                 <Input
                                     style={{
                                         "display": "inline",

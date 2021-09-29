@@ -11,8 +11,6 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -28,8 +26,6 @@ public class MultipartService {
 
     @Value("${spring.multipart.location}")
     private String location;
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
     public JSONObject fileUpload(HttpServletRequest request) throws FileUploadException, IOException {
