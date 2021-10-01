@@ -79,7 +79,7 @@ const BasicInfomation = ({ files, rules }) => {
         const { type } = measurement;
 
         const url = "/api/generate/" + type;
-        const method= "PUT";
+        const method= "POST";
         const headers = {
             "Content-Type": "application/json"
         };
@@ -187,7 +187,7 @@ const BasicInfomation = ({ files, rules }) => {
         }
     }
 
-    const handleOnVerify = () => {
+    const handleOnValidation = async () => {
         const { main_domain, sub_domain } = domain;
         const md_value = main_domain.value;
 
@@ -220,7 +220,47 @@ const BasicInfomation = ({ files, rules }) => {
             return false;
         }
 
-        handleOnFileUpload(files);
+        try {
+            const url =
+                measurement.type !== "input"
+                    ?
+                    "/api/validation/columns?main_domain=" + domain.main_domain.value + "&sub_domain=" + domain.sub_domain + "&measurement="
+                    :
+                    "/api/validation/input?main_domain=" + domain.main_domain.value + "&sub_domain=" + domain.sub_domain + "&measurement=" + measurement.value;
+            const method= "GET";
+            const headers = {
+                "Content-Type": "application/json"
+            };
+
+            const res = await axios({
+                url: url,
+                method: method,
+                headers: headers,
+            });
+
+            const { databases, measurements } = res.data;
+
+            if(databases.length !== 0) {
+                for (let i = 0; i < databases.length; i++) {
+                    if(!window.confirm("해당 도메인이 존재합니다. 강제진행 하시겠습니까?")) {
+                        return;
+                    }
+                }
+            }
+
+            if(measurements.length !== 0) {
+                for (let i = 0; i < measurements.length; i++) {
+                    if(!window.confirm("해당 테이블이 존재합니다. 강제진행 하시겠습니까?")) {
+                        return;
+                    }
+                }
+            }
+            
+            handleOnFileUpload(files);
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -623,7 +663,7 @@ const BasicInfomation = ({ files, rules }) => {
                                         <Button
                                             color="primary"
                                             style={{ margin: 0 }}
-                                            onClick={ () => handleOnVerify() }
+                                            onClick={ () => handleOnValidation() }
                                             >
                                                 commit
                                         </Button>

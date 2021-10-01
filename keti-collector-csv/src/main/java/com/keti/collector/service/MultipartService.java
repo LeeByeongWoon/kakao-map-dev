@@ -58,7 +58,6 @@ public class MultipartService {
                 OutputStream out = new FileOutputStream(files);
                 IOUtils.copy(filesInputStream, out);
 
-                fileMap.put("type", "success");
                 fileMap.put("file_name", fileName);
                 fileMap.put("uuid_file_name", uuidFileName);
 

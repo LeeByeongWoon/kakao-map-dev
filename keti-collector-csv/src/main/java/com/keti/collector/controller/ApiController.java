@@ -1,6 +1,8 @@
 package com.keti.collector.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import java.io.IOException;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.json.simple.JSONObject;
 import org.apache.commons.fileupload.FileUploadException;
 
@@ -40,6 +44,44 @@ public class ApiController {
     }
 
 
+    @RequestMapping(value = "/validation/{type}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> apiValidation(
+            @PathVariable("type") String type,
+            @RequestParam(required = true, value="main_domain") String mainDomain,
+            @RequestParam(required = true, value="sub_domain") String subDomain,
+            @RequestParam(required = false, value="measurement") String measurement) {
+        ResponseEntity<JSONObject> responseEntity = null;
+        Map<String, List<String>> apiResponse = new HashMap<>();
+
+        logger.info("type: " + type);
+
+        try {            
+            switch (type) {
+                case "input":
+                    apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
+                    apiResponse.put("measurements", generateSchemaService.validationByMeasurement(mainDomain, subDomain, measurement));
+                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+                    break;
+    
+                case "columns":
+                    apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
+                    apiResponse.put("measurements", new ArrayList<String>());
+                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+                    break;
+            
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            apiResponse.put("databases", new ArrayList<String>());
+            apiResponse.put("measurements", new ArrayList<String>());
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+        }
+
+        return responseEntity;
+    }
+
+
     @RequestMapping(value = "/files", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiFileUpload(HttpServletRequest request) {
         ResponseEntity<JSONObject> responseEntity = null;
@@ -57,7 +99,7 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/generate/{type}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/generate/{type}", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiGenerateSchema(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
 
@@ -66,7 +108,7 @@ public class ApiController {
 
             switch (type) {
                 case "input":
-                    apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
+                    apiResponse.put("generateDatabase", generateSchemaService.generateByDatabase(generateVo));
                     apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
                     apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
         
@@ -74,7 +116,7 @@ public class ApiController {
                     break;
                 
                 case "columns":
-                    apiResponse.put("generateDatabase", generateSchemaService.generateDatabase(generateVo));
+                    apiResponse.put("generateDatabase", generateSchemaService.generateByDatabase(generateVo));
                     apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
                     apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
         

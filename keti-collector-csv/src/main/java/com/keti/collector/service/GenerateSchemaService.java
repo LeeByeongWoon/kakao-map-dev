@@ -10,14 +10,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.influxdb.dto.Point;
+import org.influxdb.dto.QueryResult;
 import org.influxdb.dto.Point.Builder;
+import org.influxdb.dto.QueryResult.Result;
+import org.influxdb.dto.QueryResult.Series;
 import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,13 +48,58 @@ public class GenerateSchemaService {
     }
 
 
-    public String generateDatabase(GenerateVo generateVo) {
-        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
-        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
+    public List<String> validationByDatabase(String _mainDomain, String _subDomain) {
+        List<String> databases = new ArrayList<>();
 
-        influxDBRepository.createDatabase(database);
+        QueryResult qr_databases = influxDBRepository.getDatabases();
+        List<Result> qr_results = qr_databases.getResults();
+        // String qr_error = qr_databases.getError();
 
-        return database;
+        for (Result e : qr_results) {
+            List<Series> r_series = e.getSeries();
+            // String r_error = e.getError();
+
+            for (Series ele : r_series) {
+                List<List<Object>> s_values = ele.getValues();
+
+                for (List<Object> element : s_values) {
+                    String database = element.get(0).toString();
+
+                    if(database.equals(_mainDomain + "__" + _subDomain)) {
+                        databases.add(database);
+                    }
+                }
+            }
+        }
+
+        return databases;
+    }
+
+    public List<String> validationByMeasurement(String _mainDomain, String _subDomain, String _measurement) {
+        List<String> measurements = new ArrayList<>();
+
+        QueryResult qr_measurements = influxDBRepository.getMeasurements(_mainDomain + "__" + _subDomain);
+        List<Result> qr_results = qr_measurements.getResults();
+        // String qr_error = qr_measurements.getError();
+
+        for (Result e : qr_results) {
+            List<Series> r_series = e.getSeries();
+            // String r_error = e.getError();
+
+            for (Series ele : r_series) {
+                List<List<Object>> s_values = ele.getValues();
+
+                for (List<Object> element : s_values) {
+                    String measurement = element.get(0).toString();
+
+                    if(measurement.equals(_measurement)) {
+                        measurements.add(measurement);
+                    }
+                }
+            }
+        }
+
+        return measurements;
     }
 
 
@@ -58,6 +108,16 @@ public class GenerateSchemaService {
         String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
 
         influxDBRepository.swapDatabase(database);
+
+        return database;
+    }
+
+
+    public String generateByDatabase(GenerateVo generateVo) {
+        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
+        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
+
+        influxDBRepository.createDatabase(database);
 
         return database;
     }
@@ -89,8 +149,10 @@ public class GenerateSchemaService {
             String[] entity = line.split(",", -1);
             Point point = generateSeries(measurement, columns, entity);
 
-            entities.add(point);
-
+            if(point != null) {
+                entities.add(point);
+            }
+    
             if(cnt % 1000 == 0) {
                 logger.info("commit: " + cnt/1000);
                 influxDBRepository.save(entities);
@@ -141,7 +203,9 @@ public class GenerateSchemaService {
             
             Point point = generateSeries(measurement, columns, entity);
 
-            entities.add(point);
+            if(point != null) {
+                entities.add(point);
+            }
 
             if(cnt % 1000 == 0) {
                 logger.info("commit: " + cnt/1000);
@@ -164,38 +228,7 @@ public class GenerateSchemaService {
     }
 
 
-    public String compareToValue(String type, String data, List<JSONObject> funcs) {
-        String result = "";
-
-        int funcsLength = funcs.size();
-        if(funcsLength != 0) {
-            for (JSONObject func : funcs) {
-                String compareSign = func.get("compare_sign").toString();
-                String compareValue = func.get("compare_value").toString();
-    
-                switch (compareSign) {
-                    case "!=":
-                        if(!data.equals(compareValue)) {
-                            result = data;
-                        }
-                        break;
-                              
-                    case "==":
-                        if(data.equals(compareValue)) {
-                            result = data;
-                        }
-                        break;
-                }
-            }
-        } else {
-            result = data;
-        }
-
-        return result;
-    }
-
-
-    public Point generateSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
+    private Point generateSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
         Builder builder = Point.measurement(measurement);
 
         for (JSONObject column : columns) {
@@ -206,7 +239,25 @@ public class GenerateSchemaService {
             String dataValue = column.get("data_value").toString();
             List<JSONObject> dataFunc = objectMapper.convertValue(column.get("data_func"), new TypeReference<List<JSONObject>>(){});
 
-            String compareEntity = compareToValue(dataType, entity[dataIndex], dataFunc);
+            String compareToStringEntity = "";
+            Float compareToFloatEntity = 0.00f;
+
+            if(dataType.equals("Char")) {
+                compareToStringEntity = compareToString(entity[dataIndex], dataFunc);
+
+                if(compareToStringEntity == null) {
+                    return null;
+                }
+            }
+
+            if(dataType.equals("Float")) {
+                compareToFloatEntity = 
+                    !entity[dataIndex].isEmpty() ? compareToFloat(Float.parseFloat(entity[dataIndex]), dataFunc) : compareToFloat(0.00f, dataFunc);
+
+                if(compareToFloatEntity == null) {
+                    return null;
+                }
+            }
 
             switch (dataSet) {
                 case "time":
@@ -217,27 +268,25 @@ public class GenerateSchemaService {
                     break;
 
                 case "tag":
-                    builder.tag(dataValue, compareEntity);
+                    builder.tag(dataValue, compareToStringEntity);
                     break;
 
                 case "field":
                     if(dataType.equals("Float")) {
-                        float series = !compareEntity.isEmpty() ? Float.parseFloat(compareEntity) : 0;
-                        builder.addField(dataValue, series);
+                        builder.addField(dataValue, compareToFloatEntity);
                     } else {
-                        builder.addField(dataValue, compareEntity);
+                        builder.addField(dataValue, compareToStringEntity);
                     }
 
                     break;
 
                 case "all":
-                    builder.tag(dataValue, compareEntity);
+                    builder.tag(dataValue, compareToStringEntity);
 
                     if(dataType.equals("Float")) {
-                        float series = !compareEntity.isEmpty() ? Float.parseFloat(compareEntity) : 0;
-                        builder.addField(dataValue, series);
+                        builder.addField(dataValue, compareToFloatEntity);
                     } else {
-                        builder.addField(dataValue, compareEntity);
+                        builder.addField(dataValue, compareToStringEntity);
                     }
 
                     break;
@@ -248,10 +297,86 @@ public class GenerateSchemaService {
     }
 
 
-    public LineIterator csvFileReader(String encode, String fileName) throws IOException {
+    private LineIterator csvFileReader(String encode, String fileName) throws IOException {
         File file = new File(location + fileName);
         
         return FileUtils.lineIterator(file, encode);
+    }
+
+
+    private Float compareToFloat(Float data, List<JSONObject> funcs) {
+        Float value = data;
+
+        for (JSONObject func : funcs) {
+            value = null;
+
+            String compareSign = func.get("compare_sign").toString();
+            Float compareValue = Float.parseFloat(func.get("compare_value").toString());
+    
+            switch (compareSign) {
+                case "!=":
+                    if(data != compareValue) {
+                        value = data;
+                    }
+                    break;
+                              
+                case "==":
+                    if(data == compareValue) {
+                        value = data;
+                    }
+                    break;
+                        
+                case ">":
+                    if(data > compareValue) {
+                        value = data;
+                    }
+                    break;
+
+                case "<":
+                    if(data < compareValue) {
+                        value = data;
+                    }
+                    break;
+
+                default:
+                    value = data;
+                    break;
+            }
+        }
+
+        return value;
+    }
+
+    
+    private String compareToString(String data, List<JSONObject> funcs) {
+        String value = data;
+
+        for (JSONObject func : funcs) {
+            value = null;
+
+            String compareSign = func.get("compare_sign").toString();
+            String compareValue = func.get("compare_value").toString();
+    
+            switch (compareSign) {
+                case "!=":
+                    if(!data.equals(compareValue)) {
+                        value = data;
+                    }
+                    break;
+                          
+                case "==":
+                    if(data.equals(compareValue)) {
+                        value = data;
+                    }
+                    break;
+
+                default:
+                    value = data;
+                    break;
+            }
+        }
+    
+        return value;
     }
 
 }
