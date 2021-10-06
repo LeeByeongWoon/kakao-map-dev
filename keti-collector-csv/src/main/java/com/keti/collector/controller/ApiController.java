@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,25 +52,20 @@ public class ApiController {
         ResponseEntity<JSONObject> responseEntity = null;
         Map<String, List<String>> apiResponse = new HashMap<>();
 
-        logger.info("type: " + type);
-
-        try {            
-            switch (type) {
-                case "input":
-                    apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
-                    apiResponse.put("measurements", generateSchemaService.validationByMeasurement(mainDomain, subDomain, measurement));
-                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-                    break;
-    
-                case "columns":
-                    apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
-                    apiResponse.put("measurements", new ArrayList<String>());
-                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-                    break;
-            
-                default:
-                    break;
+        try {
+            if(type == "input") {
+                apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
+                apiResponse.put("measurements", generateSchemaService.validationByMeasurement(mainDomain, subDomain, measurement));
+            } else if(type == "columns") {
+                apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
+                apiResponse.put("measurements", new ArrayList<String>());
+            } else {
+                apiResponse.put("databases", new ArrayList<String>());
+                apiResponse.put("measurements", new ArrayList<String>());
             }
+
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+
         } catch (Exception e) {
             apiResponse.put("databases", new ArrayList<String>());
             apiResponse.put("measurements", new ArrayList<String>());
@@ -90,9 +84,9 @@ public class ApiController {
             responseEntity = new ResponseEntity<JSONObject>(multipartService.fileUpload(request), HttpStatus.OK);
             
         } catch (FileUploadException ex) {
-            responseEntity = responseExcetion("FileUploadException", ex.toString());
+            responseEntity = responseExcetion("apiFileUpload - FileUploadException", ex.toString());
         } catch (IOException ex) {
-            responseEntity = responseExcetion("IOException", ex.toString());
+            responseEntity = responseExcetion("apiFileUpload - IOException", ex.toString());
         }
 
         return responseEntity;
@@ -104,30 +98,25 @@ public class ApiController {
         ResponseEntity<JSONObject> responseEntity = null;
 
         try {
-            Map<String, String> apiResponse = new HashMap<>();
+            Map<String, JSONObject> apiResponse = new HashMap<>();
 
-            switch (type) {
-                case "input":
-                    apiResponse.put("generateDatabase", generateSchemaService.generateByDatabase(generateVo));
-                    apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
-                    apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
-        
-                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-                    break;
-                
-                case "columns":
-                    apiResponse.put("generateDatabase", generateSchemaService.generateByDatabase(generateVo));
-                    apiResponse.put("useDatabase", generateSchemaService.useDatabase(generateVo));
-                    apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
-        
-                    responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-                    break;
+            JSONObject resultMessage = generateSchemaService.generateByDatabase(generateVo);
+            apiResponse.put("generateByDatabase", resultMessage);
+
+            if(type.equals("input")) {
+                apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
+            } else if(type.equals("columns")) {
+                apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
+            } else {
+                // apiResponse.put("apiGenerateSchema", "not found type");
             }
+
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
             
         } catch (ParseException ex) {
-            responseEntity = responseExcetion("ParseException", ex.toString());
+            responseEntity = responseExcetion("apiGenerateSchema - ParseException", ex.toString());
         } catch (IOException ex) {
-            responseEntity = responseExcetion("IOException", ex.toString());
+            responseEntity = responseExcetion("apiGenerateSchema - IOException", ex.toString());
         }
 
         return responseEntity;

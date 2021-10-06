@@ -39,12 +39,12 @@ public class InfluxDBRepository {
         return queryResult;
     }
 
-    public QueryResult getRetentionPolicies(String database) {
-        Query query = BoundParameterQuery.QueryBuilder.newQuery("show retention policies").forDatabase(database).create();
-        QueryResult queryResult = influxDBTemplate.query(query);
+    // public QueryResult getRetentionPolicies(String database) {
+    //     Query query = BoundParameterQuery.QueryBuilder.newQuery("show retention policies").forDatabase(database).create();
+    //     QueryResult queryResult = influxDBTemplate.query(query);
 
-        return queryResult;
-    }
+    //     return queryResult;
+    // }
 
     public void save(List<Point> entities) {
         influxDBTemplate.write(entities);

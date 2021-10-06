@@ -39,12 +39,12 @@ public class GenerateSchemaService {
     
     private final InfluxDBRepository influxDBRepository;
     private final ObjectMapper objectMapper;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
-    public GenerateSchemaService(InfluxDBRepository influxDBRepository, ObjectMapper objectMapper) {
-        this.influxDBRepository = influxDBRepository;
-        this.objectMapper = objectMapper;
+    public GenerateSchemaService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
+        this.influxDBRepository = _influxDBRepository;
+        this.objectMapper = _objectMapper;
     }
 
 
@@ -103,42 +103,45 @@ public class GenerateSchemaService {
     }
 
 
-    public String useDatabase(GenerateVo generateVo) {
+    public JSONObject generateByDatabase(GenerateVo generateVo) {
+        Map<String, String> serviceResult = new HashMap<>();
+
         JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
-        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
+        String mainDomain = ifxDatabase.get("db_main").toString();
+        String subDomain = ifxDatabase.get("db_sub").toString();
+        String database = mainDomain + "__" + subDomain;
+
+        List<String> databases = validationByDatabase(mainDomain, subDomain);
+
+        if(databases.size() != 0) {
+            serviceResult.put("result", "already");
+        } else {
+            serviceResult.put("result", "generate");
+            influxDBRepository.createDatabase(database);
+        }
 
         influxDBRepository.swapDatabase(database);
 
-        return database;
+        return new JSONObject(serviceResult);
     }
 
 
-    public String generateByDatabase(GenerateVo generateVo) {
-        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
-        String database = ifxDatabase.get("db_main") + "__" + ifxDatabase.get("db_sub");
+    public JSONObject generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
+        Map<String, String> serviceResult = new HashMap<>();
 
-        influxDBRepository.createDatabase(database);
-
-        return database;
-    }
-
-
-    public String generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        String encode = generateVo.getFile().getFlEncode();
-        String fileName = generateVo.getFile().getFlName();
+        LineIterator it = csvFileReader(generateVo);
         String measurement = generateVo.getInfluxdb().getIfxMeasurement().get("mt_value").toString();
         List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
 
-        LineIterator it = csvFileReader(encode, fileName);
-
-        int cnt = -1;
+        int total = -1;
+        int commit = -1;
         List<Point> entities = null;
 
         while(it.hasNext()) {
-            cnt++;
+            total++;
             String line = it.nextLine();
 
-            if(cnt == 0) {
+            if(total == 0) {
                 continue;
             }
             
@@ -150,11 +153,11 @@ public class GenerateSchemaService {
             Point point = generateSeries(measurement, columns, entity);
 
             if(point != null) {
+                commit++;
                 entities.add(point);
             }
     
-            if(cnt % 1000 == 0) {
-                logger.info("commit: " + cnt/1000);
+            if(total % 1000 == 0) {
                 influxDBRepository.save(entities);
 
                 entities.clear();
@@ -162,35 +165,38 @@ public class GenerateSchemaService {
             }
         }
 
-        if(cnt % 1000 != 0) {
-            logger.info("commit: " + cnt/1000);
+        if(total % 1000 != 0) {
             influxDBRepository.save(entities);
 
             entities.clear();
             entities = null;
         }
 
-        return Integer.toString(cnt);
+        serviceResult.put("total", Integer.toString(total));
+        serviceResult.put("commit", Integer.toString(commit));
+
+        return new JSONObject(serviceResult);
     }
 
 
-    public String generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        String encode = generateVo.getFile().getFlEncode();
-        String fileName = generateVo.getFile().getFlName();
+    public JSONObject generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
+        Map<String, String> serviceResult = new HashMap<>();
+
+        LineIterator it = csvFileReader(generateVo);
+
         int measurementIndex = Integer.parseInt(generateVo.getInfluxdb().getIfxMeasurement().get("mt_index").toString());
         List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
 
-        LineIterator it = csvFileReader(encode, fileName);
-
-        int cnt = -1;
+        int total = -1;
+        int commit = -1;
         List<Point> entities = null;
 
         while(it.hasNext()) {
-            cnt++;
+            total++;
 
             String line = it.nextLine();
 
-            if(cnt == 0) {
+            if(total == 0) {
                 continue;
             }
             
@@ -204,11 +210,11 @@ public class GenerateSchemaService {
             Point point = generateSeries(measurement, columns, entity);
 
             if(point != null) {
+                commit++;
                 entities.add(point);
             }
 
-            if(cnt % 1000 == 0) {
-                logger.info("commit: " + cnt/1000);
+            if(total % 1000 == 0) {
                 influxDBRepository.save(entities);
 
                 entities.clear();
@@ -216,15 +222,17 @@ public class GenerateSchemaService {
             }
         }
 
-        if(cnt % 1000 != 0) {
-            logger.info("commit: " + cnt/1000);
+        if(total % 1000 != 0) {
             influxDBRepository.save(entities);
 
             entities.clear();
             entities = null;
         }
 
-        return Integer.toString(cnt);
+        serviceResult.put("total", Integer.toString(total));
+        serviceResult.put("commit", Integer.toString(commit));
+
+        return new JSONObject(serviceResult);
     }
 
 
@@ -297,13 +305,6 @@ public class GenerateSchemaService {
     }
 
 
-    private LineIterator csvFileReader(String encode, String fileName) throws IOException {
-        File file = new File(location + fileName);
-        
-        return FileUtils.lineIterator(file, encode);
-    }
-
-
     private Float compareToFloat(Float data, List<JSONObject> funcs) {
         Float value = data;
 
@@ -312,28 +313,30 @@ public class GenerateSchemaService {
 
             String compareSign = func.get("compare_sign").toString();
             Float compareValue = Float.parseFloat(func.get("compare_value").toString());
+
+            int compareResult = Float.compare(data, compareValue);
     
             switch (compareSign) {
                 case "!=":
-                    if(data != compareValue) {
+                    if(compareResult != 0) {
                         value = data;
                     }
                     break;
                               
                 case "==":
-                    if(data == compareValue) {
+                    if(compareResult == 0) {
                         value = data;
                     }
                     break;
                         
                 case ">":
-                    if(data > compareValue) {
+                    if(compareResult > 0) {
                         value = data;
                     }
                     break;
 
                 case "<":
-                    if(data < compareValue) {
+                    if(compareResult < 0) {
                         value = data;
                     }
                     break;
@@ -356,16 +359,18 @@ public class GenerateSchemaService {
 
             String compareSign = func.get("compare_sign").toString();
             String compareValue = func.get("compare_value").toString();
+
+            int compareResult = data.compareTo(compareValue);
     
             switch (compareSign) {
                 case "!=":
-                    if(!data.equals(compareValue)) {
+                    if(compareResult != 0) {
                         value = data;
                     }
                     break;
                           
                 case "==":
-                    if(data.equals(compareValue)) {
+                    if(compareResult == 0) {
                         value = data;
                     }
                     break;
@@ -377,6 +382,16 @@ public class GenerateSchemaService {
         }
     
         return value;
+    }
+
+    
+    private LineIterator csvFileReader(GenerateVo generateVo) throws IOException {
+        String encode = generateVo.getFile().getFlEncode();
+        String fileName = generateVo.getFile().getFlName();
+
+        File file = new File(location + fileName);
+        
+        return FileUtils.lineIterator(file, encode);
     }
 
 }

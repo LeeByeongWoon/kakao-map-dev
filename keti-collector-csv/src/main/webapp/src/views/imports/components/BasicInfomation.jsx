@@ -74,8 +74,7 @@ const BasicInfomation = ({ files, rules }) => {
     const [progress, setProgress] = useState(0);
     const [uploadResponse, setUploadResponse] = useState({});
 
-    const handleOnGenerator = (data) => {
-        const { uuid_file_name } = data;
+    const handleOnGenerator = ({ uuid_file_name }) => {
         const { type } = measurement;
 
         const url = "/api/generate/" + type;
@@ -153,7 +152,13 @@ const BasicInfomation = ({ files, rules }) => {
         })
     }
 
-    const handleOnFileUpload = async (data) => {
+    const handleOnFileUpload = async ({ vld_files }) => {
+        const response_files = {
+            status: null,
+            statusText: null,
+            data: null
+        };
+
         try {
             const url = "/api/files";
             const method= "POST";
@@ -162,7 +167,7 @@ const BasicInfomation = ({ files, rules }) => {
             };
 
             const formData = new FormData();
-            formData.append("files", data[0]);
+            formData.append("files", vld_files[0]);
 
             const res = await axios({
                 url: url,
@@ -175,19 +180,35 @@ const BasicInfomation = ({ files, rules }) => {
                 },
             });
 
-            setUploadResponse(res);
+            const { status, statusText, data } = res;
             
             if(res.status === 200) {
-                handleOnGenerator(res.data);
+                response_files["status"] = status;
+                response_files["statusText"] = statusText;
+                response_files["data"] = data;
+                // handleOnGenerator(res.data);
             }
 
         } catch (error) {
-            setUploadResponse(error);
+            const { status, statusText, data } = error;
+            response_files["status"] = status;
+            response_files["statusText"] = statusText;
+            response_files["data"] = data;
             console.error(error);
         }
+
+        setUploadResponse(response_files);
+
+        return response_files;
     }
 
     const handleOnValidation = async () => {
+        const response_validation = {
+            vld_databases: null,
+            vld_measurements: null,
+            vld_files: null
+        };
+
         const { main_domain, sub_domain } = domain;
         const md_value = main_domain.value;
 
@@ -241,26 +262,26 @@ const BasicInfomation = ({ files, rules }) => {
             const { databases, measurements } = res.data;
 
             if(databases.length !== 0) {
-                for (let i = 0; i < databases.length; i++) {
-                    if(!window.confirm("해당 도메인이 존재합니다. 강제진행 하시겠습니까?")) {
-                        return;
-                    }
+                if(!window.confirm(databases + "이 존재합니다. 계속 진행 하시겠습니까?")) {
+                    return;
                 }
             }
 
             if(measurements.length !== 0) {
-                for (let i = 0; i < measurements.length; i++) {
-                    if(!window.confirm("해당 테이블이 존재합니다. 강제진행 하시겠습니까?")) {
-                        return;
-                    }
+                if(!window.confirm(measurements + "이 존재합니다. 계속 진행 하시겠습니까?")) {
+                    return;
                 }
             }
-            
-            handleOnFileUpload(files);
+
+            response_validation["vld_databases"] = databases || "";
+            response_validation["vld_measurements"] = measurements || "";
+            response_validation["vld_files"] = files;
 
         } catch (error) {
             console.error(error);
         }
+
+        return response_validation;
     }
 
     return (
@@ -663,7 +684,13 @@ const BasicInfomation = ({ files, rules }) => {
                                         <Button
                                             color="primary"
                                             style={{ margin: 0 }}
-                                            onClick={ () => handleOnValidation() }
+                                            onClick={
+                                                async () => {
+                                                    const validation = await handleOnValidation();
+                                                    const { data } = await handleOnFileUpload(validation);
+                                                    handleOnGenerator(data);
+                                                }
+                                            }
                                             >
                                                 commit
                                         </Button>
