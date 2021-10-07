@@ -717,14 +717,14 @@ const BasicInfomation = ({ files, rules }) => {
                         ""
                     }
                     {
-                        responseGenerator["rg_data"] !== null
+                        responseGenerator["rg_data"] !== undefined
                         ?
                         <Row>
                             <Col md="12">
                                 데이터 저장 결과
                             </Col>
                             <Col md="12">
-                                {JSON.stringify(responseGenerator["rg_data"])}
+                                {JSON.stringify(responseGenerator["rg_data"])}<br /><br />
                             </Col>
                         </Row>
                         :
