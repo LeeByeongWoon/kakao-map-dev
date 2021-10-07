@@ -173,14 +173,14 @@ public class GenerateSchemaService {
         }
 
         serviceResult.put("total", Integer.toString(total));
-        serviceResult.put("commit", Integer.toString(commit));
+        serviceResult.put("commit", Integer.toString(commit+1));
 
         return new JSONObject(serviceResult);
     }
 
 
     public JSONObject generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        Map<String, String> serviceResult = new HashMap<>();
+        Map<String, Object> serviceResult = new HashMap<>();
 
         LineIterator it = csvFileReader(generateVo);
 
@@ -188,7 +188,8 @@ public class GenerateSchemaService {
         List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
 
         int total = -1;
-        int commit = -1;
+        Map<String, Long> commit = new HashMap<>();
+
         List<Point> entities = null;
 
         while(it.hasNext()) {
@@ -206,11 +207,12 @@ public class GenerateSchemaService {
 
             String[] entity = line.split(",", -1);
             String measurement = entity[measurementIndex];
-            
             Point point = generateSeries(measurement, columns, entity);
 
             if(point != null) {
-                commit++;
+                Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
+                commit.put(measurement, cnt);
+
                 entities.add(point);
             }
 
@@ -230,7 +232,7 @@ public class GenerateSchemaService {
         }
 
         serviceResult.put("total", Integer.toString(total));
-        serviceResult.put("commit", Integer.toString(commit));
+        serviceResult.put("commit", new JSONObject(commit));
 
         return new JSONObject(serviceResult);
     }

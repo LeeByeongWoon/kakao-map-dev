@@ -87,6 +87,8 @@ public class ApiController {
             responseEntity = responseExcetion("apiFileUpload - FileUploadException", ex.toString());
         } catch (IOException ex) {
             responseEntity = responseExcetion("apiFileUpload - IOException", ex.toString());
+        } catch (NullPointerException ex) {
+            responseEntity = responseExcetion("apiGenerateSchema - NullPointerException", ex.toString());
         }
 
         return responseEntity;
@@ -107,8 +109,6 @@ public class ApiController {
                 apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
             } else if(type.equals("columns")) {
                 apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
-            } else {
-                // apiResponse.put("apiGenerateSchema", "not found type");
             }
 
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
@@ -117,6 +117,8 @@ public class ApiController {
             responseEntity = responseExcetion("apiGenerateSchema - ParseException", ex.toString());
         } catch (IOException ex) {
             responseEntity = responseExcetion("apiGenerateSchema - IOException", ex.toString());
+        } catch (NullPointerException ex) {
+            responseEntity = responseExcetion("apiGenerateSchema - NullPointerException", ex.toString());
         }
 
         return responseEntity;
@@ -130,7 +132,7 @@ public class ApiController {
         responseBody.put("type", type);
         responseBody.put("message", message);
 
-        return new ResponseEntity<JSONObject>(new JSONObject(responseBody), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<JSONObject>(new JSONObject(responseBody), HttpStatus.OK);
     }
     
 }

@@ -71,92 +71,111 @@ const BasicInfomation = ({ files, rules }) => {
         {}
     ]);
 
-    const [progress, setProgress] = useState(0);
-    const [uploadResponse, setUploadResponse] = useState({});
+    // const [progress, setProgress] = useState(0);
+    const [responseValidation, setResponseValidation] = useState({});
+    const [responseFiles, setResponseFiles] = useState({
+        rf_progress: 0
+    });
+    const [responseGenerator, setResponseGenerator] = useState({});
 
-    const handleOnGenerator = ({ uuid_file_name }) => {
-        const { type } = measurement;
+    const handleOnGenerator = async (props) => {
+        const { uuid_file_name } = props;
 
-        const url = "/api/generate/" + type;
-        const method= "POST";
-        const headers = {
-            "Content-Type": "application/json"
+        const response_generator = {
+            rg_status: null,
+            rg_statusText: null,
+            rg_data: null
         };
 
-        const params = {
-            file: {
-                fl_type: "csv",
-                fl_encode: encode,
-                fl_name: uuid_file_name
-            },
-            influxdb: {
-                ifx_database: {
-                    db_main: domain.main_domain.value,
-                    db_sub: domain.sub_domain
-                },
-                ifx_measurement: {
-                    mt_type: measurement.type,
-                    mt_index: measurement.index,
-                    mt_value: measurement.value
-                },
-                ifx_columns: columns.map(
-                    v => {
-                        const compareData = compareRules.filter(val => v.value === (val.compareColumn !== undefined ? val.compareColumn.value : []));
-                        const column = 
-                            v.value !== timeIndex.value 
-                            ?
-                                {
-                                    data_index: v.index,
-                                    data_set: v.data_set,
-                                    data_type: v.data_type,
-                                    data_format: v.data_format,
-                                    data_value: v.value,
-                                    data_func: compareData.map(
-                                        val => ({
-                                            compare_sign: val.compareSign.value,
-                                            compare_value: val.compareValue
-                                        })
-                                    )
-                                }
-                            :
-                                {
-                                    data_index: v.index,
-                                    data_set: "time",
-                                    data_type: "Date",
-                                    data_format: timeIndex.format,
-                                    data_value: v.value,
-                                    data_func: []
-                                }
-                        
-                        return column;
-                    }
-                )
-            }
-        };
+        try {
+            const url = "/api/generate/" + measurement.type;
+            const method= "POST";
+            const headers = {
+                "Content-Type": "application/json"
+            };
 
-        dispatch(inactive());
+            const params = {
+                file: {
+                    fl_type: "csv",
+                    fl_encode: encode,
+                    fl_name: uuid_file_name
+                },
+                influxdb: {
+                    ifx_database: {
+                        db_main: domain.main_domain.value,
+                        db_sub: domain.sub_domain
+                    },
+                    ifx_measurement: {
+                        mt_type: measurement.type,
+                        mt_index: measurement.index,
+                        mt_value: measurement.value
+                    },
+                    ifx_columns: columns.map(
+                        v => {
+                            const compareData = compareRules.filter(val => v.value === (val.compareColumn !== undefined ? val.compareColumn.value : []));
+                            const column = 
+                                v.value !== timeIndex.value 
+                                ?
+                                    {
+                                        data_index: v.index,
+                                        data_set: v.data_set,
+                                        data_type: v.data_type,
+                                        data_format: v.data_format,
+                                        data_value: v.value,
+                                        data_func: compareData.map(
+                                            val => ({
+                                                compare_sign: val.compareSign.value,
+                                                compare_value: val.compareValue
+                                            })
+                                        )
+                                    }
+                                :
+                                    {
+                                        data_index: v.index,
+                                        data_set: "time",
+                                        data_type: "Date",
+                                        data_format: timeIndex.format,
+                                        data_value: v.value,
+                                        data_func: []
+                                    }
+                            
+                            return column;
+                        }
+                    )
+                }
+            };
 
-        axios({
-            url: url,
-            method: method,
-            headers: headers,
-            data: JSON.stringify(params)
-        })
-        .then(res => {
-            console.log(res);
-            dispatch(active());
-        })
-        .catch(error => {
-            console.log(error.response);
-            dispatch(active());
-        })
+            dispatch(inactive());
+
+            const res = await axios({
+                url: url,
+                method: method,
+                headers: headers,
+                data: JSON.stringify(params)
+            });
+
+            const { status, statusText, data } = res;
+
+            response_generator["rg_status"] = status;
+            response_generator["rg_statusText"] = statusText;
+            response_generator["rg_data"] = data;
+        } catch (error) {
+            alert(error);
+            console.log(error);
+        }
+        
+        dispatch(active());
+        
+        return response_generator;
     }
 
-    const handleOnFileUpload = async ({ vld_files }) => {
+    const handleOnFileUpload = async (props) => {
+        const rv_files = props;
+
         const response_files = {
-            status: null,
-            statusText: null,
-            data: null
+            rf_status: null,
+            rf_statusText: null,
+            rf_data: null
         };
 
         try {
@@ -167,7 +186,7 @@ const BasicInfomation = ({ files, rules }) => {
             };
 
             const formData = new FormData();
-            formData.append("files", vld_files[0]);
+            formData.append("files", rv_files[0]);
 
             const res = await axios({
                 url: url,
@@ -176,37 +195,32 @@ const BasicInfomation = ({ files, rules }) => {
                 data: formData,
                 onUploadProgress: (e) => {
                     const progressRate = (e.loaded / e.total * 100).toFixed(1);
-                    setProgress(progressRate);
+                    setResponseFiles({
+                        ...responseFiles,
+                        rf_progress: progressRate
+                    });
                 },
             });
 
             const { status, statusText, data } = res;
-            
-            if(res.status === 200) {
-                response_files["status"] = status;
-                response_files["statusText"] = statusText;
-                response_files["data"] = data;
-                // handleOnGenerator(res.data);
-            }
 
+            response_files["rf_status"] = status;
+            response_files["rf_statusText"] = statusText;
+            response_files["rf_data"] = data;
         } catch (error) {
-            const { status, statusText, data } = error;
-            response_files["status"] = status;
-            response_files["statusText"] = statusText;
-            response_files["data"] = data;
+            alert(error);
             console.error(error);
         }
-
-        setUploadResponse(response_files);
 
         return response_files;
     }
 
     const handleOnValidation = async () => {
         const response_validation = {
-            vld_databases: null,
-            vld_measurements: null,
-            vld_files: null
+            rv_check: false,
+            rv_databases: null,
+            rv_measurements: null,
+            rv_files: null
         };
 
         const { main_domain, sub_domain } = domain;
@@ -221,24 +235,24 @@ const BasicInfomation = ({ files, rules }) => {
         if(md_value === undefined || md_value === null || md_value === ""
                 || sub_domain === undefined || sub_domain === null || sub_domain === "") {
             alert("Main domain, Sub domain을 입력해주세요.");
-            return false;
+            return response_validation;
         }
 
         if(ti_format === undefined || ti_format === null || ti_format === ""
                 || ti_value === undefined || ti_value === null || ti_value === "") {
             alert("Time Index Column을 입력해주세요.");
-            return false;
+            return response_validation;
         }
 
         if(mt_type === undefined || mt_type === null || mt_type === ""
                 || mt_value === undefined || mt_value === null || mt_value === "") {
             alert("Measurement를 입력해주세요.");
-            return false;
+            return response_validation;
         }
 
         if(files.length === 0) {
             alert("파일을 저장해주세요.");
-            return false;
+            return response_validation;
         }
 
         try {
@@ -273,11 +287,12 @@ const BasicInfomation = ({ files, rules }) => {
                 }
             }
 
-            response_validation["vld_databases"] = databases || "";
-            response_validation["vld_measurements"] = measurements || "";
-            response_validation["vld_files"] = files;
-
+            response_validation["rv_check"] = true;
+            response_validation["rv_databases"] = databases || "";
+            response_validation["rv_measurements"] = measurements || "";
+            response_validation["rv_files"] = files;
         } catch (error) {
+            alert(error);
             console.error(error);
         }
 
@@ -656,48 +671,101 @@ const BasicInfomation = ({ files, rules }) => {
                                 </Button>
                         </Col>
                     </Row>
+                </CardBody>
+
+                <CardHeader>
+                    <CardTitle tag="h4">3. Commit & Result</CardTitle>
+                </CardHeader>
+                <CardBody>
+                    {
+                        responseValidation["rv_check"] !== undefined
+                        ?
+                        <Row>
+                            <Col md="12">
+                                중복체크
+                            </Col>
+                            <Col md="12">
+                                <h6>{responseValidation["rv_check"] !== true ? "실패" : "성공"}</h6>
+                            </Col>
+                        </Row>
+                        :
+                        ""
+                    }
+                    {
+                        responseFiles["rf_progress"] !== 0
+                        ?
+                        <>
+                            <Row>
+                                <Col md="12">
+                                    파일 업로드
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="11">
+                                    <ProgressBar
+                                        style={{ marginTop: "15px" }}
+                                        now={responseFiles["rf_progress"]}
+                                        // label={responseFiles["rf_progress"] + "%"}
+                                        />
+                                </Col>
+                                <Col md="1">
+                                    <h6 style={{ marginTop: "12px" }}>{responseFiles["rf_statusText"] || responseFiles["rf_progress"] + "%" }</h6>
+                                </Col>
+                            </Row>
+                        </>
+                        :
+                        ""
+                    }
+                    {
+                        responseGenerator["rg_data"] !== null
+                        ?
+                        <Row>
+                            <Col md="12">
+                                데이터 저장 결과
+                            </Col>
+                            <Col md="12">
+                                {JSON.stringify(responseGenerator["rg_data"])}
+                            </Col>
+                        </Row>
+                        :
+                        ""
+                    }
                     <Row>
-                        {
-                            progress !== 0
-                            ?
-                                <>
-                                    <Col md="11">
-                                        <ProgressBar
-                                            style={{ marginTop: "15px" }}
-                                            now={progress}
-                                            // label={progress + "%"}
-                                            />
-                                    </Col>
-                                    <Col md="1">
-                                        <h6 style={{ marginTop: "12px" }}>{uploadResponse.statusText || progress + "%" }</h6>
-                                    </Col>
-                                </>
-                            :
-                                <>
-                                    <Col
-                                        md="12"
-                                        style={{
-                                            margin: 0,
-                                            textAlign: "right"
-                                        }}
-                                        >
-                                        <Button
-                                            color="primary"
-                                            style={{ margin: 0 }}
-                                            onClick={
-                                                async () => {
-                                                    const validation = await handleOnValidation();
-                                                    const { data } = await handleOnFileUpload(validation);
-                                                    handleOnGenerator(data);
-                                                }
+                    <Col
+                        md="12"
+                        style={{
+                            margin: 0,
+                            textAlign: "right"
+                        }}
+                        >
+                            <Button
+                                color="primary"
+                                style={{ margin: 0 }}
+                                onClick={
+                                    async () => {
+                                        const response_validation = await handleOnValidation();
+                                        const { rv_check, rv_files } = response_validation;
+
+                                        setResponseValidation(response_validation);
+
+                                        if(rv_check === true) {
+                                            const response_files = await handleOnFileUpload(rv_files);
+                                            const { rf_data } = response_files;
+
+                                            setResponseFiles(response_files);
+
+                                            if(rf_data !== null && rf_data !== undefined && rf_data !== "") {
+                                                const response_generator = await handleOnGenerator(rf_data);
+                                                setResponseGenerator(response_generator);
                                             }
-                                            >
-                                                commit
-                                        </Button>
-                                    </Col>
-                                </>
-                        }
-                    </Row>        
+                                        }
+                                    }
+                                }
+                                >
+                                    commit
+                            </Button>
+                        </Col>
+                    </Row>     
                 </CardBody>
 
             </Card>
