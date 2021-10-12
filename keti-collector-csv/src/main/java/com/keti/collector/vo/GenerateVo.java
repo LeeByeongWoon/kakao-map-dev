@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class GenerateVo {
-    public FileVo file;
-    public InfluxdbVo influxdb;
+    public FileVo fileVo;
+    public TimeSeriesVo timeSeriesVo;
+    public MetaVo metaVo;
 }

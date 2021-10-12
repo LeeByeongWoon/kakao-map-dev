@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class InfluxdbVo {
+public class TimeSeriesVo {
     private JSONObject ifxDatabase;
     private JSONObject ifxMeasurement;
     private List<JSONObject> ifxColumns;

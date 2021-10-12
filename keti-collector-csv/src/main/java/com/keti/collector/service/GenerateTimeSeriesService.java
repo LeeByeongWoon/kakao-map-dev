@@ -32,7 +32,7 @@ import com.keti.collector.vo.GenerateVo;
 
 
 @Service
-public class GenerateSchemaService {
+public class GenerateTimeSeriesService {
 
     @Value("${spring.multipart.location}")
     private String location = null;
@@ -42,7 +42,7 @@ public class GenerateSchemaService {
     // private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
-    public GenerateSchemaService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
+    public GenerateTimeSeriesService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
         this.influxDBRepository = _influxDBRepository;
         this.objectMapper = _objectMapper;
     }
@@ -106,7 +106,7 @@ public class GenerateSchemaService {
     public JSONObject generateByDatabase(GenerateVo generateVo) {
         Map<String, String> serviceResult = new HashMap<>();
 
-        JSONObject ifxDatabase = generateVo.getInfluxdb().getIfxDatabase();
+        JSONObject ifxDatabase = generateVo.getTimeSeriesVo().getIfxDatabase();
         String mainDomain = ifxDatabase.get("db_main").toString();
         String subDomain = ifxDatabase.get("db_sub").toString();
         String database = mainDomain + "__" + subDomain;
@@ -130,8 +130,8 @@ public class GenerateSchemaService {
         Map<String, String> serviceResult = new HashMap<>();
 
         LineIterator it = csvFileReader(generateVo);
-        String measurement = generateVo.getInfluxdb().getIfxMeasurement().get("mt_value").toString();
-        List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
+        String measurement = generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
+        List<JSONObject> columns = generateVo.getTimeSeriesVo().getIfxColumns();
 
         int total = -1;
         int commit = -1;
@@ -150,7 +150,7 @@ public class GenerateSchemaService {
             }
 
             String[] entity = line.split(",", -1);
-            Point point = generateSeries(measurement, columns, entity);
+            Point point = generateTimeSeries(measurement, columns, entity);
 
             if(point != null) {
                 commit++;
@@ -184,8 +184,8 @@ public class GenerateSchemaService {
 
         LineIterator it = csvFileReader(generateVo);
 
-        int measurementIndex = Integer.parseInt(generateVo.getInfluxdb().getIfxMeasurement().get("mt_index").toString());
-        List<JSONObject> columns = generateVo.getInfluxdb().getIfxColumns();
+        int measurementIndex = Integer.parseInt(generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
+        List<JSONObject> columns = generateVo.getTimeSeriesVo().getIfxColumns();
 
         int total = -1;
         Map<String, Long> commit = new HashMap<>();
@@ -207,7 +207,7 @@ public class GenerateSchemaService {
 
             String[] entity = line.split(",", -1);
             String measurement = entity[measurementIndex];
-            Point point = generateSeries(measurement, columns, entity);
+            Point point = generateTimeSeries(measurement, columns, entity);
 
             if(point != null) {
                 Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
@@ -238,7 +238,7 @@ public class GenerateSchemaService {
     }
 
 
-    private Point generateSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
+    private Point generateTimeSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
         Builder builder = Point.measurement(measurement);
 
         for (JSONObject column : columns) {
@@ -388,8 +388,8 @@ public class GenerateSchemaService {
 
     
     private LineIterator csvFileReader(GenerateVo generateVo) throws IOException {
-        String encode = generateVo.getFile().getFlEncode();
-        String fileName = generateVo.getFile().getFlName();
+        String encode = generateVo.getFileVo().getFlEncode();
+        String fileName = generateVo.getFileVo().getFlName();
 
         File file = new File(location + fileName);
         

@@ -13,7 +13,9 @@ import {
 } from "reactstrap";
 
 
-const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
+const CsvColumnEditor = (props) => {
+    const { idx, val, handleOnEdit, handleOnRemove } = props;
+    
     const dataSet = [
         { label: "tag", value: "tag" },
         { label: "field", value: "field" },
@@ -42,7 +44,7 @@ const CsvColumnEditor = ({ idx, val, handleOnEdit, handleOnRemove }) => {
 
 
     return (
-        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "96px"}} >
+        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "96px"}}>
             {value}
             {" "}
             <Button

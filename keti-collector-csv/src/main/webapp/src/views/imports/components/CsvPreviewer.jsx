@@ -50,7 +50,7 @@ const encodeType = [
 const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
     const inputRef = useRef(null);
 
-    const [encode, setEncode] = useState({ index: 0, value: "utf-8", label: "utf-8" });
+    const [encode, setEncode] = useState({});
 
     const [csvFiles, setCsvFiles] = useState([]);
     const [csvData, setCsvData] = useState(defaultCsvData);
@@ -202,7 +202,13 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                             className="react-select primary"
                                             classNamePrefix="react-select"
                                             name="mainDomainSelect"
-                                            value={encode}
+                                            value={
+                                                encode.value !== undefined
+                                                ?
+                                                    encode
+                                                :
+                                                    ""
+                                            }
                                             onChange={(value) => setEncode(value)}
                                             options={encodeType}
                                             placeholder="option"
@@ -351,7 +357,9 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                                                 />
                                                                         </>
                                                                     :
-                                                                        value
+                                                                        <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "96px"}}>
+                                                                            {value}
+                                                                        </div>
                                                                 }
                                                         </th>
                                                     )

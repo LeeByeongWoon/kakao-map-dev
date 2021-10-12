@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -23,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.json.simple.JSONObject;
 import org.apache.commons.fileupload.FileUploadException;
 
-import com.keti.collector.service.GenerateSchemaService;
+import com.keti.collector.service.GenerateMetaService;
+import com.keti.collector.service.GenerateTimeSeriesService;
 import com.keti.collector.service.MultipartService;
 import com.keti.collector.vo.GenerateVo;
+import com.mongodb.MongoException;
 
 
 @RestController
@@ -33,50 +34,68 @@ import com.keti.collector.vo.GenerateVo;
 public class ApiController {
 
     private final MultipartService multipartService;
-    private final GenerateSchemaService generateSchemaService;
+    private final GenerateMetaService generateMetaService;
+    private final GenerateTimeSeriesService generateTimeSeriesService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public ApiController(MultipartService multipartService, GenerateSchemaService generateSchemaService) {
-        this.multipartService = multipartService;
-        this.generateSchemaService = generateSchemaService;
+    public ApiController(
+            MultipartService _multipartService,
+            GenerateMetaService _generateMetaService,
+            GenerateTimeSeriesService _generateTimeSeriesService) {
+        this.multipartService = _multipartService;
+        this.generateMetaService = _generateMetaService;
+        this.generateTimeSeriesService = _generateTimeSeriesService;
     }
 
 
-    @RequestMapping(value = "/validation/{type}", method = RequestMethod.GET)
-    public ResponseEntity<JSONObject> apiValidation(
-            @PathVariable("type") String type,
-            @RequestParam(required = true, value="main_domain") String mainDomain,
-            @RequestParam(required = true, value="sub_domain") String subDomain,
-            @RequestParam(required = false, value="measurement") String measurement) {
+    @RequestMapping(value = "/generate_meta", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> apiGenerateMeta(@RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
-        Map<String, List<String>> apiResponse = new HashMap<>();
 
         try {
-            if(type == "input") {
-                apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
-                apiResponse.put("measurements", generateSchemaService.validationByMeasurement(mainDomain, subDomain, measurement));
-            } else if(type == "columns") {
-                apiResponse.put("databases", generateSchemaService.validationByDatabase(mainDomain, subDomain));
-                apiResponse.put("measurements", new ArrayList<String>());
-            } else {
-                apiResponse.put("databases", new ArrayList<String>());
-                apiResponse.put("measurements", new ArrayList<String>());
-            }
-
-            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-
-        } catch (Exception e) {
-            apiResponse.put("databases", new ArrayList<String>());
-            apiResponse.put("measurements", new ArrayList<String>());
-            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+            generateMetaService.generateByMeta(generateVo);
+        } catch (MongoException ex) {
+            responseEntity = responseExcetion("apiGenerateMeta - MongoException", ex.toString());
+        } catch (UnknownHostException ex) {
+            responseEntity = responseExcetion("apiGenerateMeta - UnknownHostException", ex.toString());
         }
 
         return responseEntity;
     }
 
 
-    @RequestMapping(value = "/files", method = RequestMethod.POST)
+    @RequestMapping(value = "/generate_ts/{type}", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> apiGenerateTimeSeries(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
+        ResponseEntity<JSONObject> responseEntity = null;
+
+        try {
+            Map<String, JSONObject> apiResponse = new HashMap<>();
+
+            JSONObject resultMessage = generateTimeSeriesService.generateByDatabase(generateVo);
+            apiResponse.put("generateByDatabase", resultMessage);
+
+            if(type.equals("input")) {
+                apiResponse.put("generateByInput", generateTimeSeriesService.generateByInput(generateVo));
+            } else if(type.equals("columns")) {
+                apiResponse.put("generateByColumns", generateTimeSeriesService.generateByColumns(generateVo));
+            }
+
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+            
+        } catch (ParseException ex) {
+            responseEntity = responseExcetion("apiGenerateTimeSeries - ParseException", ex.toString());
+        } catch (IOException ex) {
+            responseEntity = responseExcetion("apiGenerateTimeSeries - IOException", ex.toString());
+        } catch (NullPointerException ex) {
+            responseEntity = responseExcetion("apiGenerateTimeSeries - NullPointerException", ex.toString());
+        }
+
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value = "/generate_file", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiFileUpload(HttpServletRequest request) {
         ResponseEntity<JSONObject> responseEntity = null;
 
@@ -95,30 +114,33 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/generate/{type}", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> apiGenerateSchema(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
+    @RequestMapping(value = "/validation/{type}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> apiValidation(
+            @PathVariable("type") String type,
+            @RequestParam(required = true, value="main_domain") String mainDomain,
+            @RequestParam(required = true, value="sub_domain") String subDomain,
+            @RequestParam(required = false, value="measurement") String measurement) {
         ResponseEntity<JSONObject> responseEntity = null;
+        Map<String, List<String>> apiResponse = new HashMap<>();
 
         try {
-            Map<String, JSONObject> apiResponse = new HashMap<>();
-
-            JSONObject resultMessage = generateSchemaService.generateByDatabase(generateVo);
-            apiResponse.put("generateByDatabase", resultMessage);
-
-            if(type.equals("input")) {
-                apiResponse.put("generateByInput", generateSchemaService.generateByInput(generateVo));
-            } else if(type.equals("columns")) {
-                apiResponse.put("generateByColumns", generateSchemaService.generateByColumns(generateVo));
+            if(type == "input") {
+                apiResponse.put("databases", generateTimeSeriesService.validationByDatabase(mainDomain, subDomain));
+                apiResponse.put("measurements", generateTimeSeriesService.validationByMeasurement(mainDomain, subDomain, measurement));
+            } else if(type == "columns") {
+                apiResponse.put("databases", generateTimeSeriesService.validationByDatabase(mainDomain, subDomain));
+                apiResponse.put("measurements", new ArrayList<String>());
+            } else {
+                apiResponse.put("databases", new ArrayList<String>());
+                apiResponse.put("measurements", new ArrayList<String>());
             }
 
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
-            
-        } catch (ParseException ex) {
-            responseEntity = responseExcetion("apiGenerateSchema - ParseException", ex.toString());
-        } catch (IOException ex) {
-            responseEntity = responseExcetion("apiGenerateSchema - IOException", ex.toString());
-        } catch (NullPointerException ex) {
-            responseEntity = responseExcetion("apiGenerateSchema - NullPointerException", ex.toString());
+
+        } catch (Exception ex) {
+            apiResponse.put("databases", new ArrayList<String>());
+            apiResponse.put("measurements", new ArrayList<String>());
+            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
         }
 
         return responseEntity;

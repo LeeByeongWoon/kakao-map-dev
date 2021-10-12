@@ -88,7 +88,7 @@ const BasicInfomation = ({ files, rules }) => {
         };
 
         try {
-            const url = "/api/generate/" + measurement.type;
+            const url = "/api/generate_ts/" + measurement.type;
             const method= "POST";
             const headers = {
                 "Content-Type": "application/json"
@@ -179,7 +179,7 @@ const BasicInfomation = ({ files, rules }) => {
         };
 
         try {
-            const url = "/api/files";
+            const url = "/api/generate_file";
             const method= "POST";
             const headers = {
                 "Content-Type": "multipart/form-data"
@@ -680,55 +680,63 @@ const BasicInfomation = ({ files, rules }) => {
                     {
                         responseValidation["rv_check"] !== undefined
                         ?
-                        <Row>
-                            <Col md="12">
-                                중복체크
-                            </Col>
-                            <Col md="12">
-                                <h6>{responseValidation["rv_check"] !== true ? "실패" : "성공"}</h6>
-                            </Col>
-                        </Row>
+                            <Row>
+                                <Col md="12">
+                                    중복체크
+                                </Col>
+                                <Col md="12">
+                                    <h6>{responseValidation["rv_check"] !== true ? "FAIL" : "OK"}</h6>
+                                </Col>
+                            </Row>
                         :
-                        ""
+                            ""
                     }
                     {
                         responseFiles["rf_progress"] !== 0
                         ?
-                        <>
-                            <Row>
-                                <Col md="12">
-                                    파일 업로드
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md="11">
-                                    <ProgressBar
-                                        style={{ marginTop: "15px" }}
-                                        now={responseFiles["rf_progress"]}
-                                        // label={responseFiles["rf_progress"] + "%"}
-                                        />
-                                </Col>
-                                <Col md="1">
-                                    <h6 style={{ marginTop: "12px" }}>{responseFiles["rf_statusText"] || responseFiles["rf_progress"] + "%" }</h6>
-                                </Col>
-                            </Row>
-                        </>
+                            <>
+                                <Row>
+                                    <Col md="12">
+                                        파일 업로드
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md="11">
+                                        <ProgressBar
+                                            style={{ marginTop: "15px" }}
+                                            now={responseFiles["rf_progress"]}
+                                            // label={responseFiles["rf_progress"] + "%"}
+                                            />
+                                    </Col>
+                                    <Col md="1">
+                                        <h6 style={{ marginTop: "12px" }}>
+                                            {
+                                                responseFiles["rf_status"] !== 200
+                                                ?
+                                                    responseFiles["rf_progress"] + "%"
+                                                :
+                                                    "OK"
+                                            }
+                                        </h6>
+                                    </Col>
+                                </Row>
+                            </>
                         :
-                        ""
+                            ""
                     }
                     {
                         responseGenerator["rg_data"] !== undefined
                         ?
-                        <Row>
-                            <Col md="12">
-                                데이터 저장 결과
-                            </Col>
-                            <Col md="12">
-                                {JSON.stringify(responseGenerator["rg_data"])}<br /><br />
-                            </Col>
-                        </Row>
+                            <Row>
+                                <Col md="12">
+                                    데이터 저장 결과
+                                </Col>
+                                <Col md="12">
+                                    {JSON.stringify(responseGenerator["rg_data"])}<br /><br />
+                                </Col>
+                            </Row>
                         :
-                        ""
+                            ""
                     }
                     <Row>
                     <Col

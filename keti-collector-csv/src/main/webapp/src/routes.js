@@ -28,7 +28,7 @@
 // import Login from "views/pages/Login.js";
 // import Notifications from "views/components/Notifications.js";
 // import Panels from "views/components/Panels.js";
-// import ReactTables from "views/tables/ReactTables.js";
+import ReactTables from "views/tables/ReactTables.js";
 // import Register from "views/pages/Register.js";
 // import RegularForms from "views/forms/RegularForms.js";
 // import RegularTables from "views/tables/RegularTables.js";
