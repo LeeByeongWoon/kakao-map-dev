@@ -39,7 +39,7 @@ public class GenerateTimeSeriesService {
     
     private final InfluxDBRepository influxDBRepository;
     private final ObjectMapper objectMapper;
-    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
     public GenerateTimeSeriesService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
@@ -48,7 +48,7 @@ public class GenerateTimeSeriesService {
     }
 
 
-    public List<String> validationByDatabase(String _mainDomain, String _subDomain) {
+    public List<String> databaseInValidation(String _database) {
         List<String> databases = new ArrayList<>();
 
         QueryResult qr_databases = influxDBRepository.getDatabases();
@@ -65,7 +65,7 @@ public class GenerateTimeSeriesService {
                 for (List<Object> element : s_values) {
                     String database = element.get(0).toString();
 
-                    if(database.equals(_mainDomain + "__" + _subDomain)) {
+                    if(database.equals(_database)) {
                         databases.add(database);
                     }
                 }
@@ -75,10 +75,10 @@ public class GenerateTimeSeriesService {
         return databases;
     }
 
-    public List<String> validationByMeasurement(String _mainDomain, String _subDomain, String _measurement) {
+    public List<String> measurementInValidation(String _database, String _measurement) {
         List<String> measurements = new ArrayList<>();
 
-        QueryResult qr_measurements = influxDBRepository.getMeasurements(_mainDomain + "__" + _subDomain);
+        QueryResult qr_measurements = influxDBRepository.getMeasurements(_database);
         List<Result> qr_results = qr_measurements.getResults();
         // String qr_error = qr_measurements.getError();
 
@@ -103,20 +103,22 @@ public class GenerateTimeSeriesService {
     }
 
 
-    public JSONObject generateByDatabase(GenerateVo generateVo) {
+    public JSONObject generatedByDatabase(GenerateVo _generateVo) {
         Map<String, String> serviceResult = new HashMap<>();
 
-        JSONObject ifxDatabase = generateVo.getTimeSeriesVo().getIfxDatabase();
+        JSONObject ifxDatabase = _generateVo.getTimeSeriesVo().getIfxDatabase();
         String mainDomain = ifxDatabase.get("db_main").toString();
         String subDomain = ifxDatabase.get("db_sub").toString();
         String database = mainDomain + "__" + subDomain;
 
-        List<String> databases = validationByDatabase(mainDomain, subDomain);
+        List<String> databases = databaseInValidation(database);
 
         if(databases.size() != 0) {
             serviceResult.put("result", "already");
+            serviceResult.put("commit", database);
         } else {
             serviceResult.put("result", "generate");
+            serviceResult.put("commit", database);
             influxDBRepository.createDatabase(database);
         }
 
@@ -126,22 +128,22 @@ public class GenerateTimeSeriesService {
     }
 
 
-    public JSONObject generateByInput(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
-        Map<String, String> serviceResult = new HashMap<>();
+    public JSONObject generatedByInput(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
+        Map<String, Object> serviceResult = new HashMap<>();
 
-        LineIterator it = csvFileReader(generateVo);
-        String measurement = generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
-        List<JSONObject> columns = generateVo.getTimeSeriesVo().getIfxColumns();
+        LineIterator it = csvFileReader(_generateVo);
+        String measurement = _generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
+        List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
 
-        int total = -1;
-        int commit = -1;
+        int rows = -1;
+        Map<String, Long> commit = new HashMap<>();
         List<Point> entities = null;
 
         while(it.hasNext()) {
-            total++;
+            rows++;
             String line = it.nextLine();
 
-            if(total == 0) {
+            if(rows == 0) {
                 continue;
             }
             
@@ -150,14 +152,15 @@ public class GenerateTimeSeriesService {
             }
 
             String[] entity = line.split(",", -1);
-            Point point = generateTimeSeries(measurement, columns, entity);
+            Point point = generatedByTimeSeries(measurement, columns, entity);
 
             if(point != null) {
-                commit++;
+                Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
+                commit.put(measurement, cnt);
                 entities.add(point);
             }
     
-            if(total % 1000 == 0) {
+            if(rows % 1000 == 0) {
                 influxDBRepository.save(entities);
 
                 entities.clear();
@@ -165,39 +168,37 @@ public class GenerateTimeSeriesService {
             }
         }
 
-        if(total % 1000 != 0) {
+        if(rows % 1000 != 0) {
             influxDBRepository.save(entities);
 
             entities.clear();
             entities = null;
         }
 
-        serviceResult.put("total", Integer.toString(total));
-        serviceResult.put("commit", Integer.toString(commit+1));
+        serviceResult.put("rows", Integer.toString(rows));
+        serviceResult.put("commits", new JSONObject(commit));
 
         return new JSONObject(serviceResult);
     }
 
 
-    public JSONObject generateByColumns(GenerateVo generateVo) throws IOException, ParseException, NumberFormatException {
+    public JSONObject generatedByColumns(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
         Map<String, Object> serviceResult = new HashMap<>();
 
-        LineIterator it = csvFileReader(generateVo);
+        LineIterator it = csvFileReader(_generateVo);
+        int measurementIndex = Integer.parseInt(_generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
+        List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
 
-        int measurementIndex = Integer.parseInt(generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
-        List<JSONObject> columns = generateVo.getTimeSeriesVo().getIfxColumns();
-
-        int total = -1;
+        int rows = -1;
         Map<String, Long> commit = new HashMap<>();
-
         List<Point> entities = null;
 
         while(it.hasNext()) {
-            total++;
+            rows++;
 
             String line = it.nextLine();
 
-            if(total == 0) {
+            if(rows == 0) {
                 continue;
             }
             
@@ -207,7 +208,7 @@ public class GenerateTimeSeriesService {
 
             String[] entity = line.split(",", -1);
             String measurement = entity[measurementIndex];
-            Point point = generateTimeSeries(measurement, columns, entity);
+            Point point = generatedByTimeSeries(measurement, columns, entity);
 
             if(point != null) {
                 Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
@@ -216,7 +217,7 @@ public class GenerateTimeSeriesService {
                 entities.add(point);
             }
 
-            if(total % 1000 == 0) {
+            if(rows % 1000 == 0) {
                 influxDBRepository.save(entities);
 
                 entities.clear();
@@ -224,24 +225,24 @@ public class GenerateTimeSeriesService {
             }
         }
 
-        if(total % 1000 != 0) {
+        if(rows % 1000 != 0) {
             influxDBRepository.save(entities);
 
             entities.clear();
             entities = null;
         }
 
-        serviceResult.put("total", Integer.toString(total));
-        serviceResult.put("commit", new JSONObject(commit));
+        serviceResult.put("rows", Integer.toString(rows));
+        serviceResult.put("commits", new JSONObject(commit));
 
         return new JSONObject(serviceResult);
     }
 
 
-    private Point generateTimeSeries(String measurement, List<JSONObject> columns, String[] entity) throws ParseException {
-        Builder builder = Point.measurement(measurement);
+    private Point generatedByTimeSeries(String _measurement, List<JSONObject> _columns, String[] _entity) throws ParseException {
+        Builder builder = Point.measurement(_measurement);
 
-        for (JSONObject column : columns) {
+        for (JSONObject column : _columns) {
             int dataIndex = Integer.parseInt(column.get("data_index").toString());
             String dataSet = column.get("data_set").toString();
             String dataType = column.get("data_type").toString();
@@ -253,16 +254,14 @@ public class GenerateTimeSeriesService {
             Float compareToFloatEntity = 0.00f;
 
             if(dataType.equals("Char")) {
-                compareToStringEntity = compareToString(entity[dataIndex], dataFunc);
+                compareToStringEntity = compareToString(_entity[dataIndex], dataFunc);
 
                 if(compareToStringEntity == null) {
                     return null;
                 }
-            }
-
-            if(dataType.equals("Float")) {
+            } else if(dataType.equals("Float")) {
                 compareToFloatEntity = 
-                    !entity[dataIndex].isEmpty() ? compareToFloat(Float.parseFloat(entity[dataIndex]), dataFunc) : compareToFloat(0.00f, dataFunc);
+                    !_entity[dataIndex].isEmpty() ? compareToFloat(Float.parseFloat(_entity[dataIndex]), dataFunc) : compareToFloat(0.00f, dataFunc);
 
                 if(compareToFloatEntity == null) {
                     return null;
@@ -272,7 +271,7 @@ public class GenerateTimeSeriesService {
             switch (dataSet) {
                 case "time":
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
-                    Date dt = simpleDateFormat.parse(entity[dataIndex]);
+                    Date dt = simpleDateFormat.parse(_entity[dataIndex]);
 
                     builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
                     break;
@@ -307,45 +306,58 @@ public class GenerateTimeSeriesService {
     }
 
 
-    private Float compareToFloat(Float data, List<JSONObject> funcs) {
-        Float value = data;
+    private Float compareToFloat(Float _data, List<JSONObject> _funcs) {
+        Float value = 0.00f;
 
-        for (JSONObject func : funcs) {
-            value = null;
+        int size = _funcs.size();
+        boolean[] validations = new boolean[size];
 
+        for (int i = 0; i < size; i++) {
+            validations[i] = false;
+
+            JSONObject func = _funcs.get(i);
             String compareSign = func.get("compare_sign").toString();
             Float compareValue = Float.parseFloat(func.get("compare_value").toString());
 
-            int compareResult = Float.compare(data, compareValue);
+            int compareResult = Float.compare(_data, compareValue);
     
             switch (compareSign) {
                 case "!=":
                     if(compareResult != 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
                               
                 case "==":
                     if(compareResult == 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
                         
                 case ">":
                     if(compareResult > 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
 
                 case "<":
                     if(compareResult < 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
 
                 default:
-                    value = data;
+                    validations[i] = false;
                     break;
+            }
+        }
+
+        for (boolean validation : validations) {
+            if(!validation) {
+                value = null;
+                break;
+            } else {
+                value = _data;
             }
         }
 
@@ -353,33 +365,46 @@ public class GenerateTimeSeriesService {
     }
 
     
-    private String compareToString(String data, List<JSONObject> funcs) {
-        String value = data;
+    private String compareToString(String _data, List<JSONObject> _funcs) {
+        String value = "";
 
-        for (JSONObject func : funcs) {
-            value = null;
+        int size = _funcs.size();
+        boolean[] validations = new boolean[size];
 
+        for (int i = 0; i < size; i++) {
+            validations[i] = false;
+
+            JSONObject func = _funcs.get(i);
             String compareSign = func.get("compare_sign").toString();
             String compareValue = func.get("compare_value").toString();
 
-            int compareResult = data.compareTo(compareValue);
+            int compareResult = _data.compareTo(compareValue);
     
             switch (compareSign) {
                 case "!=":
                     if(compareResult != 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
                           
                 case "==":
                     if(compareResult == 0) {
-                        value = data;
+                        validations[i] = true;
                     }
                     break;
 
                 default:
-                    value = data;
+                    validations[i] = false;
                     break;
+            }
+        }
+
+        for (boolean validation : validations) {
+            if(!validation) {
+                value = null;
+                break;
+            } else {
+                value = _data;
             }
         }
     
@@ -387,9 +412,9 @@ public class GenerateTimeSeriesService {
     }
 
     
-    private LineIterator csvFileReader(GenerateVo generateVo) throws IOException {
-        String encode = generateVo.getFileVo().getFlEncode();
-        String fileName = generateVo.getFileVo().getFlName();
+    private LineIterator csvFileReader(GenerateVo _generateVo) throws IOException {
+        String encode = _generateVo.getFileVo().getFlEncode();
+        String fileName = _generateVo.getFileVo().getFlName();
 
         File file = new File(location + fileName);
         

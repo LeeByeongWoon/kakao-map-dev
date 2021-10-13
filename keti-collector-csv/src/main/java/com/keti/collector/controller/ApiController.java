@@ -49,36 +49,37 @@ public class ApiController {
     }
 
 
-    @RequestMapping(value = "/generate_meta", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> apiGenerateMeta(@RequestBody GenerateVo generateVo) {
-        ResponseEntity<JSONObject> responseEntity = null;
-
-        try {
-            generateMetaService.generateByMeta(generateVo);
-        } catch (MongoException ex) {
-            responseEntity = responseExcetion("apiGenerateMeta - MongoException", ex.toString());
-        } catch (UnknownHostException ex) {
-            responseEntity = responseExcetion("apiGenerateMeta - UnknownHostException", ex.toString());
-        }
-
-        return responseEntity;
-    }
-
-
-    @RequestMapping(value = "/generate_ts/{type}", method = RequestMethod.POST)
+    @RequestMapping(value = "/generate/{type}", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiGenerateTimeSeries(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
 
         try {
-            Map<String, JSONObject> apiResponse = new HashMap<>();
+            Map<String, Object> apiResponse = new HashMap<>();
 
-            JSONObject resultMessage = generateTimeSeriesService.generateByDatabase(generateVo);
-            apiResponse.put("generateByDatabase", resultMessage);
+            switch (type) {
+                case "input":
+                    JSONObject inputDatabaseJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
+                    JSONObject inputTimeSeriesJsonObject = generateTimeSeriesService.generatedByInput(generateVo);
+                    JSONObject inputMetaJsonObject = generateMetaService.generatedByMeta(inputDatabaseJsonObject, inputTimeSeriesJsonObject);
+                    
+                    apiResponse.put("generateByDatabase", inputDatabaseJsonObject);
+                    apiResponse.put("generatedByInput", inputTimeSeriesJsonObject);
+                    apiResponse.put("generatedByMeta", inputMetaJsonObject);
+                    break;
 
-            if(type.equals("input")) {
-                apiResponse.put("generateByInput", generateTimeSeriesService.generateByInput(generateVo));
-            } else if(type.equals("columns")) {
-                apiResponse.put("generateByColumns", generateTimeSeriesService.generateByColumns(generateVo));
+                case "columns":
+                    JSONObject columnsDatabaseJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
+                    JSONObject columnsTimeSeriesJsonObject = generateTimeSeriesService.generatedByColumns(generateVo);
+                    JSONObject columnsMetaJsonObject = generateMetaService.generatedByMeta(columnsDatabaseJsonObject, columnsTimeSeriesJsonObject);
+
+                    apiResponse.put("generateByDatabase", columnsDatabaseJsonObject);
+                    apiResponse.put("generatedByColumns", columnsTimeSeriesJsonObject);
+                    apiResponse.put("generatedByMeta", columnsMetaJsonObject);
+                    break;
+            
+                default:
+                    apiResponse.put("generatedByDefault", "Not Found");
+                    break;
             }
 
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
@@ -89,13 +90,15 @@ public class ApiController {
             responseEntity = responseExcetion("apiGenerateTimeSeries - IOException", ex.toString());
         } catch (NullPointerException ex) {
             responseEntity = responseExcetion("apiGenerateTimeSeries - NullPointerException", ex.toString());
+        } catch (MongoException ex) {
+            responseEntity = responseExcetion("apiGenerateMeta - MongoException", ex.toString());
         }
 
         return responseEntity;
     }
 
 
-    @RequestMapping(value = "/generate_file", method = RequestMethod.POST)
+    @RequestMapping(value = "/generate/file", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiFileUpload(HttpServletRequest request) {
         ResponseEntity<JSONObject> responseEntity = null;
 
@@ -120,15 +123,17 @@ public class ApiController {
             @RequestParam(required = true, value="main_domain") String mainDomain,
             @RequestParam(required = true, value="sub_domain") String subDomain,
             @RequestParam(required = false, value="measurement") String measurement) {
+        String database = mainDomain + "__" + subDomain;
+
         ResponseEntity<JSONObject> responseEntity = null;
         Map<String, List<String>> apiResponse = new HashMap<>();
 
         try {
             if(type == "input") {
-                apiResponse.put("databases", generateTimeSeriesService.validationByDatabase(mainDomain, subDomain));
-                apiResponse.put("measurements", generateTimeSeriesService.validationByMeasurement(mainDomain, subDomain, measurement));
+                apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
+                apiResponse.put("measurements", generateTimeSeriesService.measurementInValidation(database, measurement));
             } else if(type == "columns") {
-                apiResponse.put("databases", generateTimeSeriesService.validationByDatabase(mainDomain, subDomain));
+                apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
                 apiResponse.put("measurements", new ArrayList<String>());
             } else {
                 apiResponse.put("databases", new ArrayList<String>());

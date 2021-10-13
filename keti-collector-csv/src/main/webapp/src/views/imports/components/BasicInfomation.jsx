@@ -88,19 +88,19 @@ const BasicInfomation = ({ files, rules }) => {
         };
 
         try {
-            const url = "/api/generate_ts/" + measurement.type;
+            const url = "/api/generate/" + measurement.type;
             const method= "POST";
             const headers = {
                 "Content-Type": "application/json"
             };
 
             const params = {
-                file: {
+                file_vo: {
                     fl_type: "csv",
                     fl_encode: encode,
                     fl_name: uuid_file_name
                 },
-                influxdb: {
+                time_series_vo: {
                     ifx_database: {
                         db_main: domain.main_domain.value,
                         db_sub: domain.sub_domain
@@ -138,12 +138,15 @@ const BasicInfomation = ({ files, rules }) => {
                                         data_value: v.value,
                                         data_func: []
                                     }
-                            
+
                             return column;
                         }
                     )
-                }
+                },
+                meta_vo: {}
             };
+
+            console.log(params);
 
             dispatch(inactive());
 
@@ -179,7 +182,7 @@ const BasicInfomation = ({ files, rules }) => {
         };
 
         try {
-            const url = "/api/generate_file";
+            const url = "/api/generate/file";
             const method= "POST";
             const headers = {
                 "Content-Type": "multipart/form-data"
