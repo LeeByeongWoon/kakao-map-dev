@@ -554,9 +554,12 @@ const BasicInfomation = ({ files, rules }) => {
                                                     options={
                                                         rules.columns !== undefined
                                                         ?
-                                                            columns.map(v => {
-                                                                return { ...v, label: v.value };
-                                                            })
+                                                            columns.map(
+                                                                v => (
+                                                                    timeIndex.value !== v.value 
+                                                                    ? { ...v, label: v.value }
+                                                                    : { ...v, label: v.value, isDisabled: true, })
+                                                            )
                                                         :
                                                             []
                                                     }

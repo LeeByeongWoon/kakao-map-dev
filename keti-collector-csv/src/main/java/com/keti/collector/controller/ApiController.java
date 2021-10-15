@@ -55,32 +55,38 @@ public class ApiController {
 
         try {
             Map<String, Object> apiResponse = new HashMap<>();
+            JSONObject databasesJsonObject = null;
+            JSONObject measurementsJsonObject = null;
+            JSONObject metasJsonObject = null;
 
             switch (type) {
                 case "input":
-                    JSONObject inputDatabaseJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
-                    JSONObject inputTimeSeriesJsonObject = generateTimeSeriesService.generatedByInput(generateVo);
-                    JSONObject inputMetaJsonObject = generateMetaService.generatedByMeta(inputDatabaseJsonObject, inputTimeSeriesJsonObject);
-                    
-                    apiResponse.put("generateByDatabase", inputDatabaseJsonObject);
-                    apiResponse.put("generatedByInput", inputTimeSeriesJsonObject);
-                    apiResponse.put("generatedByMeta", inputMetaJsonObject);
+                    apiResponse.put("type", "generatedByInput");
+
+                    databasesJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
+                    measurementsJsonObject = generateTimeSeriesService.generatedByInput(generateVo);
+                    metasJsonObject = generateMetaService.generatedByMeta(databasesJsonObject, measurementsJsonObject);
                     break;
 
                 case "columns":
-                    JSONObject columnsDatabaseJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
-                    JSONObject columnsTimeSeriesJsonObject = generateTimeSeriesService.generatedByColumns(generateVo);
-                    JSONObject columnsMetaJsonObject = generateMetaService.generatedByMeta(columnsDatabaseJsonObject, columnsTimeSeriesJsonObject);
+                    apiResponse.put("type", "generatedByColumns");
 
-                    apiResponse.put("generateByDatabase", columnsDatabaseJsonObject);
-                    apiResponse.put("generatedByColumns", columnsTimeSeriesJsonObject);
-                    apiResponse.put("generatedByMeta", columnsMetaJsonObject);
+                    databasesJsonObject = generateTimeSeriesService.generatedByDatabase(generateVo);
+                    measurementsJsonObject = generateTimeSeriesService.generatedByColumns(generateVo);
+                    metasJsonObject = generateMetaService.generatedByMeta(databasesJsonObject, measurementsJsonObject);
                     break;
             
                 default:
-                    apiResponse.put("generatedByDefault", "Not Found");
+                    apiResponse.put("type", "generatedByDefault");
+                    databasesJsonObject = new JSONObject();
+                    measurementsJsonObject = new JSONObject();
+                    metasJsonObject = new JSONObject();
                     break;
             }
+
+            apiResponse.put("databases", databasesJsonObject);
+            apiResponse.put("measurements", measurementsJsonObject);
+            apiResponse.put("metas", metasJsonObject);
 
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
             

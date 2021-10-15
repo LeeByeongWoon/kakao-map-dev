@@ -114,7 +114,7 @@ public class GenerateTimeSeriesService {
         List<String> databases = databaseInValidation(database);
 
         if(databases.size() != 0) {
-            serviceResult.put("result", "already");
+            serviceResult.put("rows", "already");
             serviceResult.put("commit", database);
         } else {
             serviceResult.put("result", "generate");
@@ -290,11 +290,11 @@ public class GenerateTimeSeriesService {
                     break;
 
                 case "all":
-                    builder.tag(dataValue, compareToStringEntity);
-
                     if(dataType.equals("Float")) {
+                        builder.tag(dataValue, compareToFloatEntity.toString());
                         builder.addField(dataValue, compareToFloatEntity);
                     } else {
+                        builder.tag(dataValue, compareToStringEntity);
                         builder.addField(dataValue, compareToStringEntity);
                     }
 
@@ -307,7 +307,7 @@ public class GenerateTimeSeriesService {
 
 
     private Float compareToFloat(Float _data, List<JSONObject> _funcs) {
-        Float value = 0.00f;
+        Float value = _data;
 
         int size = _funcs.size();
         boolean[] validations = new boolean[size];
@@ -319,7 +319,7 @@ public class GenerateTimeSeriesService {
             String compareSign = func.get("compare_sign").toString();
             Float compareValue = Float.parseFloat(func.get("compare_value").toString());
 
-            int compareResult = Float.compare(_data, compareValue);
+            int compareResult = Float.compare(value, compareValue);
     
             switch (compareSign) {
                 case "!=":
@@ -347,6 +347,7 @@ public class GenerateTimeSeriesService {
                     break;
 
                 default:
+                    logger.info("default: " + compareSign);
                     validations[i] = false;
                     break;
             }
@@ -356,8 +357,6 @@ public class GenerateTimeSeriesService {
             if(!validation) {
                 value = null;
                 break;
-            } else {
-                value = _data;
             }
         }
 
@@ -366,7 +365,7 @@ public class GenerateTimeSeriesService {
 
     
     private String compareToString(String _data, List<JSONObject> _funcs) {
-        String value = "";
+        String value = _data;
 
         int size = _funcs.size();
         boolean[] validations = new boolean[size];
@@ -378,7 +377,7 @@ public class GenerateTimeSeriesService {
             String compareSign = func.get("compare_sign").toString();
             String compareValue = func.get("compare_value").toString();
 
-            int compareResult = _data.compareTo(compareValue);
+            int compareResult = value.compareTo(compareValue);
     
             switch (compareSign) {
                 case "!=":
@@ -403,8 +402,6 @@ public class GenerateTimeSeriesService {
             if(!validation) {
                 value = null;
                 break;
-            } else {
-                value = _data;
             }
         }
     
