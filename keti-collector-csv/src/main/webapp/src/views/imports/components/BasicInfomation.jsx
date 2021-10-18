@@ -73,6 +73,7 @@ const BasicInfomation = ({ files, rules }) => {
     ]);
 
     // const [progress, setProgress] = useState(0);
+    const [responseIsCheck, setResponseIsCheck] = useState(false);
     const [responseValidation, setResponseValidation] = useState({});
     const [responseFiles, setResponseFiles] = useState({
         rf_progress: 0
@@ -356,7 +357,7 @@ const BasicInfomation = ({ files, rules }) => {
                                         />
                                 </FormGroup>
                             </Col>
-                            <Label
+                            {/* <Label
                                 md="2"
                                 style={{
                                     width: "140px"
@@ -373,7 +374,7 @@ const BasicInfomation = ({ files, rules }) => {
                                         value={domain.target_domain || ""}
                                         />
                                 </FormGroup>
-                            </Col>
+                            </Col> */}
                         </Row>
                         <Row>
                             <Label md="2">Time index column</Label>
@@ -744,39 +745,67 @@ const BasicInfomation = ({ files, rules }) => {
                             ""
                     }
                     <Row>
-                    <Col
-                        md="12"
-                        style={{
-                            margin: 0,
-                            textAlign: "right"
-                        }}
-                        >
-                            <Button
-                                color="primary"
-                                style={{ margin: 0 }}
-                                onClick={
-                                    async () => {
-                                        const response_validation = await handleOnValidation();
-                                        const { rv_check, rv_files } = response_validation;
-
-                                        setResponseValidation(response_validation);
-
-                                        if(rv_check === true) {
-                                            const response_files = await handleOnFileUpload(rv_files);
-                                            const { rf_data } = response_files;
-
-                                            setResponseFiles(response_files);
-
-                                            if(rf_data !== null && rf_data !== undefined && rf_data !== "") {
-                                                const response_generator = await handleOnGenerator(rf_data);
-                                                setResponseGenerator(response_generator);
+                        <Col
+                            md="12"
+                            style={{
+                                margin: 0,
+                                textAlign: "right"
+                            }}
+                            >
+                                {
+                                    responseGenerator["rg_data"] !== undefined
+                                    ?
+                                        <Button
+                                            color="primary"
+                                            style={{ margin: 0 }}
+                                            onClick={
+                                                () => {
+                                                    window.location.reload();
+                                                }
                                             }
-                                        }
-                                    }
+                                            >
+                                                refresh
+                                        </Button>
+                                    :
+                                        <>
+                                            {
+                                                !responseIsCheck
+                                                ?
+                                                    <Button
+                                                        color="primary"
+                                                        style={{ margin: 0 }}
+                                                        onClick={
+                                                            async () => {
+                                                                setResponseIsCheck(true);
+            
+                                                                const response_validation = await handleOnValidation();
+                                                                const { rv_check, rv_files } = response_validation;
+            
+                                                                setResponseValidation(response_validation);
+            
+                                                                if(rv_check === true) {
+                                                                    const response_files = await handleOnFileUpload(rv_files);
+                                                                    const { rf_data } = response_files;
+            
+                                                                    setResponseFiles(response_files);
+            
+                                                                    if(rf_data !== null && rf_data !== undefined && rf_data !== "") {
+                                                                        const response_generator = await handleOnGenerator(rf_data);
+                                                                        setResponseGenerator(response_generator);
+                                                                        
+                                                                        setResponseIsCheck(false);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        >
+                                                            commit
+                                                    </Button>
+                                                :
+                                                    ""
+                                            }
+                                        </>
                                 }
-                                >
-                                    commit
-                            </Button>
                         </Col>
                     </Row>     
                 </CardBody>

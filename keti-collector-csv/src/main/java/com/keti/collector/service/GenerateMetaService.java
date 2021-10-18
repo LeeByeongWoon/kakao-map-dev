@@ -7,27 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bson.BsonDocument;
-import org.bson.BsonInt64;
 import org.bson.BsonString;
-import org.bson.BsonValue;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+// import org.bson.BsonValue;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.MongoException;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ValidationOptions;
-import com.mongodb.client.result.InsertOneResult;
+// import com.mongodb.client.result.InsertOneResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keti.collector.config.MongoDBConfiguration;
@@ -47,13 +42,17 @@ public class GenerateMetaService {
 
 
     public JSONObject generatedByMeta(JSONObject _database, JSONObject _measurements) throws IOException, MongoException {
-        String database = _database.get("commit").toString();
-        String mainDomain = database.split("__")[0];
-        String subDomain = database.split("__")[1];
+        List<String> database = new ArrayList<>(
+            objectMapper.readValue(
+                _database.get("commits").toString(), new TypeReference<Map<String, Long>>(){}
+            ).keySet());
         List<String> measurements = new ArrayList<>(
             objectMapper.readValue(
                 _measurements.get("commits").toString(), new TypeReference<Map<String, Long>>(){}
             ).keySet());
+
+        String mainDomain = database.get(0).split("__")[0];
+        String subDomain = database.get(0).split("__")[1];
 
         Map<String, Object> serviceResultMeta = new HashMap<>();
 
@@ -87,15 +86,13 @@ public class GenerateMetaService {
                 String tableName = bsonString.getValue();
 
                 if(measurement.equals(tableName)) {
-                    logger.info("measurement: " + measurement);
-                    logger.info("tableName: " + tableName);
                     validation = true; 
                     break;
                 }
             }
 
             if(!validation) {
-                InsertOneResult insertOneResult = mongoCollection.insertOne(new Document()
+                mongoCollection.insertOne(new Document()
                         .append("_id", new ObjectId())
                         .append("table_name", measurement)
                         .append("location", new JSONObject())
@@ -105,8 +102,17 @@ public class GenerateMetaService {
                         .append("source_type", "")
                         .append("tag", new ArrayList<String>()));
 
-                BsonValue bsonValue = insertOneResult.getInsertedId();
-                logger.info("bsonValue: " + bsonValue);
+                // InsertOneResult insertOneResult = mongoCollection.insertOne(new Document()
+                //         .append("_id", new ObjectId())
+                //         .append("table_name", measurement)
+                //         .append("location", new JSONObject())
+                //         .append("description", "")
+                //         .append("source_agency", "")
+                //         .append("source", measurement)
+                //         .append("source_type", "")
+                //         .append("tag", new ArrayList<String>()));
+
+                // BsonValue bsonValue = insertOneResult.getInsertedId();
 
                 commits++;
             }

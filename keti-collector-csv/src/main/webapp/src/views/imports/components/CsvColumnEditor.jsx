@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import Select from "react-select";
 import {
@@ -12,21 +12,20 @@ import {
     UncontrolledTooltip
 } from "reactstrap";
 
+const dataSet = [
+    { label: "tag", value: "tag" },
+    { label: "field", value: "field" },
+    { label: "all", value: "all" }
+];
+
+const dataType = [
+    { label: "Char", value: "Char" },
+    { label: "Float", value: "Float" }
+];
+
 
 const CsvColumnEditor = (props) => {
     const { idx, val, handleOnEdit, handleOnRemove } = props;
-    
-    const dataSet = [
-        { label: "tag", value: "tag" },
-        { label: "field", value: "field" },
-        { label: "all", value: "all" }
-    ];
-    
-    const dataType = [
-        { label: "Char", value: "Char" },
-        { label: "Float", value: "Float" }
-    ];
-
     const { data_set, data_type, value } = val;
 
     const [display, setDisplay] = useState("none");
@@ -42,10 +41,25 @@ const CsvColumnEditor = (props) => {
         }
     });
 
+    useEffect(
+        () => {
+            setEditResult({
+                column_name: value,
+                data_set: {
+                    label: data_set,
+                    value: data_set
+                },
+                data_type: {
+                    label: data_type,
+                    value: data_type
+                }
+            });
+        }, [props]
+    );
 
     return (
         <div style={{ position: "relative", display: "inline-block", width: "100%", minWidth: "96px"}}>
-            {value}
+            {editResult.column_name}
             {" "}
             <Button
                 id={"Edit_" + idx}

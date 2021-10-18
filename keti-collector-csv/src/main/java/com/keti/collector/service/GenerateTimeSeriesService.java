@@ -1,8 +1,5 @@
 package com.keti.collector.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
@@ -39,7 +38,7 @@ public class GenerateTimeSeriesService {
     
     private final InfluxDBRepository influxDBRepository;
     private final ObjectMapper objectMapper;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
     public GenerateTimeSeriesService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
@@ -49,7 +48,7 @@ public class GenerateTimeSeriesService {
 
 
     public List<String> databaseInValidation(String _database) {
-        List<String> databases = new ArrayList<>();
+        List<String> serviceResult = new ArrayList<>();
 
         QueryResult qr_databases = influxDBRepository.getDatabases();
         List<Result> qr_results = qr_databases.getResults();
@@ -66,17 +65,17 @@ public class GenerateTimeSeriesService {
                     String database = element.get(0).toString();
 
                     if(database.equals(_database)) {
-                        databases.add(database);
+                        serviceResult.add(database);
                     }
                 }
             }
         }
 
-        return databases;
+        return serviceResult;
     }
 
     public List<String> measurementInValidation(String _database, String _measurement) {
-        List<String> measurements = new ArrayList<>();
+        List<String> serviceResult = new ArrayList<>();
 
         QueryResult qr_measurements = influxDBRepository.getMeasurements(_database);
         List<Result> qr_results = qr_measurements.getResults();
@@ -93,18 +92,18 @@ public class GenerateTimeSeriesService {
                     String measurement = element.get(0).toString();
 
                     if(measurement.equals(_measurement)) {
-                        measurements.add(measurement);
+                        serviceResult.add(measurement);
                     }
                 }
             }
         }
 
-        return measurements;
+        return serviceResult;
     }
 
 
     public JSONObject generatedByDatabase(GenerateVo _generateVo) {
-        Map<String, String> serviceResult = new HashMap<>();
+        Map<String, Object> serviceResult = new HashMap<>();
 
         JSONObject ifxDatabase = _generateVo.getTimeSeriesVo().getIfxDatabase();
         String mainDomain = ifxDatabase.get("db_main").toString();
@@ -113,14 +112,16 @@ public class GenerateTimeSeriesService {
 
         List<String> databases = databaseInValidation(database);
 
+        Map<String, Long> commits = new HashMap<>();
         if(databases.size() != 0) {
-            serviceResult.put("rows", "already");
-            serviceResult.put("commit", database);
+            commits.put(database, 0L);
         } else {
-            serviceResult.put("result", "generate");
-            serviceResult.put("commit", database);
             influxDBRepository.createDatabase(database);
+            commits.put(database, 1L);
         }
+
+        serviceResult.put("rows", 1);
+        serviceResult.put("commits", new JSONObject(commits));
 
         influxDBRepository.swapDatabase(database);
 
@@ -347,7 +348,6 @@ public class GenerateTimeSeriesService {
                     break;
 
                 default:
-                    logger.info("default: " + compareSign);
                     validations[i] = false;
                     break;
             }

@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 
 import Papa from "papaparse";
 import CsvColumnEditor from "./CsvColumnEditor";
@@ -50,7 +50,7 @@ const encodeType = [
 const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
     const inputRef = useRef(null);
 
-    const [csvEncode, setCsvEncode] = useState({});
+    const [csvEncode, setCsvEncode] = useState({ index: 0, value: "utf-8", label: "utf-8" });
     const [csvFiles, setCsvFiles] = useState([]);
     const [csvData, setCsvData] = useState(defaultCsvData);
     const [csvCheckIn, setCsvCheckIn] = useState(false);
@@ -106,14 +106,13 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
         }
     }
 
-    const handleOnAddFile = (e) => {
-        const { files } = e.target;
-
-        if(files.length !== 0) {
+    const handleOnAddFile = (_files) => {
+        
+        if(_files.length !== 0) {
             Papa.parse(
-                files[0].slice(0, 102400 * 10),
+                _files[0].slice(0, 102400 * 10),
                 {
-                    encoding: csvEncode !== null ? csvEncode.value : "utf-8",
+                    encoding: csvEncode.value,
                     complete: (results, parser) => {
                         const { data } = results;
 
@@ -148,17 +147,22 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                         };
                 
                         setCsvData(table);
-                        setCsvFiles(files);
+                        setCsvFiles(_files);
                     },
                     error: (error) => {
                         console.log(error);
-
                         setCsvFiles([]);
                     }
                 }
             );
         }
     }
+
+    useEffect(
+        () => {
+            handleOnAddFile(csvFiles);
+        }, [csvEncode]
+    );
 
     const handleOnRemoveFile = () => {
         setCsvData(defaultCsvData);
@@ -209,7 +213,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                 :
                                                     ""
                                             }
-                                            onChange={(value) => setCsvEncode(value)}
+                                            onChange={v => setCsvEncode(v)}
                                             options={encodeType}
                                             placeholder="option"
                                             />
@@ -241,17 +245,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                         paddingLeft: 0,
                                                         paddingRight: 0,
                                                     }}
-                                                    onClick={
-                                                        () => {
-                                                            if(csvEncode.value !== undefined
-                                                                    && csvEncode.value !== null
-                                                                    && csvEncode.value !== "") {
-                                                                inputRef.current.click();
-                                                            } else {
-                                                                alert("Encoding을 선택해주세요.");
-                                                            }
-                                                        }
-                                                    }
+                                                    onClick={() => inputRef.current.click()}
                                                     >
                                                         <input
                                                             type="file"
@@ -261,7 +255,12 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                             style={{
                                                                 "display": "none"
                                                             }}
-                                                            onChange={ e => handleOnAddFile(e) } />
+                                                            onChange={
+                                                                e => {
+                                                                    handleOnAddFile(e.target.files);
+                                                                }
+                                                            } 
+                                                            />
                                                         Browser file
                                                 </Button>
                                             </Col>

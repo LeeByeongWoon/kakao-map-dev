@@ -14,6 +14,8 @@ spring:
     read-timeout: 30
     write-timeout: 30
     gzip: true
+  mongodb:
+    url: mongodb://keti:clustketi@192.168.7.182:27017/?maxPoolSize=20&w=majority
   # influx2: 
   #   url: http://192.168.100.46:8086 # URL to connect to InfluxDB.
   #   username: wizontech # Username to use in the basic auth.
