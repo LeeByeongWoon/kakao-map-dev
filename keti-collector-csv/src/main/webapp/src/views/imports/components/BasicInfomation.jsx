@@ -54,7 +54,8 @@ const sign = {
 
 const BasicInfomation = ({ files, rules }) => {
     const dispatch = useDispatch();
-    const { encode, columns } = rules;
+    const { csv_encode, csv_files } = files;
+    const { csv_columns } = rules;
 
     const [domain, setDomain] = useState({
         main_domain: {},
@@ -97,7 +98,7 @@ const BasicInfomation = ({ files, rules }) => {
             const params = {
                 file_vo: {
                     fl_type: "csv",
-                    fl_encode: encode,
+                    fl_encode: csv_encode,
                     fl_name: uuid_file_name
                 },
                 time_series_vo: {
@@ -110,7 +111,7 @@ const BasicInfomation = ({ files, rules }) => {
                         mt_index: measurement.index,
                         mt_value: measurement.value
                     },
-                    ifx_columns: columns.map(
+                    ifx_columns: csv_columns.map(
                         v => {
                             const compareData = compareRules.filter(val => v.value === (val.compareColumn !== undefined ? val.compareColumn.value : []));
                             const column = 
@@ -145,8 +146,6 @@ const BasicInfomation = ({ files, rules }) => {
                 },
                 meta_vo: {}
             };
-
-            console.log(params);
 
             dispatch(inactive());
 
@@ -253,7 +252,7 @@ const BasicInfomation = ({ files, rules }) => {
             return response_validation;
         }
 
-        if(files.length === 0) {
+        if(csv_files.length === 0) {
             alert("파일을 저장해주세요.");
             return response_validation;
         }
@@ -293,7 +292,7 @@ const BasicInfomation = ({ files, rules }) => {
             response_validation["rv_check"] = true;
             response_validation["rv_databases"] = databases || "";
             response_validation["rv_measurements"] = measurements || "";
-            response_validation["rv_files"] = files;
+            response_validation["rv_files"] = csv_files;
         } catch (error) {
             alert(error);
             console.error(error);
@@ -393,9 +392,9 @@ const BasicInfomation = ({ files, rules }) => {
                                         }
                                         onChange={ v => setTimeIndex({ ...timeIndex, data_type: "Char", label: v.label, value: v.value }) }
                                         options={
-                                            rules.columns !== undefined
+                                            rules.csv_columns !== undefined
                                             ?
-                                                columns.map(v => {
+                                            csv_columns.map(v => {
                                                     return { ...v, label: v.value };
                                                 })
                                             :
@@ -499,9 +498,9 @@ const BasicInfomation = ({ files, rules }) => {
                                             }
                                             onChange={ e => setMeasurement({ ...measurement, ...e }) }
                                             options={
-                                                rules.columns !== undefined
+                                                rules.csv_columns !== undefined
                                                 ?
-                                                    columns.map(v => {
+                                                    csv_columns.map(v => {
                                                         return { ...v, label: v.value };
                                                     })
                                                 :
@@ -552,9 +551,9 @@ const BasicInfomation = ({ files, rules }) => {
                                                         }
                                                     }
                                                     options={
-                                                        rules.columns !== undefined
+                                                        rules.csv_columns !== undefined
                                                         ?
-                                                            columns.map(
+                                                            csv_columns.map(
                                                                 v => (
                                                                     timeIndex.value !== v.value 
                                                                     ? { ...v, label: v.value }

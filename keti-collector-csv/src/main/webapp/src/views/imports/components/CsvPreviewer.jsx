@@ -50,22 +50,22 @@ const encodeType = [
 const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
     const inputRef = useRef(null);
 
-    const [encode, setEncode] = useState({});
-
+    const [csvEncode, setCsvEncode] = useState({});
     const [csvFiles, setCsvFiles] = useState([]);
     const [csvData, setCsvData] = useState(defaultCsvData);
     const [csvCheckIn, setCsvCheckIn] = useState(false);
 
 
     const handleOnCommit = () => {
-        const rules = {
-            encode: encode !== null ? encode.value : "utf-8",
-            columns: csvData["columns"][0]
-        };
+        handleOnSetFiles({
+            csv_encode: csvEncode.value,
+            csv_files: csvFiles
+        });
+        handleOnSetRules({
+            csv_columns: csvData["columns"][0]
+        });
 
         setCsvCheckIn(true);
-        handleOnSetFiles(csvFiles);
-        handleOnSetRules(rules);
     }
 
     const handleOnRemove = (data) => {
@@ -113,7 +113,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
             Papa.parse(
                 files[0].slice(0, 102400 * 10),
                 {
-                    encoding: encode !== null ? encode.value : "utf-8",
+                    encoding: csvEncode !== null ? csvEncode.value : "utf-8",
                     complete: (results, parser) => {
                         const { data } = results;
 
@@ -203,13 +203,13 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                             classNamePrefix="react-select"
                                             name="mainDomainSelect"
                                             value={
-                                                encode.value !== undefined
+                                                csvEncode.value !== undefined
                                                 ?
-                                                    encode
+                                                    csvEncode
                                                 :
                                                     ""
                                             }
-                                            onChange={(value) => setEncode(value)}
+                                            onChange={(value) => setCsvEncode(value)}
                                             options={encodeType}
                                             placeholder="option"
                                             />
@@ -241,7 +241,17 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                         paddingLeft: 0,
                                                         paddingRight: 0,
                                                     }}
-                                                    onClick={ () => inputRef.current.click() }
+                                                    onClick={
+                                                        () => {
+                                                            if(csvEncode.value !== undefined
+                                                                    && csvEncode.value !== null
+                                                                    && csvEncode.value !== "") {
+                                                                inputRef.current.click();
+                                                            } else {
+                                                                alert("Encoding을 선택해주세요.");
+                                                            }
+                                                        }
+                                                    }
                                                     >
                                                         <input
                                                             type="file"
@@ -252,7 +262,7 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                                                 "display": "none"
                                                             }}
                                                             onChange={ e => handleOnAddFile(e) } />
-                                                        Browse file
+                                                        Browser file
                                                 </Button>
                                             </Col>
                                             <Col md="4">
@@ -407,7 +417,18 @@ const CsvPreviewer = ({ handleOnSetFiles, handleOnSetRules }) => {
                                         <>
                                             <Button
                                                 color="primary"
-                                                onClick={ () => handleOnCommit() }
+                                                onClick={
+                                                    () => {
+                                                        if(csvFiles.length !== 0
+                                                                && csvData.columns !== undefined
+                                                                && csvData.columns !== null
+                                                                && csvData.columns !== "") {
+                                                            handleOnCommit();   
+                                                        } else {
+                                                            alert("파일을 선택해주세요.");
+                                                        }
+                                                    }
+                                                }
                                                 >
                                                     save
                                             </Button>
