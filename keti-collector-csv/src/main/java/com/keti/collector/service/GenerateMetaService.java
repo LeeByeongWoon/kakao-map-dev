@@ -94,6 +94,8 @@ public class GenerateMetaService {
             if(!validation) {
                 mongoCollection.insertOne(new Document()
                         .append("_id", new ObjectId())
+                        .append("main_domain", mainDomain)
+                        .append("sub_domain", subDomain)
                         .append("table_name", measurement)
                         .append("location", new JSONObject())
                         .append("description", "")
