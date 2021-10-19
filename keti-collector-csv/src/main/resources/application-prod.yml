@@ -5,10 +5,10 @@ spring:
   multipart:
     location: /appdata/keti-collector-csv/
   influxdb:
-    url: http://203.253.128.158:8086
+    url: http://203.253.128.158:8087
     database: _internal
-    username: admin
-    password: qwer1234!@
+    username: keti
+    password: keticlust
     retention-policy: autogen
     connect-timeout: 30
     read-timeout: 30
