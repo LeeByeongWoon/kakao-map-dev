@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
+import org.bson.Document;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 // import org.bson.BsonValue;
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.MongoException;
@@ -33,7 +33,7 @@ public class GenerateMetaService {
 
     private final MongoDBConfiguration mongoDBConfiguration;
     private final ObjectMapper objectMapper;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public GenerateMetaService(MongoDBConfiguration _mongoDBConfiguration, ObjectMapper _objectMapper) {
         this.mongoDBConfiguration = _mongoDBConfiguration;
@@ -86,7 +86,7 @@ public class GenerateMetaService {
                 String tableName = bsonString.getValue();
 
                 if(measurement.equals(tableName)) {
-                    validation = true; 
+                    validation = true;
                     break;
                 }
             }

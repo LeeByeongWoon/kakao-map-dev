@@ -5,17 +5,17 @@ spring:
   multipart:
     location: /appdata/keti-collector-csv/
   influxdb:
-    url: http://192.168.7.182:8086
+    url: http://203.253.128.158:8087
     database: _internal
-    username: admin
-    password: qwer1234!@
+    username: clust
+    password: clustketi
     retention-policy: autogen
     connect-timeout: 30
     read-timeout: 30
     write-timeout: 30
     gzip: true
   mongodb:
-    url: mongodb://keti:clustketi@192.168.7.182:27017/?maxPoolSize=20&w=majority
+    url: mongodb://keti:clustketi@203.253.128.158:27017/?maxPoolSize=20&w=majority
   # influx2: 
   #   url: http://192.168.100.46:8086 # URL to connect to InfluxDB.
   #   username: wizontech # Username to use in the basic auth.
