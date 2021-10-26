@@ -7,7 +7,7 @@ spring:
       bootstrap-servers: 192.168.7.181:9092
       topics: dev-keti-finance
       group-id: dev-keti-finance-consumer-01
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       listener: 1
       enable-auto-commit: true
       poll-timeout: 1000
@@ -17,7 +17,7 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
     url: http://192.168.7.182:8086
-    database: keti_rtd
+    database: keti__rtd
     username: admin
     password: qwer1234!@
     retention-policy: autogen

@@ -7,7 +7,7 @@ spring:
       bootstrap-servers: 203.253.128.158:9092
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer-01
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       listener: 1
       enable-auto-commit: true
       poll-timeout: 1000
@@ -17,7 +17,7 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
     url: http://203.253.128.158:8087
-    database: keti_rtd
+    database: keti__rtd
     username: admin
     password: clustketi
     retention-policy: autogen
