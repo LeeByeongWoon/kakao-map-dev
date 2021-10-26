@@ -51,8 +51,8 @@ public class GenerateMetaService {
                 _measurements.get("commits").toString(), new TypeReference<Map<String, Long>>(){}
             ).keySet());
 
-        String mainDomain = database.get(0).split("__")[0];
-        String subDomain = database.get(0).split("__")[1];
+        String mainDomain = database.get(0).split("_")[0];
+        String subDomain = database.get(0).split("_")[1];
 
         Map<String, Object> serviceResultMeta = new HashMap<>();
 

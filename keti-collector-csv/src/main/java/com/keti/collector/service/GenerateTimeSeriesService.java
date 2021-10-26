@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
@@ -38,7 +38,7 @@ public class GenerateTimeSeriesService {
     
     private final InfluxDBRepository influxDBRepository;
     private final ObjectMapper objectMapper;
-    // private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     
     public GenerateTimeSeriesService(InfluxDBRepository _influxDBRepository, ObjectMapper _objectMapper) {
@@ -108,7 +108,7 @@ public class GenerateTimeSeriesService {
         JSONObject ifxDatabase = _generateVo.getTimeSeriesVo().getIfxDatabase();
         String mainDomain = ifxDatabase.get("db_main").toString();
         String subDomain = ifxDatabase.get("db_sub").toString();
-        String database = mainDomain + "__" + subDomain;
+        String database = mainDomain + "_" + subDomain;
 
         List<String> databases = databaseInValidation(database);
 

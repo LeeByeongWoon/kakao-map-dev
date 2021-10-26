@@ -128,16 +128,16 @@ public class ApiController {
             @RequestParam(required = true, value="main_domain") String mainDomain,
             @RequestParam(required = true, value="sub_domain") String subDomain,
             @RequestParam(required = false, value="measurement") String measurement) {
-        String database = mainDomain + "__" + subDomain;
+        String database = mainDomain + "_" + subDomain;
 
         ResponseEntity<JSONObject> responseEntity = null;
         Map<String, List<String>> apiResponse = new HashMap<>();
 
         try {
-            if(type == "input") {
+            if("input".equals(type)) {
                 apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
                 apiResponse.put("measurements", generateTimeSeriesService.measurementInValidation(database, measurement));
-            } else if(type == "columns") {
+            } else if("columns".equals(type) ) {
                 apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
                 apiResponse.put("measurements", new ArrayList<String>());
             } else {
@@ -148,9 +148,7 @@ public class ApiController {
             responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
 
         } catch (Exception ex) {
-            apiResponse.put("databases", new ArrayList<String>());
-            apiResponse.put("measurements", new ArrayList<String>());
-            responseEntity = new ResponseEntity<JSONObject>(new JSONObject(apiResponse), HttpStatus.OK);
+            responseEntity = responseExcetion("apiValidation - Exception", ex.toString());
         }
 
         return responseEntity;

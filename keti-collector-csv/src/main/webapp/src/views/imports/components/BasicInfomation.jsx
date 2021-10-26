@@ -278,6 +278,10 @@ const BasicInfomation = ({ files, rules }) => {
 
             const { databases, measurements } = res.data;
 
+            if(databases === undefined && measurement === undefined) {
+                return;
+            }
+
             if(databases.length !== 0) {
                 if(!window.confirm(databases + "이 존재합니다. 계속 진행 하시겠습니까?")) {
                     return;

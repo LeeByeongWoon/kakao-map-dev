@@ -17,7 +17,7 @@ spring:
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
     url: http://203.253.128.158:8087
-    database: keti__rtd
+    database: keti_rtd
     username: clust
     password: clustketi
     retention-policy: autogen
