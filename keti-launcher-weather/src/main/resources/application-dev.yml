@@ -18,7 +18,7 @@ spring:
   influxdb:
     url: http://203.253.128.158:8087
     database: keti_rtd
-    username: admin
+    username: clust
     password: clustketi
     retention-policy: autogen
     connect-timeout: 15

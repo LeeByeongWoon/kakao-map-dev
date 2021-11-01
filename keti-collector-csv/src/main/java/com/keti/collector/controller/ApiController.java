@@ -127,7 +127,7 @@ public class ApiController {
             @PathVariable("type") String type,
             @RequestParam(required = true, value="main_domain") String mainDomain,
             @RequestParam(required = true, value="sub_domain") String subDomain,
-            @RequestParam(required = false, value="measurement") String measurement) {
+            @RequestParam(required = true, value="measurement") String measurement) {
         String database = mainDomain + "_" + subDomain;
 
         ResponseEntity<JSONObject> responseEntity = null;

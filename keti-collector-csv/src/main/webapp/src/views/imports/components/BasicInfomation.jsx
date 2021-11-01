@@ -25,17 +25,17 @@ import {
 
 //Air, Farm, Factory, Bio, Life, Energy, Weather, City, Traffic, Culture, Economy
 const defaultMainDomain = [
-    { value: "Air", label: "Air" },
-    { value: "Farm", label: "Farm" },
-    { value: "Factory", label: "Factory" },
-    { value: "Bio", label: "Bio" },
-    { value: "Life", label: "Life" },
-    { value: "Energy", label: "Energy" },
-    { value: "Weather", label: "Weather" },
-    { value: "City", label: "City" },
-    { value: "Traffic", label: "Traffic" },
-    { value: "Culture", label: "Culture" },
-    { value: "Economy", label: "Economy" }
+    { value: "air", label: "air" },
+    { value: "farm", label: "farm" },
+    { value: "factory", label: "factory" },
+    { value: "bio", label: "bio" },
+    { value: "life", label: "life" },
+    { value: "energy", label: "energy" },
+    { value: "weather", label: "weather" },
+    { value: "city", label: "city" },
+    { value: "traffic", label: "traffic" },
+    { value: "culture", label: "culture" },
+    { value: "economy", label: "economy" }
 ];
 
 const sign = {
@@ -59,7 +59,7 @@ const BasicInfomation = ({ files, rules }) => {
 
     const [domain, setDomain] = useState({
         main_domain: {},
-        sub_domain: "test_01",
+        sub_domain: "",
         target_domain: ""
     });
     const [timeIndex, setTimeIndex] = useState({
@@ -279,18 +279,18 @@ const BasicInfomation = ({ files, rules }) => {
             const { databases, measurements } = res.data;
 
             if(databases === undefined && measurement === undefined) {
-                return;
+                return response_validation;
             }
 
             if(databases.length !== 0) {
                 if(!window.confirm(databases + "이 존재합니다. 계속 진행 하시겠습니까?")) {
-                    return;
+                    return response_validation;
                 }
             }
 
             if(measurements.length !== 0) {
                 if(!window.confirm(measurements + "이 존재합니다. 계속 진행 하시겠습니까?")) {
-                    return;
+                    return response_validation;
                 }
             }
 
@@ -780,14 +780,17 @@ const BasicInfomation = ({ files, rules }) => {
                                                         style={{ margin: 0 }}
                                                         onClick={
                                                             async () => {
-                                                                setResponseIsCheck(true);
-            
                                                                 const response_validation = await handleOnValidation();
+                                                                console.log(response_validation);
                                                                 const { rv_check, rv_files } = response_validation;
+
+                                                                console.log(response_validation);
             
                                                                 setResponseValidation(response_validation);
             
                                                                 if(rv_check === true) {
+                                                                    setResponseIsCheck(true);
+
                                                                     const response_files = await handleOnFileUpload(rv_files);
                                                                     const { rf_data } = response_files;
             

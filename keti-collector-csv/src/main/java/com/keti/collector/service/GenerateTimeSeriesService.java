@@ -64,7 +64,7 @@ public class GenerateTimeSeriesService {
                 for (List<Object> element : s_values) {
                     String database = element.get(0).toString();
 
-                    if(database.equals(_database)) {
+                    if(_database.equals(database)) {
                         serviceResult.add(database);
                     }
                 }
@@ -84,15 +84,16 @@ public class GenerateTimeSeriesService {
         for (Result e : qr_results) {
             List<Series> r_series = e.getSeries();
             // String r_error = e.getError();
-
-            for (Series ele : r_series) {
-                List<List<Object>> s_values = ele.getValues();
-
-                for (List<Object> element : s_values) {
-                    String measurement = element.get(0).toString();
-
-                    if(measurement.equals(_measurement)) {
-                        serviceResult.add(measurement);
+            if(r_series != null) {
+                for (Series ele : r_series) {
+                    List<List<Object>> s_values = ele.getValues();
+    
+                    for (List<Object> element : s_values) {
+                        String measurement = element.get(0).toString();
+    
+                        if(_measurement.equals(measurement)) {
+                            serviceResult.add(measurement);
+                        }
                     }
                 }
             }
