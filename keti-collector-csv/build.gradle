@@ -51,6 +51,8 @@ dependencies {
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation "io.springfox:springfox-boot-starter:3.0.0"
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

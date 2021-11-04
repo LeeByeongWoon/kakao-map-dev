@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +52,14 @@ public class ApiController {
         this.generateTimeSeriesService = _generateTimeSeriesService;
     }
 
-
+    
+    @Operation(summary = "apiGenerateTimeSeries", description = "")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @RequestMapping(value = "/generate/{type}", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> apiGenerateTimeSeries(@PathVariable("type") String type, @RequestBody GenerateVo generateVo) {
         ResponseEntity<JSONObject> responseEntity = null;
@@ -134,10 +146,10 @@ public class ApiController {
         Map<String, List<String>> apiResponse = new HashMap<>();
 
         try {
-            if("input".equals(type)) {
+            if(type.equals("input")) {
                 apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
                 apiResponse.put("measurements", generateTimeSeriesService.measurementInValidation(database, measurement));
-            } else if("columns".equals(type) ) {
+            } else if(type.equals("columns") ) {
                 apiResponse.put("databases", generateTimeSeriesService.databaseInValidation(database));
                 apiResponse.put("measurements", new ArrayList<String>());
             } else {
