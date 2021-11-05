@@ -1,0 +1,36 @@
+    let data = geojson.features; // 지도 데아터
+let coordinates = []; // 좌표 배열
+let name = ""; // 이름(아이디)
+let polygons = [];
+
+    const diplayArea = (coordinates, name, color) => {
+      let path = [];
+      let points = [];
+
+      coordinates[0].forEach((coordinate) => {
+        let point = {};
+        point.x = coordinate[1];
+        point.y = coordinate[0];
+        points.push(point);
+        path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+      });
+      const polygon = new kakao.maps.Polygon({
+        map: map,
+        path: path,
+        strokeWeight: 2,
+        strokeColor: "#004c80",
+        strokeOpacity: 0.8,
+        strokeStyle: "solid",
+        fillColor: color,
+        fillOpacity: 0.5,
+      });
+
+      polygons.push(polygon);
+    };
+
+    // 데이터를 분리해서 그려주는 부분
+    data.forEach((val) => {
+      coordinates = val.geometry.coordinates;
+      name = val.properties.fid;
+      diplayArea(coordinates, name, colorSchema[val.properties.DN]);
+    });

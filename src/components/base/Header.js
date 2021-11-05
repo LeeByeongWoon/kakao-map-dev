@@ -30,12 +30,12 @@ const Logo = styled.div`
 `;
 //logo
 
-function Header() {
+function Header({ map }) {
   return (
     <Positioner>
       <Background>
         <Logo>Title</Logo>
-        <InputAdr />
+        <InputAdr map={map} />
       </Background>
     </Positioner>
   );

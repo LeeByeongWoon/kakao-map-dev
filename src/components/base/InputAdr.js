@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import oc from "open-color";
+import { theme } from "lib/style";
 
 //위치잡기
-const Position = styled.div`
+const Position = styled.form`
   display: flex;
   height: auto;
   justify-content: center;
@@ -32,8 +33,8 @@ const Search = styled.div`
   align-items: center;
   padding: 0 1rem;
 
-  color: ${oc.indigo[4]};
-  border: 1px solid ${oc.indigo[4]};
+  color: ${theme(4)};
+  border: 1px solid ${theme(4)};
 
   text-align: center;
   font-size: 1rem;
@@ -42,35 +43,46 @@ const Search = styled.div`
   cursor: pointer;
   user-select: none;
 
+  :hover {
+    background: ${theme(4)};
+    color: white;
+  }
   &:active {
-    background: ${oc.indigo[4]};
+    background: ${theme(6)};
     color: white;
   }
 `;
-function InputAdr() {
+function InputAdr({ map }) {
   const [input, setInput] = useState("");
+  let place = new kakao.maps.services.Places();
 
   const onChange = (e) => {
     setInput(e.target.value);
   };
 
   const searchAddr = () => {
-    console.log(input);
-    // let place = new kakao.maps.service.Places();
-    // place.keywordSearch(input, placeSearchCB);
-  };
-  // const placeSearchCB = (data, status, pagination) => {
-  //   if (status === kakao.maps.services.Status.OK) {
-  //     let bounds = new kakao.maps.LatLngBounds();
+    if (!input.replace(/^\s+|\s+$/g, "")) {
+      alert("키워드를 입력해주세요!");
+      return false;
+    }
 
-  //     for (let i = 0; i < data.length; i++) {
-  //       bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-  //     }
-  //     map.setBounds(bounds);
-  //   }
-  // };
+    place.keywordSearch(input, placeSearchCB);
+  };
+  const placeSearchCB = (data, status, pagination) => {
+    if (status === kakao.maps.services.Status.OK) {
+      let bounds = new kakao.maps.LatLngBounds();
+
+      for (let i = 0; i < data.length; i++) {
+        bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+      }
+      map.setBounds(bounds);
+    }
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
-    <Position>
+    <Position onSubmit={handleSubmit}>
       <Input
         onChange={onChange}
         value={input}

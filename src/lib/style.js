@@ -1,16 +1,16 @@
 /*global kakao*/
-import OpenColor from "open-color";
+import oc from "open-color";
 
 export const colorSchema = {
-  1: "#ff6b6b", //red
-  2: "#cc5de8", // puple
-  3: "#5c7cfa", // Indigo
-  4: "#22b8cf", // Cyan
-  5: "#fcc419", // yellow
+  1: oc.red[5], //red[deps]
+  2: oc.grape[5], // grape[deps]
+  3: oc.indigo[5], // Indigo[deps]
+  4: oc.cyan[5], // Cyan[deps]
+  5: oc.yellow[5], // yellow[deps]
 };
 
 export const theme = (weight) => {
-  return OpenColor.indigo[weight];
+  return oc.indigo[weight];
 };
 
 // map style
