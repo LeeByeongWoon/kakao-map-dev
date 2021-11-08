@@ -11,10 +11,10 @@ const Wrap = styled.div`
 function ButtonContainer() {
   return (
     <Wrap>
-      <ControllButton name="rain" />
-      <ControllButton name="mountain" />
-      <ControllButton name="hello" />
-      <ControllButton name="bye" />
+      <ControllButton name="1월 평균 기온" />
+      <ControllButton name="강수량" />
+      <ControllButton name="연평균 기온" />
+      <ControllButton name="1월 최저 기온" />
     </Wrap>
   );
 }

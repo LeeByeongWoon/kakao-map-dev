@@ -3,11 +3,12 @@ import styled from "styled-components";
 import { theme } from "lib/style";
 
 const ButtonDesign = styled.div`
-  border: 1px solid ${theme(4)};
+  border: 2px solid ${theme(4)};
   color: ${theme(4)};
   padding: 1rem 1.25rem;
   cursor: pointer;
   user-select: none;
+  font-size: 0.75rem;
   & + & {
     margin-left: 1rem;
   }

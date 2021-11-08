@@ -18,3 +18,18 @@ export const options = {
   center: new kakao.maps.LatLng(37.54448747133563, 126.738295688373), // 지도의 중심 좌표
   level: 12, // 확대 레벨
 };
+
+const yearList = () => {
+  let tmp = [];
+  for (let i = 1980; i <= 2060; i += 10) {
+    tmp.push(i);
+  }
+  return tmp;
+};
+
+const yy = yearList();
+export const defaultValue = {
+  fruit: ["apple", "peach", "mango", "dragonfruits", "pear"],
+  year: [...yy],
+  tag: ["default", "average", "rain", "TotalAverage", "minTemperature"],
+};

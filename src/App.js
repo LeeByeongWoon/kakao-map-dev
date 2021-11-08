@@ -1,6 +1,7 @@
 /*global kakao*/
 import { Header } from "components/base";
 import { MainContainer } from "components/main";
+import Globalstyles from "lib/GlobalStyles";
 import { options } from "lib/style";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <>
+      <Globalstyles />
       <Header map={map} />
       <MainContainer map={map} container={container} />
     </>

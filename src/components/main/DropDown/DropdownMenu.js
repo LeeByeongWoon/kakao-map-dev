@@ -1,34 +1,28 @@
-import react, { useState } from "React";
+import React, { useState } from "react";
 import styled from "styled-components";
+import DropdownBtn from "./DropdownBtn";
+import { defaultValue } from "lib/style";
 
-const DropdownContainer = styled.div``;
-const DropdwonContents = styled.div`
-  display: ${(props) => (props.display[props.name] ? "blcok" : "none")};
+const DropdownContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 0.5rem;
 `;
-function DropdownMenu({ name }) {
-  const [display, setDisplay] = useState({
-    year: false,
-    fruits: false,
-  });
-  const onMouseOver = (e) => {
-    const [name] = e.target;
-    setDisplay({
-      ...display,
-      [name]: true,
-    });
-  };
-  const onMouseOut = (e) => {
-    const [name] = e.target;
-    setDisplay({
-      ...display,
-      [name]: false,
-    });
-  };
+const DataSet = {
+  year: "",
+  fruit: "",
+  tag: "defualt",
+};
+
+function DropdownMenu() {
+  const { fruit, year, tag } = defaultValue;
+  const [fileName, setFilename] = useState(DataSet);
+
   return (
     <DropdownContainer>
-      <DropdwonContents name={name}>
-        {name == year ? "년도" : "과일"}
-      </DropdwonContents>
+      <DropdownBtn data={year} name="year"></DropdownBtn>
+      <DropdownBtn data={fruit} name="fruit"></DropdownBtn>
     </DropdownContainer>
   );
 }
