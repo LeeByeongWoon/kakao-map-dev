@@ -6,8 +6,8 @@
     <springProperty scope="context" name="LOG_FILE" source="logging.path.file"/>
     <springProperty scope="context" name="LOG_INTERVAL" source="spring.collector.interval"/>
 
-    <property name="LOG_DIR_NAME" value="${LOG_DIR}_${LOG_INTERVAL}h"/>
-    <property name="LOG_FILE_NAME" value="${LOG_FILE}_${LOG_INTERVAL}h"/>
+    <property name="LOG_DIR_NAME" value="${LOG_DIR}"/>
+    <property name="LOG_FILE_NAME" value="${LOG_FILE}"/>
     <property name="ERR_LOG_FILE_NAME" value="${LOG_FILE_NAME}_err"/>
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] - %msg%n"/>
 

@@ -17,7 +17,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponents;
@@ -68,6 +67,7 @@ public class CurrentWeatherService extends AbstractWeatherService {
             logger.info(kst + " - [Collect(" + (cnt+1) + "/" + pointListSize + ") | HttpStatusCode=" + statusCodeValue + "]");
 
             if(statusCodeValue >= 200 && statusCodeValue <= 300) { 
+                logger.info("responseEntity: " + responseEntity);
                 String key = nx + "." + ny;
 
                 List<VillageInfoEntity> pointDataList = groupPointMap.get(key);

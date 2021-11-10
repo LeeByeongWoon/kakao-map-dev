@@ -24,9 +24,9 @@ spring:
     target: 50
     interval: 24
   weatherApi:
-    end-point: http://apis.data.go.kr/1360000/VilageFcstInfoService/
+    end-point: http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/
     end-point-service: getUltraSrtNcst
-    end-point-service-key: Ld1kB90v%2BPy5LBEX2wWOXb6FLjdX44C1GY6VPuQN9M8xYU8w%2FeUBR7rJsApfXa10a1GTMFnJkdjRjFGyTQEvrg%3D%3D
+    end-point-service-key: nkrMhfspfYjvNTfgACykGqom2kLmq5zeNHa1VI1kDgT4xgZQ7M4UxQ5rub9RCQL%2BpvW0%2BQFDRncdJ5WLLUb4gA%3D%3D
   pid:
     file: ./keti-collector-weather.pid
 
