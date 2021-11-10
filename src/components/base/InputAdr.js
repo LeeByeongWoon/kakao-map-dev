@@ -26,6 +26,9 @@ const Input = styled.input`
   ::placeholder {
     color: ${oc.gray[3]};
   }
+  @media only screen and(max-width: 768px) {
+    width: 100%;
+  }
 `;
 //주소검색
 const Search = styled.div`
