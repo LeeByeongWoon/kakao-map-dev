@@ -67,7 +67,6 @@ public class CurrentWeatherService extends AbstractWeatherService {
             logger.info(kst + " - [Collect(" + (cnt+1) + "/" + pointListSize + ") | HttpStatusCode=" + statusCodeValue + "]");
 
             if(statusCodeValue >= 200 && statusCodeValue <= 300) { 
-                logger.info("responseEntity: " + responseEntity);
                 String key = nx + "." + ny;
 
                 List<VillageInfoEntity> pointDataList = groupPointMap.get(key);
