@@ -79,12 +79,19 @@ const OptionList = styled.ul`
   }
 `;
 
-function DropdownBtn({ data, name }) {
+function DropdownBtn({ data, name, fileVal, setfileVal }) {
   const [isActive, getActive] = useState(false);
-  const [select, selected] = useState("");
+  const [select, selected] = useState({
+    FileName: "",
+    Print: "",
+  });
+
   useEffect(() => {
     getActive(false);
-    selected("");
+    selected({
+      FileName: "",
+      Print: "",
+    });
   }, []);
 
   const onClick = (e) => {
@@ -93,19 +100,25 @@ function DropdownBtn({ data, name }) {
 
   return (
     <BtnContainer onClick={() => onClick()} isActive={isActive}>
-      <TextBox readOnly value={select} placeholder="선택해주세요" />
+      <TextBox readOnly value={select.Print} placeholder="선택해주세요" />
       <DropDownArrowBtn isActive={isActive}>
         <IoIosArrowUp />
       </DropDownArrowBtn>
       <OptionList isActive={!isActive}>
-        {data.map((tag) => (
+        {data.map((tag, index) => (
           <li
-            onClick={(e) => {
-              selected(tag);
-              console.log(e.target.value);
+            onClick={() => {
+              selected({
+                ...tag,
+              });
+              setfileVal({
+                ...fileVal,
+                [name]: tag.FileName,
+              });
             }}
-            value={tag}>
-            {tag}
+            value={tag.Print}
+            key={index}>
+            {tag.Print}
           </li>
         ))}
       </OptionList>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ButtonContainer } from "./Btns";
 import { DropdownMenu } from "./DropDown";
@@ -10,11 +10,16 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 function MainContainer({ map, container }) {
+  const [fileVal, setFileVal] = useState({
+    fruit: "",
+    year: "",
+    tag: "",
+  });
   return (
     <Wrapper>
-      <DropdownMenu />
+      <DropdownMenu fileVal={fileVal} setfileVal={setFileVal} />
       <Contents container={container} />
-      <ButtonContainer map={map} />
+      <ButtonContainer map={map} fileVal={fileVal} setfileVal={setFileVal} />
     </Wrapper>
   );
 }

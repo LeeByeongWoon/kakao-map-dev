@@ -8,13 +8,28 @@ const Wrap = styled.div`
   justify-content: center;
   margin-top: 1rem;
 `;
-function ButtonContainer() {
+function ButtonContainer({ fileVal, setfileVal, map }) {
   return (
     <Wrap>
-      <ControllButton name="1월 평균 기온" />
-      <ControllButton name="강수량" />
-      <ControllButton name="연평균 기온" />
-      <ControllButton name="1월 최저 기온" />
+      <ControllButton
+        name="average"
+        fileVal={fileVal}
+        setfileVal={setfileVal}
+        map={map}
+      />
+      <ControllButton name="rain" fileVal={fileVal} setfileVal={setfileVal} />
+      <ControllButton
+        name="totalAverage"
+        fileVal={fileVal}
+        setfileVal={setfileVal}
+        map={map}
+      />
+      <ControllButton
+        name="minTemp"
+        fileVal={fileVal}
+        setfileVal={setfileVal}
+        map={map}
+      />
     </Wrap>
   );
 }

@@ -28,8 +28,42 @@ const yearList = () => {
 };
 
 const yy = yearList();
+const temp = yy.map((year) => {
+  return {
+    FileName: year,
+    Print: year + "년",
+  };
+});
+
 export const defaultValue = {
-  fruit: ["apple", "peach", "mango", "dragonfruits", "pear"],
-  year: [...yy],
-  tag: ["default", "average", "rain", "TotalAverage", "minTemperature"],
+  fruit: [
+    {
+      FileName: "apple",
+      Print: "사과",
+    },
+    {
+      FileName: "peach",
+      Print: "복숭아",
+    },
+    {
+      FileName: "mango",
+      Print: "망고",
+    },
+    {
+      FileName: "dragonfruits",
+      Print: "용과",
+    },
+    {
+      FileName: "pear",
+      Print: "배",
+    },
+  ],
+  year: [...temp],
+  tag: {
+    default: "기본값",
+    average: "평균기온",
+    rain: "강수량",
+    totalAverage: "연평균 기온",
+    minTemp: "1월 최저 기온",
+  },
 };

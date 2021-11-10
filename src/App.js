@@ -10,7 +10,7 @@ function App() {
   const [map, setMap] = useState({});
   useEffect(() => {
     const map = new kakao.maps.Map(container.current, options);
-    map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
+    // map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
     setMap(map);
   }, []);
 

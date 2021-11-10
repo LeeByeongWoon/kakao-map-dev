@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import DropdownBtn from "./DropdownBtn";
 import { defaultValue } from "lib/style";
@@ -9,20 +9,22 @@ const DropdownContainer = styled.div`
   justify-content: center;
   margin-bottom: 0.5rem;
 `;
-const DataSet = {
-  year: "",
-  fruit: "",
-  tag: "defualt",
-};
 
-function DropdownMenu() {
-  const { fruit, year, tag } = defaultValue;
-  const [fileName, setFilename] = useState(DataSet);
+function DropdownMenu({ fileVal, setfileVal }) {
+  const { fruit, year } = defaultValue;
 
   return (
     <DropdownContainer>
-      <DropdownBtn data={year} name="year"></DropdownBtn>
-      <DropdownBtn data={fruit} name="fruit"></DropdownBtn>
+      <DropdownBtn
+        data={year}
+        name="year"
+        fileVal={fileVal}
+        setfileVal={setfileVal}></DropdownBtn>
+      <DropdownBtn
+        data={fruit}
+        name="fruit"
+        fileVal={fileVal}
+        setfileVal={setfileVal}></DropdownBtn>
     </DropdownContainer>
   );
 }
