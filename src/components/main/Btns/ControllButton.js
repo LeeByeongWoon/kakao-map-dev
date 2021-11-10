@@ -1,5 +1,5 @@
 /*global kakao*/
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { colorSchema, defaultValue, theme } from "lib/style";
 
@@ -23,7 +23,16 @@ const ButtonDesign = styled.div`
   }
 `;
 
-function ControllButton({ name, fileVal, setfileVal, map }) {
+function ControllButton({
+  polygons,
+  setPolygons,
+  on,
+  off,
+  name,
+  fileVal,
+  setfileVal,
+  map,
+}) {
   const { tag } = defaultValue;
 
   const onClick = (name) => {
@@ -34,13 +43,10 @@ function ControllButton({ name, fileVal, setfileVal, map }) {
     const filename = `${fileVal.fruit}_${fileVal.year}_${name}`;
     import(`res/${filename}`)
       .then((file) => {
-        console.log(file);
-        let data = file.features; // 지도 데아터
+        let data = file.features; // 지도 데이터
         let coordinates = []; // 좌표 배열
-        let name = ""; // 이름(아이디)
-        let polygons = [];
 
-        const diplayArea = (coordinates, name, color) => {
+        const diplayArea = (coordinates, color) => {
           let path = [];
           let points = [];
 
@@ -51,6 +57,7 @@ function ControllButton({ name, fileVal, setfileVal, map }) {
             points.push(point);
             path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
           });
+
           const polygon = new kakao.maps.Polygon({
             map: map,
             path: path,
@@ -61,29 +68,36 @@ function ControllButton({ name, fileVal, setfileVal, map }) {
             fillColor: color,
             fillOpacity: 0.5,
           });
-          polygons.push(polygon);
+          setPolygons((polygons) => [...polygons, polygon]);
+          console.log(polygons);
         };
 
         // 데이터를 분리해서 그려주는 부분
-        data.forEach((val) => {
-          coordinates = val.geometry.coordinates;
-          name = val.properties.fid;
-          diplayArea(coordinates, name, colorSchema[val.properties.DN]);
-        });
+        if (on !== name) {
+          for (let i = 0; i < polygons.length; i++) {
+            polygons[i].setMap(null);
+          }
+          data.forEach((val) => {
+            coordinates = val.geometry.coordinates;
+            diplayArea(coordinates, colorSchema[val.properties.DN]);
+          });
+          off(name);
+        } else if (on === name) {
+          for (let i = 0; i < polygons.length; i++) {
+            polygons[i].setMap(null);
+          }
+          console.log(polygons);
+          off(null);
+        }
       })
       .catch((e) => {
         alert("년도와 과일을 확인해주세요");
         console.log(e);
       });
   };
-  //  { FileName: "default", Print: "기본값" },
-  // { FileName: "average", Print: "1월 평균기온" },
-  // { FileName: "rain", print: "강수량" },
-  // { FileName: "totalAverage", Print: "연평균 기온" },
-  // { FileName: "minTemperature", Print: "1월 최저 기온" },
 
   return (
-    <ButtonDesign name={name} onClick={() => onClick(name)}>
+    <ButtonDesign onClick={() => onClick(name)} name={name}>
       {tag[name]}
     </ButtonDesign>
   );

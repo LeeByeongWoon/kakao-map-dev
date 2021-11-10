@@ -80,6 +80,7 @@ function InputAdr({ map }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    searchAddr();
   };
   return (
     <Position onSubmit={handleSubmit}>
