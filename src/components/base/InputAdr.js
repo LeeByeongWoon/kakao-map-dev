@@ -83,6 +83,7 @@ function InputAdr({ map }) {
           markers[i].setMap(null);
         }
       }
+      infowindow.close();
 
       for (let i = 0; i < data.length; i++) {
         let marker = new kakao.maps.Marker({

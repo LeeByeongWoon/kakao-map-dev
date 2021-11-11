@@ -9,8 +9,8 @@ function App() {
   const container = useRef(null); // 지도를 표시하는 DOM 객체
   const [map, setMap] = useState({});
   const [center, setCenter] = useState({
-    Lat: "",
-    Lng: "",
+    Lat: 37.54448747133563,
+    Lng: 126.738295688373,
   });
   useEffect(() => {
     const map = new kakao.maps.Map(container.current, options);
@@ -19,13 +19,13 @@ function App() {
 
     kakao.maps.event.addListener(map, "center_changed", function () {
       const latlng = map.getCenter();
-      setCenter({
+      setCenter((center) => ({
         ...center,
         Lat: latlng.getLat(),
         Lng: latlng.getLng(),
-      });
+      }));
     });
-  }, [center]);
+  }, []);
 
   return (
     <>
