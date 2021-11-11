@@ -1,8 +1,8 @@
 /*global kakao*/
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import oc from "open-color";
 import { theme } from "lib/style";
+import oc from "open-color";
+import React, { useState } from "react";
+import styled from "styled-components";
 
 //위치잡기
 const Position = styled.form`
@@ -55,10 +55,6 @@ const Search = styled.div`
     color: white;
   }
 `;
-const InfoContainer = styled.div`
-  color: ${oc.gray[1]};
-`;
-const infoStyle = "color: red;";
 
 function InputAdr({ map }) {
   const [input, setInput] = useState("");

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { ButtonContainer } from "./Btns";
 import { DropdownMenu } from "./DropDown";
 import { Contents } from "./Maps";
-import CenterChanged from "./Maps/CenterChanged";
 
 const Wrapper = styled.div`
   width: 100%;

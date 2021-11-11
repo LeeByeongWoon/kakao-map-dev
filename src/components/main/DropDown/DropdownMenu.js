@@ -19,6 +19,7 @@ function DropdownMenu({ fileVal, setfileVal, setTitle }) {
         data={year}
         name="year"
         fileVal={fileVal}
+        setTitle={setTitle}
         setfileVal={setfileVal}></DropdownBtn>
       <DropdownBtn
         data={fruit}

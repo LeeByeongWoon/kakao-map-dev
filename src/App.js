@@ -1,7 +1,6 @@
 /*global kakao*/
 import { Header } from "components/base";
 import { MainContainer } from "components/main";
-import CenterChanged from "components/main/Maps/CenterChanged";
 import Globalstyles from "lib/GlobalStyles";
 import { options } from "lib/style";
 import React, { useEffect, useRef, useState } from "react";
@@ -26,7 +25,7 @@ function App() {
         Lng: latlng.getLng(),
       });
     });
-  }, []);
+  }, [center]);
 
   return (
     <>

@@ -1,7 +1,7 @@
 /*global kakao*/
-import React, { useState } from "react";
-import styled from "styled-components";
 import { colorSchema, defaultValue, theme } from "lib/style";
+import React from "react";
+import styled from "styled-components";
 
 const ButtonDesign = styled.div`
   border: 2px solid ${theme(4)};
@@ -69,7 +69,6 @@ function ControllButton({
             fillOpacity: 0.5,
           });
           setPolygons((polygons) => [...polygons, polygon]);
-          console.log(polygons);
         };
 
         // 데이터를 분리해서 그려주는 부분

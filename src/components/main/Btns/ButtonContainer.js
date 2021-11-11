@@ -1,5 +1,3 @@
-/*global kakao */
-import { colorSchema } from "lib/style";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ControllButton } from ".";

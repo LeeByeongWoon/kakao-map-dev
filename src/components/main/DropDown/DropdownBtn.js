@@ -115,7 +115,9 @@ function DropdownBtn({ data, name, fileVal, setfileVal, setTitle }) {
                 ...fileVal,
                 [name]: tag.FileName,
               });
-              setTitle(tag.Print);
+              if (name !== "year") {
+                setTitle(tag.Print);
+              }
             }}
             value={tag.Print}
             key={index}>

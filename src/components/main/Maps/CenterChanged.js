@@ -1,6 +1,5 @@
-/*global kakao*/
 import OpenColor from "open-color";
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const LatLngContain = styled.div`

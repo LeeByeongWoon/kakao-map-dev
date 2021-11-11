@@ -1,7 +1,7 @@
-import { colorSchema, defaultValue } from "lib/style";
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import { colorSchema } from "lib/style";
 import oc from "open-color";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 
 const CommentContain = styled.div`
   position: absolute;
@@ -57,7 +57,7 @@ function LegendContainer({ title }) {
 
   return (
     <>
-      {title != "" && (
+      {title !== "" && (
         <CommentContain>
           <Comment active={active}>
             <Title>{title}</Title>
