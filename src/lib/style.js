@@ -60,9 +60,9 @@ export const defaultValue = {
   ],
   year: [...temp],
   tag: {
-    default: "기본값",
+    default: "종합",
     average: "평균기온",
-    rain: "강수량",
+    rain: "연간강수량",
     totalAverage: "연평균 기온",
     minTemp: "1월 최저 기온",
   },

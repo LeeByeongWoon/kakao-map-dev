@@ -1,3 +1,4 @@
+import { defaultValue } from "lib/style";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ControllButton } from ".";
@@ -11,11 +12,12 @@ const Wrap = styled.div`
 function ButtonContainer({ fileVal, setfileVal, map }) {
   const [on, off] = useState("");
   const [polygons, setPolygons] = useState([]);
-
+  const { tag } = defaultValue;
+  const tags = Object.keys(tag);
   return (
     <Wrap>
       <ControllButton
-        name="average"
+        name={tags[0]}
         fileVal={fileVal}
         setfileVal={setfileVal}
         map={map}
@@ -25,7 +27,7 @@ function ButtonContainer({ fileVal, setfileVal, map }) {
         setPolygons={setPolygons}
       />
       <ControllButton
-        name="rain"
+        name={tags[1]}
         fileVal={fileVal}
         setfileVal={setfileVal}
         map={map}
@@ -35,7 +37,7 @@ function ButtonContainer({ fileVal, setfileVal, map }) {
         setPolygons={setPolygons}
       />
       <ControllButton
-        name="totalAverage"
+        name={tags[2]}
         fileVal={fileVal}
         setfileVal={setfileVal}
         map={map}
@@ -45,7 +47,7 @@ function ButtonContainer({ fileVal, setfileVal, map }) {
         setPolygons={setPolygons}
       />
       <ControllButton
-        name="minTemp"
+        name={tags[3]}
         fileVal={fileVal}
         setfileVal={setfileVal}
         map={map}
