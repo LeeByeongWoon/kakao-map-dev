@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import oc from "open-color";
 import { theme } from "lib/style";
@@ -55,8 +55,14 @@ const Search = styled.div`
     color: white;
   }
 `;
+const InfoContainer = styled.div`
+  color: ${oc.gray[1]};
+`;
+const infoStyle = "color: red;";
+
 function InputAdr({ map }) {
   const [input, setInput] = useState("");
+  const [markers, setMarkers] = useState([]);
   let place = new kakao.maps.services.Places();
 
   const onChange = (e) => {
@@ -74,13 +80,35 @@ function InputAdr({ map }) {
   const placeSearchCB = (data, status, pagination) => {
     if (status === kakao.maps.services.Status.OK) {
       let bounds = new kakao.maps.LatLngBounds();
+      let infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+      if (markers.length !== 0) {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
 
       for (let i = 0; i < data.length; i++) {
+        let marker = new kakao.maps.Marker({
+          map: map,
+          position: new kakao.maps.LatLng(data[i].y, data[i].x),
+        });
+        setMarkers((markers) => [...markers, marker]);
+
+        kakao.maps.event.addListener(marker, "click", function () {
+          infowindow.setContent(
+            `<div style="padding:5px;"> ${data[i].place_name}</div>`
+          );
+          infowindow.open(map, marker);
+        });
+
         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
       }
+      console.log(data);
       map.setBounds(bounds);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     searchAddr();

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { LegendContainer, Map } from ".";
+import CenterChanged from "./CenterChanged";
 
 const Position = styled.div`
   width: 100%;
@@ -9,10 +10,11 @@ const Position = styled.div`
   position: relative;
 `;
 
-function Contents({ container }) {
+function Contents({ container, center, fileVal, title }) {
   return (
     <Position>
-      <LegendContainer />
+      <LegendContainer fileVal={fileVal} title={title} />
+      <CenterChanged center={center} />
       <Map container={container} />
     </Position>
   );

@@ -79,7 +79,7 @@ const OptionList = styled.ul`
   }
 `;
 
-function DropdownBtn({ data, name, fileVal, setfileVal }) {
+function DropdownBtn({ data, name, fileVal, setfileVal, setTitle }) {
   const [isActive, getActive] = useState(false);
   const [select, selected] = useState({
     FileName: "",
@@ -115,6 +115,7 @@ function DropdownBtn({ data, name, fileVal, setfileVal }) {
                 ...fileVal,
                 [name]: tag.FileName,
               });
+              setTitle(tag.Print);
             }}
             value={tag.Print}
             key={index}>

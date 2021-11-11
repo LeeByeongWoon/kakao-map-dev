@@ -10,7 +10,7 @@ const DropdownContainer = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-function DropdownMenu({ fileVal, setfileVal }) {
+function DropdownMenu({ fileVal, setfileVal, setTitle }) {
   const { fruit, year } = defaultValue;
 
   return (
@@ -24,7 +24,8 @@ function DropdownMenu({ fileVal, setfileVal }) {
         data={fruit}
         name="fruit"
         fileVal={fileVal}
-        setfileVal={setfileVal}></DropdownBtn>
+        setfileVal={setfileVal}
+        setTitle={setTitle}></DropdownBtn>
     </DropdownContainer>
   );
 }
