@@ -10,10 +10,10 @@ const Position = styled.div`
   position: relative;
 `;
 
-function Contents({ container, center, fileVal, title }) {
+function Contents({ container, center, fileVal, title, tag }) {
   return (
     <Position>
-      <LegendContainer fileVal={fileVal} title={title} />
+      <LegendContainer fileVal={fileVal} title={title} tag={tag} />
       <CenterChanged center={center} />
       <Map container={container} />
     </Position>

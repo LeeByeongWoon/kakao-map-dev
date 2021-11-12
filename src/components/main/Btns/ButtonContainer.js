@@ -9,53 +9,27 @@ const Wrap = styled.div`
   justify-content: center;
   margin-top: 1rem;
 `;
-function ButtonContainer({ fileVal, setfileVal, map }) {
+function ButtonContainer({ fileVal, setfileVal, map, setTag }) {
   const [on, off] = useState("");
   const [polygons, setPolygons] = useState([]);
   const { tag } = defaultValue;
   const tags = Object.keys(tag);
   return (
     <Wrap>
-      <ControllButton
-        name={tags[0]}
-        fileVal={fileVal}
-        setfileVal={setfileVal}
-        map={map}
-        on={on}
-        off={off}
-        polygons={polygons}
-        setPolygons={setPolygons}
-      />
-      <ControllButton
-        name={tags[1]}
-        fileVal={fileVal}
-        setfileVal={setfileVal}
-        map={map}
-        on={on}
-        off={off}
-        polygons={polygons}
-        setPolygons={setPolygons}
-      />
-      <ControllButton
-        name={tags[2]}
-        fileVal={fileVal}
-        setfileVal={setfileVal}
-        map={map}
-        on={on}
-        off={off}
-        polygons={polygons}
-        setPolygons={setPolygons}
-      />
-      <ControllButton
-        name={tags[3]}
-        fileVal={fileVal}
-        setfileVal={setfileVal}
-        map={map}
-        on={on}
-        off={off}
-        polygons={polygons}
-        setPolygons={setPolygons}
-      />
+      {tags.map((tag, index) => (
+        <ControllButton
+          name={tag}
+          fileVal={fileVal}
+          setfileVal={setfileVal}
+          setTag={setTag}
+          map={map}
+          on={on}
+          off={off}
+          polygons={polygons}
+          setPolygons={setPolygons}
+          key={index}
+        />
+      ))}
     </Wrap>
   );
 }

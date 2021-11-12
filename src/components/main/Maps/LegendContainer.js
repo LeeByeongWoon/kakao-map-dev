@@ -1,4 +1,5 @@
-import { colorSchema } from "lib/style";
+import { legendText } from "lib/LegendComment";
+import { colorSchema, defaultValue } from "lib/style";
 import oc from "open-color";
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
@@ -30,6 +31,7 @@ const CommentText = styled.div`
 const Title = styled.div`
   width: 100%;
   text-align: center;
+  margin-bottom: 0.2rem;
 `;
 const LegendContain = styled.div`
   position: absolute;
@@ -44,10 +46,9 @@ const LegendBox = styled.div`
   padding: 0.2rem 0.5rem;
   user-select: none;
 `;
-
-function LegendContainer({ title }) {
+function LegendContainer({ title, tag, fileVal }) {
   const [active, isActive] = useState(false);
-
+  const { tag: tags } = defaultValue;
   const onMouseOver = () => {
     isActive(true);
   };
@@ -57,24 +58,28 @@ function LegendContainer({ title }) {
 
   return (
     <>
-      {title !== "" && (
+      {tag && (
         <CommentContain>
           <Comment active={active}>
-            <Title>{title}</Title>
+            <Title>
+              {title}
+              &nbsp;
+              {tags[tag]}
+            </Title>
             <CommentText>
-              1급: <p>-3℃</p>
+              1급: <p>{legendText[fileVal.fruit][tag][0]}</p>
             </CommentText>
             <CommentText>
-              2급: <p>-4℃</p>
+              2급: <p>{legendText[fileVal.fruit][tag][1]}</p>
             </CommentText>
             <CommentText>
-              3급: <p>-5℃</p>
+              3급: <p>{legendText[fileVal.fruit][tag][2]}</p>
             </CommentText>
             <CommentText>
-              4급: <p>-6℃</p>
+              4급: <p>{legendText[fileVal.fruit][tag][3]}</p>
             </CommentText>
             <CommentText>
-              5급: <p>-7℃</p>
+              5급: <p>{legendText[fileVal.fruit][tag][4]}</p>
             </CommentText>
           </Comment>
         </CommentContain>

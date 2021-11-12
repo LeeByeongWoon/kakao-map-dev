@@ -16,6 +16,7 @@ function MainContainer({ map, center, container }) {
     tag: "",
   });
   const [title, setTitle] = useState("");
+  const [tag, setTag] = useState("");
   return (
     <Wrapper>
       <DropdownMenu
@@ -28,8 +29,14 @@ function MainContainer({ map, center, container }) {
         center={center}
         fileVal={fileVal}
         title={title}
+        tag={tag}
       />
-      <ButtonContainer map={map} fileVal={fileVal} setfileVal={setFileVal} />
+      <ButtonContainer
+        map={map}
+        fileVal={fileVal}
+        setfileVal={setFileVal}
+        setTag={setTag}
+      />
     </Wrapper>
   );
 }

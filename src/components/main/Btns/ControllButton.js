@@ -32,6 +32,7 @@ function ControllButton({
   fileVal,
   setfileVal,
   map,
+  setTag,
 }) {
   const { tag } = defaultValue;
 
@@ -45,7 +46,6 @@ function ControllButton({
       .then((file) => {
         let data = file.features; // 지도 데이터
         let coordinates = []; // 좌표 배열
-
         const diplayArea = (coordinates, color) => {
           let path = [];
           let points = [];
@@ -61,9 +61,9 @@ function ControllButton({
           const polygon = new kakao.maps.Polygon({
             map: map,
             path: path,
-            strokeWeight: 2,
+            strokeWeight: 0,
             strokeColor: "#004c80",
-            strokeOpacity: 0.8,
+            strokeOpacity: 0.5,
             strokeStyle: "solid",
             fillColor: color,
             fillOpacity: 0.5,
@@ -73,6 +73,7 @@ function ControllButton({
 
         // 데이터를 분리해서 그려주는 부분
         if (on !== name) {
+          setTag(name);
           for (let i = 0; i < polygons.length; i++) {
             polygons[i].setMap(null);
           }
@@ -82,10 +83,10 @@ function ControllButton({
           });
           off(name);
         } else if (on === name) {
+          setTag("");
           for (let i = 0; i < polygons.length; i++) {
             polygons[i].setMap(null);
           }
-          console.log(polygons);
           off(null);
         }
       })
