@@ -4,12 +4,12 @@ spring:
       on-profile: "dev"
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://192.168.7.182:3306/keti?reconnect=true&characterEncoding=UTF-8
+    url: jdbc:mariadb://203.253.128.158:3306/keti?reconnect=true&characterEncoding=UTF-8
     username: keti
-    password: 'wizontech0418'
+    password: 'keti12#$'
   kafka:
     producer:
-      bootstrap-servers: 192.168.7.181:9092
+      bootstrap-servers: 203.253.128.158:9092
       topic: dev-keti-weather
       acks: -1
       retries: 1
