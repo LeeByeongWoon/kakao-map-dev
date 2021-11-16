@@ -39,6 +39,7 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.5.2'
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+	implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
 	implementation group: 'com.github.miwurster', name: 'spring-data-influxdb', version: '1.8'
     implementation 'org.influxdb:influxdb-java:2.20'
 	implementation group: 'org.mongodb', name: 'bson', version: '4.3.3'

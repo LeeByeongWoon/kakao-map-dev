@@ -1,8 +1,15 @@
 package com.keti.collector.service;
 
 import java.util.concurrent.TimeUnit;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.influxdb.dto.Point;
@@ -133,7 +143,7 @@ public class GenerateTimeSeriesService {
     public JSONObject generatedByInput(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
         Map<String, Object> serviceResult = new HashMap<>();
 
-        LineIterator it = csvFileReader(_generateVo);
+        Iterable<CSVRecord> records = csvFileReader(_generateVo);
         String measurement = _generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
         List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
 
@@ -141,9 +151,8 @@ public class GenerateTimeSeriesService {
         Map<String, Long> commit = new HashMap<>();
         List<Point> entities = null;
 
-        while(it.hasNext()) {
+        for (CSVRecord record : records) {
             rows++;
-            String line = it.nextLine();
 
             if(rows == 0) {
                 continue;
@@ -153,8 +162,7 @@ public class GenerateTimeSeriesService {
                 entities = new ArrayList<Point>();
             }
 
-            String[] entity = line.split(",", -1);
-            Point point = generatedByTimeSeries(measurement, columns, entity);
+            Point point = generatedByTimeSeries(measurement, columns, record);
 
             if(point != null) {
                 Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
@@ -187,7 +195,7 @@ public class GenerateTimeSeriesService {
     public JSONObject generatedByColumns(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
         Map<String, Object> serviceResult = new HashMap<>();
 
-        LineIterator it = csvFileReader(_generateVo);
+        Iterable<CSVRecord> records = csvFileReader(_generateVo);
         int measurementIndex = Integer.parseInt(_generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
         List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
 
@@ -195,10 +203,8 @@ public class GenerateTimeSeriesService {
         Map<String, Long> commit = new HashMap<>();
         List<Point> entities = null;
 
-        while(it.hasNext()) {
+        for (CSVRecord record : records) {
             rows++;
-
-            String line = it.nextLine();
 
             if(rows == 0) {
                 continue;
@@ -208,9 +214,8 @@ public class GenerateTimeSeriesService {
                 entities = new ArrayList<Point>();
             }
 
-            String[] entity = line.split(",", -1);
-            String measurement = entity[measurementIndex];
-            Point point = generatedByTimeSeries(measurement, columns, entity);
+            String measurement = record.get(measurementIndex);
+            Point point = generatedByTimeSeries(measurement, columns, record);
 
             if(point != null) {
                 Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
@@ -241,7 +246,7 @@ public class GenerateTimeSeriesService {
     }
 
 
-    private Point generatedByTimeSeries(String _measurement, List<JSONObject> _columns, String[] _entity) throws ParseException {
+    private Point generatedByTimeSeries(String _measurement, List<JSONObject> _columns, CSVRecord _record) throws ParseException {
         Builder builder = Point.measurement(_measurement);
 
         for (JSONObject column : _columns) {
@@ -256,14 +261,14 @@ public class GenerateTimeSeriesService {
             Float compareToFloatEntity = 0.00f;
 
             if(dataType.equals("Char")) {
-                compareToStringEntity = compareToString(_entity[dataIndex], dataFunc);
+                compareToStringEntity = compareToString(_record.get(dataIndex), dataFunc);
 
                 if(compareToStringEntity == null) {
                     return null;
                 }
             } else if(dataType.equals("Float")) {
                 compareToFloatEntity = 
-                    !_entity[dataIndex].isEmpty() ? compareToFloat(Float.parseFloat(_entity[dataIndex]), dataFunc) : compareToFloat(0.00f, dataFunc);
+                    !_record.get(dataIndex).isEmpty() ? compareToFloat(Float.parseFloat(_record.get(dataIndex)), dataFunc) : compareToFloat(0.00f, dataFunc);
 
                 if(compareToFloatEntity == null) {
                     return null;
@@ -273,7 +278,7 @@ public class GenerateTimeSeriesService {
             switch (dataSet) {
                 case "time":
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
-                    Date dt = simpleDateFormat.parse(_entity[dataIndex]);
+                    Date dt = simpleDateFormat.parse(_record.get(dataIndex));
 
                     builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
                     break;
@@ -306,6 +311,184 @@ public class GenerateTimeSeriesService {
         
         return builder.build();
     }
+
+
+    // public JSONObject generatedByInput(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
+    //     Map<String, Object> serviceResult = new HashMap<>();
+
+    //     LineIterator it = csvFileReader(_generateVo);
+    //     String measurement = _generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
+    //     List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
+
+    //     int rows = -1;
+    //     Map<String, Long> commit = new HashMap<>();
+    //     List<Point> entities = null;
+
+    //     while(it.hasNext()) {
+    //         rows++;
+    //         String line = it.nextLine();
+
+    //         if(rows == 0) {
+    //             continue;
+    //         }
+            
+    //         if(entities == null) {
+    //             entities = new ArrayList<Point>();
+    //         }
+
+    //         String[] entity = line.split(",", -1);
+    //         Point point = generatedByTimeSeries(measurement, columns, entity);
+
+    //         if(point != null) {
+    //             Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
+    //             commit.put(measurement, cnt);
+    //             entities.add(point);
+    //         }
+    
+    //         if(rows % 1000 == 0) {
+    //             influxDBRepository.save(entities);
+
+    //             entities.clear();
+    //             entities = null;
+    //         }
+    //     }
+
+    //     if(rows % 1000 != 0) {
+    //         influxDBRepository.save(entities);
+
+    //         entities.clear();
+    //         entities = null;
+    //     }
+
+    //     serviceResult.put("rows", Integer.toString(rows));
+    //     serviceResult.put("commits", new JSONObject(commit));
+
+    //     return new JSONObject(serviceResult);
+    // }
+
+
+    // public JSONObject generatedByColumns(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
+    //     Map<String, Object> serviceResult = new HashMap<>();
+
+    //     LineIterator it = csvFileReader(_generateVo);
+    //     int measurementIndex = Integer.parseInt(_generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
+    //     List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
+
+    //     int rows = -1;
+    //     Map<String, Long> commit = new HashMap<>();
+    //     List<Point> entities = null;
+
+    //     while(it.hasNext()) {
+    //         rows++;
+
+    //         String line = it.nextLine();
+
+    //         if(rows == 0) {
+    //             continue;
+    //         }
+            
+    //         if(entities == null) {
+    //             entities = new ArrayList<Point>();
+    //         }
+
+    //         String[] entity = line.split(",", -1);
+    //         String measurement = entity[measurementIndex];
+    //         Point point = generatedByTimeSeries(measurement, columns, entity);
+
+    //         if(point != null) {
+    //             Long cnt = commit.get(measurement) != null ? commit.get(measurement) + 1 : 1;
+    //             commit.put(measurement, cnt);
+
+    //             entities.add(point);
+    //         }
+
+    //         if(rows % 1000 == 0) {
+    //             influxDBRepository.save(entities);
+
+    //             entities.clear();
+    //             entities = null;
+    //         }
+    //     }
+
+    //     if(rows % 1000 != 0) {
+    //         influxDBRepository.save(entities);
+
+    //         entities.clear();
+    //         entities = null;
+    //     }
+
+    //     serviceResult.put("rows", Integer.toString(rows));
+    //     serviceResult.put("commits", new JSONObject(commit));
+
+    //     return new JSONObject(serviceResult);
+    // }
+
+
+    // private Point generatedByTimeSeries(String _measurement, List<JSONObject> _columns, String[] _entity) throws ParseException {
+    //     Builder builder = Point.measurement(_measurement);
+
+    //     for (JSONObject column : _columns) {
+    //         int dataIndex = Integer.parseInt(column.get("data_index").toString());
+    //         String dataSet = column.get("data_set").toString();
+    //         String dataType = column.get("data_type").toString();
+    //         String dataFormat = column.get("data_format").toString();
+    //         String dataValue = column.get("data_value").toString();
+    //         List<JSONObject> dataFunc = objectMapper.convertValue(column.get("data_func"), new TypeReference<List<JSONObject>>(){});
+
+    //         String compareToStringEntity = "";
+    //         Float compareToFloatEntity = 0.00f;
+
+    //         if(dataType.equals("Char")) {
+    //             compareToStringEntity = compareToString(_entity[dataIndex], dataFunc);
+
+    //             if(compareToStringEntity == null) {
+    //                 return null;
+    //             }
+    //         } else if(dataType.equals("Float")) {
+    //             compareToFloatEntity = 
+    //                 !_entity[dataIndex].isEmpty() ? compareToFloat(Float.parseFloat(_entity[dataIndex]), dataFunc) : compareToFloat(0.00f, dataFunc);
+
+    //             if(compareToFloatEntity == null) {
+    //                 return null;
+    //             }
+    //         }
+
+    //         switch (dataSet) {
+    //             case "time":
+    //                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dataFormat);
+    //                 Date dt = simpleDateFormat.parse(_entity[dataIndex]);
+
+    //                 builder.time(dt.getTime(), TimeUnit.MILLISECONDS);
+    //                 break;
+
+    //             case "tag":
+    //                 builder.tag(dataValue, compareToStringEntity);
+    //                 break;
+
+    //             case "field":
+    //                 if(dataType.equals("Float")) {
+    //                     builder.addField(dataValue, compareToFloatEntity);
+    //                 } else {
+    //                     builder.addField(dataValue, compareToStringEntity);
+    //                 }
+
+    //                 break;
+
+    //             case "all":
+    //                 if(dataType.equals("Float")) {
+    //                     builder.tag(dataValue, compareToFloatEntity.toString());
+    //                     builder.addField(dataValue, compareToFloatEntity);
+    //                 } else {
+    //                     builder.tag(dataValue, compareToStringEntity);
+    //                     builder.addField(dataValue, compareToStringEntity);
+    //                 }
+
+    //                 break;
+    //         }
+    //     }
+        
+    //     return builder.build();
+    // }
 
 
     private Float compareToFloat(Float _data, List<JSONObject> _funcs) {
@@ -410,13 +593,29 @@ public class GenerateTimeSeriesService {
     }
 
     
-    private LineIterator csvFileReader(GenerateVo _generateVo) throws IOException {
+    // private LineIterator csvFileReader(GenerateVo _generateVo) throws IOException {
+    //     String encode = _generateVo.getFileVo().getFlEncode();
+    //     String fileName = _generateVo.getFileVo().getFlName();
+
+    //     File file = new File(location + fileName);
+
+    //     return FileUtils.lineIterator(file, encode);
+    // }
+
+
+    private Iterable<CSVRecord> csvFileReader(GenerateVo _generateVo) throws IOException {
         String encode = _generateVo.getFileVo().getFlEncode();
         String fileName = _generateVo.getFileVo().getFlName();
 
         File file = new File(location + fileName);
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, encode);
+        BufferedReader br = new BufferedReader(isr);
+
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(br);
+
+        return records;
         
-        return FileUtils.lineIterator(file, encode);
     }
 
 }
