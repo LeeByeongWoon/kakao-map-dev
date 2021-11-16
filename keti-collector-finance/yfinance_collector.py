@@ -33,6 +33,22 @@ env = {
             "serializer": lambda x: json.dumps(x).encode('utf-8')
         }
     },
+    "wiz": {
+        "mariadb": {
+            "username": "keti",
+            "password": "qwer1234!@",
+            "hostname": "192.168.207.2",
+            "database": "keti",
+            "charset": "utf8"
+        },
+        "kafka": {
+            "bootstrap_servers": ["192.168.207.2:9092"],
+            "topic": "dev-keti-finance",
+            "acks": -1,
+            "compression_type": "lz4",
+            "serializer": lambda x: json.dumps(x).encode('utf-8')
+        }
+    },
     "dev": {
         "mariadb": {
             "username": "keti",

@@ -18,6 +18,6 @@ spring:
   profiles:
     group:
       "local": "common,local"
-      "vm": "common,vm"
+      "wiz": "common,wiz"
       "dev": "common,dev"
       "prod": "common,prod"

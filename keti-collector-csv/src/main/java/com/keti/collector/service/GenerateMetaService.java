@@ -51,8 +51,8 @@ public class GenerateMetaService {
                 _measurements.get("commits").toString(), new TypeReference<Map<String, Long>>(){}
             ).keySet());
 
-        String mainDomain = database.get(0).split("_")[0];
-        String subDomain = database.get(0).split("_")[1];
+        String mainDomain = database.get(0).split("_", 2)[0];
+        String subDomain = database.get(0).split("_", 2)[1];
 
         Map<String, Object> serviceResultMeta = new HashMap<>();
 
@@ -103,18 +103,8 @@ public class GenerateMetaService {
                         .append("source", measurement)
                         .append("source_type", "")
                         .append("tag", new ArrayList<String>()));
-
-                // InsertOneResult insertOneResult = mongoCollection.insertOne(new Document()
-                //         .append("_id", new ObjectId())
-                //         .append("table_name", measurement)
-                //         .append("location", new JSONObject())
-                //         .append("description", "")
-                //         .append("source_agency", "")
-                //         .append("source", measurement)
-                //         .append("source_type", "")
-                //         .append("tag", new ArrayList<String>()));
-
-                // BsonValue bsonValue = insertOneResult.getInsertedId();
+                        // .append("start_time", "")
+                        // .append("end_type", ""));
 
                 commits++;
             }
