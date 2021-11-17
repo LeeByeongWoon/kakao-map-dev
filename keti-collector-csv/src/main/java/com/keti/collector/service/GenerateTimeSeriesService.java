@@ -143,9 +143,17 @@ public class GenerateTimeSeriesService {
     public JSONObject generatedByInput(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
         Map<String, Object> serviceResult = new HashMap<>();
 
-        Iterable<CSVRecord> records = csvFileReader(_generateVo);
+        String encode = _generateVo.getFileVo().getFlEncode();
+        String fileName = _generateVo.getFileVo().getFlName();
         String measurement = _generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_value").toString();
         List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
+
+        File file = new File(location + fileName);
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, encode);
+        BufferedReader br = new BufferedReader(isr);
+
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(br);
 
         int rows = -1;
         Map<String, Long> commit = new HashMap<>();
@@ -188,6 +196,10 @@ public class GenerateTimeSeriesService {
         serviceResult.put("rows", Integer.toString(rows));
         serviceResult.put("commits", new JSONObject(commit));
 
+        fis.close();
+        isr.close();
+        br.close();
+
         return new JSONObject(serviceResult);
     }
 
@@ -195,9 +207,17 @@ public class GenerateTimeSeriesService {
     public JSONObject generatedByColumns(GenerateVo _generateVo) throws IOException, ParseException, NumberFormatException {
         Map<String, Object> serviceResult = new HashMap<>();
 
-        Iterable<CSVRecord> records = csvFileReader(_generateVo);
+        String encode = _generateVo.getFileVo().getFlEncode();
+        String fileName = _generateVo.getFileVo().getFlName();
         int measurementIndex = Integer.parseInt(_generateVo.getTimeSeriesVo().getIfxMeasurement().get("mt_index").toString());
         List<JSONObject> columns = _generateVo.getTimeSeriesVo().getIfxColumns();
+
+        File file = new File(location + fileName);
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, encode);
+        BufferedReader br = new BufferedReader(isr);
+
+        Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(br);
 
         int rows = -1;
         Map<String, Long> commit = new HashMap<>();
@@ -241,6 +261,10 @@ public class GenerateTimeSeriesService {
 
         serviceResult.put("rows", Integer.toString(rows));
         serviceResult.put("commits", new JSONObject(commit));
+
+        fis.close();
+        isr.close();
+        br.close();
 
         return new JSONObject(serviceResult);
     }
@@ -410,22 +434,6 @@ public class GenerateTimeSeriesService {
         }
     
         return value;
-    }
-
-
-    private Iterable<CSVRecord> csvFileReader(GenerateVo _generateVo) throws IOException {
-        String encode = _generateVo.getFileVo().getFlEncode();
-        String fileName = _generateVo.getFileVo().getFlName();
-
-        File file = new File(location + fileName);
-        FileInputStream fis = new FileInputStream(file);
-        InputStreamReader isr = new InputStreamReader(fis, encode);
-        BufferedReader br = new BufferedReader(isr);
-
-        Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(br);
-
-        return records;
-        
     }
 
 }
