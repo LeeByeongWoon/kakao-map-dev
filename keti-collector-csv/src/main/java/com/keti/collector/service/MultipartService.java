@@ -41,7 +41,7 @@ public class MultipartService {
 
         ServletFileUpload upload = new ServletFileUpload();
         FileItemIterator iter = upload.getItemIterator(request);
-            
+
         UUID uuid = UUID.randomUUID();
         String uuidFileName = uuid.toString() + ".csv";
 
@@ -50,19 +50,19 @@ public class MultipartService {
             String name = item.getFieldName();
 
             if (!item.isFormField()) {
-                InputStream filesInputStream = item.openStream();
+                InputStream is = item.openStream();
                 String fileName = item.getName();
                 String filePath = location + uuidFileName;
 
                 File files = new File(filePath);
-                OutputStream out = new FileOutputStream(files);
-                IOUtils.copy(filesInputStream, out);
+                OutputStream os = new FileOutputStream(files);
+                IOUtils.copy(is, os);
 
                 fileMap.put("file_name", fileName);
                 fileMap.put("uuid_file_name", uuidFileName);
 
-                out.close();
-                filesInputStream.close(); 
+                os.close();
+                is.close(); 
             }
         }
             
