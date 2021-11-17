@@ -7,7 +7,7 @@
   "proxy": "http://localhost:8080",
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && gulp licenses",
+    "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile-sass": "node-sass src/assets/scss/paper-dashboard.scss src/assets/css/paper-dashboard.css",
