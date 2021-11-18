@@ -277,13 +277,17 @@ public class GenerateTimeSeriesService {
             Object compareToEntity = null;
             if(dataType.equals("Char")) {
                 compareToEntity = compareToString(_record.get(dataIndex), dataFunc);
+
+                if(compareToEntity == null) {
+                    return null;
+                }
             } else if(dataType.equals("Float")) {
                 compareToEntity = 
                     !_record.get(dataIndex).isEmpty() ? compareToFloat(Float.parseFloat(_record.get(dataIndex)), dataFunc) : compareToFloat(0.00f, dataFunc);
-            }
 
-            if(compareToEntity == null) {
-                return null;
+                if(compareToEntity == null) {
+                    return null;
+                }
             }
 
             switch (dataSet) {
