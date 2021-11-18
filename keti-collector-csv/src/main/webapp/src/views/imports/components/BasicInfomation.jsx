@@ -556,7 +556,7 @@ const BasicInfomation = ({ files, rules }) => {
                                                         }
                                                     }
                                                     options={
-                                                        rules.csv_columns !== undefined
+                                                        rules.csv_columns !== undefined && "value" in timeIndex
                                                         ?
                                                             csv_columns.map(
                                                                 v => (
