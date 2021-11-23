@@ -41,10 +41,11 @@ const LegendContain = styled.div`
 `;
 const LegendBox = styled.div`
   background: ${(props) => colorSchema[props.color]};
-  font-size: 0.8rem;
+  font-size: 0.5rem;
   color: white;
   padding: 0.2rem 0.5rem;
   user-select: none;
+  text-align: center;
 `;
 function LegendContainer({ title, tag, fileVal }) {
   const [active, isActive] = useState(false);
@@ -67,19 +68,13 @@ function LegendContainer({ title, tag, fileVal }) {
               {tags[tag]}
             </Title>
             <CommentText>
-              1급: <p>{legendText[fileVal.fruit][tag][0]}</p>
+              매우적합: <p>{legendText[fileVal.fruit][tag][0]}</p>
             </CommentText>
             <CommentText>
-              2급: <p>{legendText[fileVal.fruit][tag][1]}</p>
+              적합: <p>{legendText[fileVal.fruit][tag][1]}</p>
             </CommentText>
             <CommentText>
-              3급: <p>{legendText[fileVal.fruit][tag][2]}</p>
-            </CommentText>
-            <CommentText>
-              4급: <p>{legendText[fileVal.fruit][tag][3]}</p>
-            </CommentText>
-            <CommentText>
-              5급: <p>{legendText[fileVal.fruit][tag][4]}</p>
+              부정교합: <p>{legendText[fileVal.fruit][tag][2]}</p>
             </CommentText>
           </Comment>
         </CommentContain>
@@ -87,11 +82,9 @@ function LegendContainer({ title, tag, fileVal }) {
       <LegendContain
         onMouseEnter={() => onMouseOver()}
         onMouseOut={() => onMouseOut()}>
-        <LegendBox color="1">1급</LegendBox>
-        <LegendBox color="2">2급</LegendBox>
-        <LegendBox color="3">3급</LegendBox>
-        <LegendBox color="4">4급</LegendBox>
-        <LegendBox color="5">5급</LegendBox>
+        <LegendBox color="1">매우적합</LegendBox>
+        <LegendBox color="2">적합</LegendBox>
+        <LegendBox color="3">부정교합</LegendBox>
       </LegendContain>
     </>
   );
