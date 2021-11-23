@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: "prod"
   multipart:
-    location: /appdata/keti-collector-csv/
+    location: /programdrive/CsvServer/appdata/keti-collector-csv/
   influxdb:
     url: http://52.231.185.8:8087
     database: _internal
@@ -15,7 +15,7 @@ spring:
     write-timeout: 30
     gzip: true
   mongodb:
-    url: mongodb://keti:clustketi@52.231.185.8:27017/?maxPoolSize=20&w=majority
+    url: mongodb://keti:clustketi@52.231.185.8:27170/?maxPoolSize=20&w=majority
   # influx2: 
   #   url: http://192.168.100.46:8086 # URL to connect to InfluxDB.
   #   username: wizontech # Username to use in the basic auth.
@@ -29,7 +29,7 @@ spring:
   #   connectTimeout: 30s # Connection timeout for OkHttpClient. (Default: 10s)
     
 logging:
-  dir: /applog/keti-collector-csv
+  dir: /programdrive/CsvServer/applog/keti-collector-csv
   file: keti-collector-csv
   level:
     root: info
