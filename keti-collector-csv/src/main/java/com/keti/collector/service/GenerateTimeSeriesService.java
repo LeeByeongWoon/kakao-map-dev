@@ -283,11 +283,14 @@ public class GenerateTimeSeriesService {
                 }
             } else if(dataType.equals("Float")) {
                 compareToEntity = 
-                    !_record.get(dataIndex).isEmpty() ? compareToFloat(Float.parseFloat(_record.get(dataIndex)), dataFunc) : compareToFloat(0.00f, dataFunc);
+                    !_record.get(dataIndex).isEmpty() ? compareToFloat(Float.parseFloat(_record.get(dataIndex)), dataFunc) : "NaN";
 
                 if(compareToEntity == null) {
                     return null;
-                }
+                } 
+                // else if(compareToEntity.equals("NaN")) { 
+                //     continue;
+                // }
             }
 
             switch (dataSet) {
