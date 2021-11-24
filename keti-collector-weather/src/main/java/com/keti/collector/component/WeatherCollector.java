@@ -1,6 +1,7 @@
 package com.keti.collector.component;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -63,8 +64,20 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 	public void runner() {
 		try {
 			logger.info("##### Scheduler Job");
-			List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
-			kafkaProducerService.sendMessage(weatherDataList);
+
+			for (int[] point : pointList) {
+				String key = Integer.toString(point[0]) + "." + Integer.toString(point[1]);
+				
+				JSONObject weatherData = weatherService.getWeatherData(point);
+				List<VillageInfoEntity> entityByPoints = groupPointMap.get(key);
+				List<JSONObject> weatherDatas = weatherService.getJoinData(weatherData, entityByPoints);
+
+				kafkaProducerService.sendMessage(weatherDatas);
+				TimeUnit.SECONDS.sleep(1);
+			}
+
+			// List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
+			// kafkaProducerService.sendMessages(weatherDataList);
 		} catch (Exception e) {
 			logger.info("[Exception: " + e + " ]");
 		} finally {

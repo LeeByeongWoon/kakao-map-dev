@@ -1,6 +1,8 @@
 package com.keti.collector.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,32 @@ public class KafkaProducerService {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 
+
+	public void sendMessage(List<JSONObject> weatherDatas) throws Exception {
+		Map<String, List<JSONObject>> dataSet = new HashMap<>();
+		dataSet.put("messages", weatherDatas);
+
+		String messages = new JSONObject(dataSet).toString();
+		ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topic, messages);
+		ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+
+		listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+
+			@Override
+			public void onSuccess(SendResult<String, String> result) {
+				logger.info("[onSuccess - offset=" + result.getRecordMetadata().offset() + "]");
+			}
+	
+			@Override
+			public void onFailure(Throwable ex) {
+				logger.info("[onFailure | " + ex.getMessage() + "]");
+			}
+
+		});
+	}
+
     
-    public void sendMessage(List<JSONObject> weatherDataList) throws Exception {
+    public void sendMessages(List<JSONObject> weatherDataList) throws Exception {
 		int weatherDataSize = weatherDataList.size();
 
 		for(int cnt=0; cnt<weatherDataSize; cnt++) {

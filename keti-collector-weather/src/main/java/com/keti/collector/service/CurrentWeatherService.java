@@ -97,4 +97,48 @@ public class CurrentWeatherService extends AbstractWeatherService {
 
         return weatherDataList;
     }
+
+
+    @Override
+    public JSONObject getWeatherData(int[] point) throws Exception {
+        JSONObject weatherData = null;
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime dt = now.minusHours(1);
+        String kst = now.toInstant(ZoneOffset.UTC).toString();
+
+        UriComponents uri = createRequestUri(endPoint, endPointService, endPointServiceKey, dt, point);
+        ResponseEntity<String> responseEntity = requestApi(uri);
+
+        int statusCodeValue = responseEntity.getStatusCodeValue();
+        logger.info(kst + " - [Collect - HttpStatusCode=" + statusCodeValue + "]");
+
+        if(statusCodeValue >= 200 && statusCodeValue <= 300) {
+            weatherData = (JSONObject) parser.parse(responseEntity.getBody());
+            weatherData.put("statusCodeValue", statusCodeValue);
+        }
+
+        return weatherData;
+    }
+
+
+    @Override
+    public List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints) throws Exception {
+        List<JSONObject> weatherDatas = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now();
+        String utc = now.minusHours(9).toInstant(ZoneOffset.UTC).toString();
+
+        for (VillageInfoEntity entityByPoint : entityByPoints) {
+            HashMap<String, Object> messageData = new HashMap<>();
+            messageData.put("timestamp", utc);
+            messageData.put("statusCodeValue", weatherData.get("statusCodeValue"));
+            messageData.put("requestData", objectMapper.convertValue(entityByPoint, new TypeReference<JSONObject>(){}));
+            messageData.put("responseData", weatherData.get("response"));
+
+            weatherDatas.add(new JSONObject(messageData));
+        }
+
+        return weatherDatas;
+    }
 }

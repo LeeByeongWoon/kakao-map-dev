@@ -51,7 +51,6 @@ public class MessageListenerImpl implements MessageListener<String, String> {
             List<Map<String, Object>> messages = 
                     objectMapper.convertValue(recordValue.get("messages"), new TypeReference<List<Map<String, Object>>>(){});
 
-
             int messagesSize = messages.size();
             for(int cnt=0; cnt<messagesSize; cnt++) {
                 Map<String, Object> message = messages.get(cnt);

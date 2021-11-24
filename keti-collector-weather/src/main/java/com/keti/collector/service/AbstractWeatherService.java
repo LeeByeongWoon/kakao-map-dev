@@ -60,5 +60,7 @@ public abstract class AbstractWeatherService {
 
 
     public abstract List<JSONObject> getWeatherDataList(List<int[]> pointList, Map<String, List<VillageInfoEntity>> groupPointMap) throws Exception;
+    public abstract JSONObject getWeatherData(int[] point) throws Exception;
+    public abstract List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints) throws Exception;
 
 }

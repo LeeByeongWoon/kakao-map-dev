@@ -4,7 +4,7 @@ spring:
       on-profile: "local"
   kafka:
     consumer:
-      bootstrap-servers: 192.168.7.181:9092
+      bootstrap-servers: 192.168.207.128:9092
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer-01
       auto-offset-reset: latest
@@ -16,7 +16,7 @@ spring:
       key-deserializer-class-config: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
-    url: http://192.168.7.182:8086
+    url: http://192.168.207.128:8086
     database: keti_rtd
     username: admin
     password: qwer1234!@
