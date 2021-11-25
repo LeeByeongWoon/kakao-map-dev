@@ -66,14 +66,16 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 			logger.info("##### Scheduler Job");
 
 			for (int[] point : pointList) {
-				String key = Integer.toString(point[0]) + "." + Integer.toString(point[1]);
-				
 				JSONObject weatherData = weatherService.getWeatherData(point);
-				List<VillageInfoEntity> entityByPoints = groupPointMap.get(key);
-				List<JSONObject> weatherDatas = weatherService.getJoinData(weatherData, entityByPoints);
 
-				kafkaProducerService.sendMessage(weatherDatas);
-				TimeUnit.SECONDS.sleep(1);
+				if(weatherData != null) {
+					String key = Integer.toString(point[0]) + "." + Integer.toString(point[1]);
+					List<VillageInfoEntity> entityByPoints = groupPointMap.get(key);
+					List<JSONObject> weatherDatas = weatherService.getJoinData(weatherData, entityByPoints);
+
+					kafkaProducerService.sendMessage(weatherDatas);
+					TimeUnit.SECONDS.sleep(1);
+				}
 			}
 
 			// List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
