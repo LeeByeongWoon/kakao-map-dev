@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,22 +101,32 @@ public class CurrentWeatherService extends AbstractWeatherService {
 
 
     @Override
-    public JSONObject getWeatherData(int[] point) throws Exception {
+    public JSONObject getWeatherData(int[] point) {
         JSONObject weatherData = null;
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime dt = now.minusHours(1);
-        String kst = now.toInstant(ZoneOffset.UTC).toString();
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime dt = now.minusHours(1);
+            String kst = now.toInstant(ZoneOffset.UTC).toString();
 
-        UriComponents uri = createRequestUri(endPoint, endPointService, endPointServiceKey, dt, point);
-        ResponseEntity<String> responseEntity = requestApi(uri);
+            UriComponents uri = createRequestUri(endPoint, endPointService, endPointServiceKey, dt, point);
+            ResponseEntity<String> responseEntity = requestApi(uri);
 
-        int statusCodeValue = responseEntity.getStatusCodeValue();
-        logger.info(kst + " - [Collect - HttpStatusCode=" + statusCodeValue + "]");
+            int statusCodeValue = responseEntity.getStatusCodeValue();
+            logger.info(kst + " - [Collect - HttpStatusCode=" + statusCodeValue + "]");
 
-        if(statusCodeValue >= 200 && statusCodeValue <= 300) {
-            weatherData = (JSONObject) parser.parse(responseEntity.getBody());
-            weatherData.put("statusCodeValue", statusCodeValue);
+            if(statusCodeValue >= 200 && statusCodeValue <= 300) {
+                weatherData = (JSONObject) parser.parse(responseEntity.getBody());
+                weatherData.put("statusCodeValue", statusCodeValue);
+            } else {
+                throw new Exception(Integer.toString(statusCodeValue) + "Error");
+            }
+        } catch (ParseException ex) {
+            logger.info("ParseException: " + ex.getMessage());
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            logger.info("Exception: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
         return weatherData;
@@ -123,7 +134,7 @@ public class CurrentWeatherService extends AbstractWeatherService {
 
 
     @Override
-    public List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints) throws Exception {
+    public List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints) {
         List<JSONObject> weatherDatas = new ArrayList<>();
 
         LocalDateTime now = LocalDateTime.now();

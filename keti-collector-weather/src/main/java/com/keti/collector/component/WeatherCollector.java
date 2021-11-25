@@ -2,7 +2,6 @@ package com.keti.collector.component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -61,29 +60,22 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 
 	@Override
 	public void runner() {
-		try {
-			logger.info("##### Scheduler Job");
+		logger.info("##### Scheduler Job");
 
-			for (int[] point : pointList) {
-				JSONObject weatherData = weatherService.getWeatherData(point);
+		for (int[] point : pointList) {
+			JSONObject weatherData = weatherService.getWeatherData(point);
 
-				if(weatherData != null) {
-					String key = Integer.toString(point[0]) + "." + Integer.toString(point[1]);
-					List<VillageInfoEntity> entityByPoints = groupPointMap.get(key);
-					List<JSONObject> weatherDatas = weatherService.getJoinData(weatherData, entityByPoints);
+			if(weatherData != null) {
+				String key = Integer.toString(point[0]) + "." + Integer.toString(point[1]);
+				List<VillageInfoEntity> entityByPoints = groupPointMap.get(key);
+				List<JSONObject> weatherDatas = weatherService.getJoinData(weatherData, entityByPoints);
 
-					kafkaProducerService.sendMessage(weatherDatas);
-					TimeUnit.SECONDS.sleep(1);
-				}
+				kafkaProducerService.sendMessage(weatherDatas);
 			}
-
-			// List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
-			// kafkaProducerService.sendMessages(weatherDataList);
-		} catch (Exception e) {
-			logger.info("[Exception: " + e + " ]");
-		} finally {
-
 		}
+
+		// List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
+		// kafkaProducerService.sendMessages(weatherDataList);
 	}
 
 

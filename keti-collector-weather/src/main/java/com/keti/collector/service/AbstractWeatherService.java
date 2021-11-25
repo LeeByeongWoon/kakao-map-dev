@@ -47,7 +47,7 @@ public abstract class AbstractWeatherService {
     }
 
     
-    public ResponseEntity<String> requestApi(UriComponents uri) throws Exception {
+    public ResponseEntity<String> requestApi(UriComponents uri) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -60,7 +60,7 @@ public abstract class AbstractWeatherService {
 
 
     public abstract List<JSONObject> getWeatherDataList(List<int[]> pointList, Map<String, List<VillageInfoEntity>> groupPointMap) throws Exception;
-    public abstract JSONObject getWeatherData(int[] point) throws Exception;
-    public abstract List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints) throws Exception;
+    public abstract JSONObject getWeatherData(int[] point);
+    public abstract List<JSONObject> getJoinData(JSONObject weatherData, List<VillageInfoEntity> entityByPoints);
 
 }

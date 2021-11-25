@@ -3,6 +3,7 @@ package com.keti.collector.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,27 +32,34 @@ public class KafkaProducerService {
 	}
 
 
-	public void sendMessage(List<JSONObject> weatherDatas) throws Exception {
-		Map<String, List<JSONObject>> dataSet = new HashMap<>();
-		dataSet.put("messages", weatherDatas);
+	public void sendMessage(List<JSONObject> weatherDatas) {
+		try {
+			Map<String, List<JSONObject>> dataSet = new HashMap<>();
+			dataSet.put("messages", weatherDatas);
 
-		String messages = new JSONObject(dataSet).toString();
-		ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topic, messages);
-		ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(producerRecord);
+			String messages = new JSONObject(dataSet).toString();
+			ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topic, messages);
+			ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(producerRecord);
 
-		listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+			listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 
-			@Override
-			public void onSuccess(SendResult<String, String> result) {
-				logger.info("[onSuccess - offset=" + result.getRecordMetadata().offset() + "]");
-			}
-	
-			@Override
-			public void onFailure(Throwable ex) {
-				logger.info("[onFailure | " + ex.getMessage() + "]");
-			}
+				@Override
+				public void onSuccess(SendResult<String, String> result) {
+					logger.info("[onSuccess - offset=" + result.getRecordMetadata().offset() + "]");
+				}
+		
+				@Override
+				public void onFailure(Throwable ex) {
+					logger.info("[onFailure | " + ex.getMessage() + "]");
+				}
 
-		});
+			});
+			
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException ex) {
+			logger.info("InterruptedException: " + ex.getMessage());
+			ex.printStackTrace();
+		}
 	}
 
     
