@@ -23,6 +23,8 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       compresstion-type: lz4
+  pid:
+    file: /app/keti-collector-weather/keti-collector-weather.pid
 
 logging:
   path:

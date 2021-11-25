@@ -16,6 +16,8 @@ spring:
     gzip: true
   mongodb:
     url: mongodb://keti:clustketi@192.168.7.182:27017/?maxPoolSize=20&w=majority
+  pid:
+    file: ./keti-collector-csv.pid
   # influx2:
   #   url: http://192.168.207.2:8086 # URL to connect to InfluxDB.
   #   username: admin # Username to use in the basic auth.

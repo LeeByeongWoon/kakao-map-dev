@@ -4,7 +4,7 @@ spring:
       on-profile: "prod"
   kafka:
     consumer:
-      bootstrap-servers: 203.253.128.158:9092
+      bootstrap-servers: localhost:9092
       topics: dev-keti-weather
       group-id: dev-keti-weather-consumer-01
       auto-offset-reset: latest
@@ -16,7 +16,7 @@ spring:
       key-deserializer-class-config: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer-class-conifg: org.apache.kafka.common.serialization.StringDeserializer
   influxdb:
-    url: http://203.253.128.158:8087
+    url: http://localhost:8086
     database: keti_rtd
     username: clust
     password: clustketi
@@ -25,10 +25,12 @@ spring:
     read-timeout: 30
     write-timeout: 15
     gzip: true
+  pid:
+    file: /programdrive/WFcollector/keti-launcher-weather/keti-launcher-weather.pid
     
 logging:
   path:
-    dir: /applog/keti-launcher-weather
+    dir: /programdrive/WFcollector/keti-launcher-weather/applog
     file: keti-launcher-weather
   level:
     root: info

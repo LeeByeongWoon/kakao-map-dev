@@ -22,8 +22,6 @@ spring:
   config:
     activate:
       on-profile: "common"
-  pid:
-    file: ./keti-collector-csv.pid
 
 info:
   app:

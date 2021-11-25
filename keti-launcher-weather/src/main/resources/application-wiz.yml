@@ -25,6 +25,8 @@ spring:
     read-timeout: 30
     write-timeout: 15
     gzip: true
+  pid:
+    file: /app/keti-launcher-weather/keti-launcher-weather.pid
       
 
 logging:

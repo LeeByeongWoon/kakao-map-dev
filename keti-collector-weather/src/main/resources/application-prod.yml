@@ -4,12 +4,12 @@ spring:
       on-profile: "prod"
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://203.253.128.158:3306/keti?reconnect=true&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3306/keti?reconnect=true&characterEncoding=UTF-8
     username: keti
-    password: 'keti12#$'
+    password: 'ketiabcs'
   kafka:
     producer:
-      bootstrap-servers: 203.253.128.158:9092
+      bootstrap-servers: localhost:9092
       topic: dev-keti-weather
       acks: -1
       retries: 1
@@ -23,10 +23,12 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       compresstion-type: lz4
-      
+  pid:
+    file: /programdrive/WFcollector/keti-collector-weather/keti-collector-weather.pid
+
 logging:
   path:
-    dir: /applog/keti-collector-weather
+    dir: /programdrive/WFcollector/keti-collector-weather/applog
     file: keti-collector-weather
   level:
     root: info
