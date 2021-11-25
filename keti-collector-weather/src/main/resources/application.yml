@@ -26,7 +26,8 @@ spring:
   weatherApi:
     end-point: http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/
     end-point-service: getUltraSrtNcst
-    end-point-service-key: nkrMhfspfYjvNTfgACykGqom2kLmq5zeNHa1VI1kDgT4xgZQ7M4UxQ5rub9RCQL%2BpvW0%2BQFDRncdJ5WLLUb4gA%3D%3D
+    # end-point-service-key: nkrMhfspfYjvNTfgACykGqom2kLmq5zeNHa1VI1kDgT4xgZQ7M4UxQ5rub9RCQL%2BpvW0%2BQFDRncdJ5WLLUb4gA%3D%3D
+    end-point-service-key: jLiSgD9u8qqlWoesshL9t5MAv5pr4hOWtC43MsIju9jxOsGohJCW0rGoTFx8wE7QZhpAQf5myW3M6Q3Hx5dR4w%3D%3D
     
 
 info:
