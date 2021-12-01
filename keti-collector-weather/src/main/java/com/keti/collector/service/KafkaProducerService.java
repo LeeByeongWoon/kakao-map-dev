@@ -55,40 +55,11 @@ public class KafkaProducerService {
 
 			});
 			
-			TimeUnit.SECONDS.sleep(1);
+			TimeUnit.MILLISECONDS.sleep(100);
 		} catch (InterruptedException ex) {
 			logger.info("InterruptedException: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
-
-    
-    public void sendMessages(List<JSONObject> weatherDataList) throws Exception {
-		int weatherDataSize = weatherDataList.size();
-
-		for(int cnt=0; cnt<weatherDataSize; cnt++) {
-			JSONObject json = weatherDataList.get(cnt);
-			String data = json.toString();
-
-			ProducerRecord<String, String> message = new ProducerRecord<String, String>(topic, data);
-			ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(message);
 	
-			int i = cnt + 1;
-			future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-
-				@Override
-				public void onSuccess(SendResult<String, String> result) {
-					logger.info("[onSuccess(" + i + "/" + weatherDataSize + ") | offset=" + result.getRecordMetadata().offset() + "]");
-				}
-	
-				@Override
-				public void onFailure(Throwable ex) {
-					logger.info("[onFailure(" + i + "/" + weatherDataSize + ") | " + ex.getMessage() + "]");
-				}
-
-			});
-		}
-		
-    }
-
 }

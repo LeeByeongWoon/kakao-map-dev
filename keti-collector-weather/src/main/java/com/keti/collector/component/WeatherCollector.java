@@ -74,8 +74,6 @@ public class WeatherCollector extends AbstractDynamicScheduled implements Comman
 			}
 		}
 
-		// List<JSONObject> weatherDataList = weatherService.getWeatherDataList(pointList, groupPointMap);
-		// kafkaProducerService.sendMessages(weatherDataList);
 	}
 
 

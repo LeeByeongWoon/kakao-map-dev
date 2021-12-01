@@ -46,61 +46,6 @@ public class CurrentWeatherService extends AbstractWeatherService {
     
 
     @Override
-    public List<JSONObject> getWeatherDataList(List<int[]> pointList, Map<String, List<VillageInfoEntity>> groupPointMap) throws Exception {
-        List<JSONObject> weatherDataList = new ArrayList<>();
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime dt = now.minusHours(1);
-
-        String kst = now.toInstant(ZoneOffset.UTC).toString();
-        String utc = now.minusHours(9).toInstant(ZoneOffset.UTC).toString();
-
-        int pointListSize = pointList.size();
-        for(int cnt=0; cnt<pointListSize; cnt++) {
-            int[] point = pointList.get(cnt);
-            String nx = Integer.toString(point[0]);
-            String ny = Integer.toString(point[1]);
-
-            UriComponents uri = createRequestUri(endPoint, endPointService, endPointServiceKey, dt, point);
-            ResponseEntity<String> responseEntity = requestApi(uri);
-
-            int statusCodeValue = responseEntity.getStatusCodeValue();
-            logger.info(kst + " - [Collect(" + (cnt+1) + "/" + pointListSize + ") | HttpStatusCode=" + statusCodeValue + "]");
-
-            if(statusCodeValue >= 200 && statusCodeValue <= 300) { 
-                String key = nx + "." + ny;
-
-                List<VillageInfoEntity> pointDataList = groupPointMap.get(key);
-                JSONObject responseData = (JSONObject) parser.parse(responseEntity.getBody());
-
-                int pointDataSize = pointDataList.size();
-                List<JSONObject> messages = new ArrayList<>();
-                
-                for(int i=0; i<pointDataSize; i++) {
-                    JSONObject requestData =
-                            objectMapper.convertValue(pointDataList.get(i), new TypeReference<JSONObject>(){});
-
-                    HashMap<String, Object> messageData = new HashMap<>();
-                    messageData.put("timestamp", utc);
-                    messageData.put("statusCodeValue", statusCodeValue);
-                    messageData.put("requestData", requestData);
-                    messageData.put("responseData", responseData.get("response"));
-
-                    messages.add(new JSONObject(messageData));
-                }
-
-                Map<String, Object> weatherData = new HashMap<>();
-                weatherData.put("messages", messages);
-                
-                weatherDataList.add(new JSONObject(weatherData));
-            }
-        }
-
-        return weatherDataList;
-    }
-
-
-    @Override
     public JSONObject getWeatherData(int[] point) {
         JSONObject weatherData = null;
 
